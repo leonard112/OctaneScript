@@ -1,0 +1,12 @@
+arch: x86
+os: windows
+language: python
+env:
+  global: 
+    - TEST_DIR="$PWD/core/test"
+    - HOME_DIR="$PWD"
+before-script:
+  - pip install -r requirements.txt
+script: 
+  - cd $TEST_DIR && python -m unittest discover
+  - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
