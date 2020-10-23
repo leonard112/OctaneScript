@@ -1,5 +1,3 @@
-arch: x86
-os: windows
 language: python
 env:
   global: 
