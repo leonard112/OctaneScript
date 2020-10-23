@@ -10,3 +10,5 @@ before-script:
 script: 
   - cd $TEST_DIR && python -m unittest discover
   - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
+after-script:
+  - echo "publish"
