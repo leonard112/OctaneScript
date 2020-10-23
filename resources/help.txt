@@ -1,0 +1,4 @@
+    usage:
+        script_name.o
+        -version
+        -help
