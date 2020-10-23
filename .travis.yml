@@ -8,5 +8,7 @@ before-script:
 script: 
   - cd $TEST_DIR && python TestPrinter.py
   - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
+  - cp resources dist/ && cp core/usage dist/
 after-script:
+  - tar -czvf octane.tgz dist
   - echo "publish"
