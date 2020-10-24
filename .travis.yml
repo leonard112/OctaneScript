@@ -13,6 +13,6 @@ script:
   - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
 after-success:
+  - echo "${SFTP_KEY}" | base64 --decode >/tmp/sftp_rsa
   - tar -czvf $FILE_NAME dist
-  - curl -V
-  - curl -T $FILE_NAME ftps://${USER}:${USER_PW}@frs.sourceforge.net/home/frs/project/octane-lang/alpha/${FILE_NAME}
+  - sftp -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/alpha <<< $'put ${FILE_NAME}'
