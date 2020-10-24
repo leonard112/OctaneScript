@@ -5,7 +5,7 @@ env:
     - HOME_DIR="$PWD"
     - TEST_DIR="$HOME_DIR/core/test"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-    - FILE_NAME="octane-0.0.1-c$COMMIT_SHORT.tgz"
+    - FILE_NAME="octane-0.0.1-alpha-c$COMMIT_SHORT.tgz"
 before-script:
   - pip install -r requirements.txt
 script: 
@@ -15,5 +15,5 @@ script:
 after-success:
   - echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
   - chmod 400 /tmp/sftp_rsa
-  - tar -czvf $FILE_NAME dist/
+  - tar -czvf $FILE_NAME dist/*
   - sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/alpha/linux <<< $"put ${FILE_NAME}"
