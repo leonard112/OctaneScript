@@ -6,3 +6,35 @@ Octane is a scripting language built from Python. Octane is currenly in it's ear
 ## Releases
 * __0.0.1-alpha__
   * `print` function is stable. `print` can print simple strings enclosed in single or double quotes and coloring and styling be applied to text easily by by calling a specialized version of `print`. For example you can print __RED__ and __UNDERLINED__ text with the following print function: `printRedUnderline "This text is red and underlined."` 
+  
+## Installation
+
+* __Linux (x86):__
+  * Download binaries from sourceforge.net.
+    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octane-lang/alpha/linux/<file name>.tgz`
+  * Create a dedicated folder for the binaries to live.
+    * `$ sudo mkdir /opt/octane`
+  * Extract the contents ot the tar file to the folder where you want the binaries to live.
+    * `$ sudo tar -xzvf <file name> --directory /opt/octane/`
+  * Append the following line to `.bashrc`.
+    * `$ PATH=/opt/octane:$PATH`
+
+* __Windows:__
+> _Esure that you have __Python__ installed and __pip__ package manager installed before you begin. Also ensure that you are running cmd or Powershell as __Administrator__._
+  * Clone this repository.
+    * `> git clone https://github.com/leonard112/octane.git`
+  * Navigate to the source code.
+    * `> cd octane/src`
+  * Install dependencies.
+    * `> pip install -r requirements.txt`
+  * Build octane.exe
+    * `> pyinstaller --onefile  --name octane  main.py`
+  * Copy resources required for executable to work.
+    * `> cp -r resources dist/`
+    * `> mkdir /dist/core`
+    * `> cp -r core/usage dist/core/`
+  * Copy everything in the `dist` folder to your `Program Files (x86)` folder.
+    * `> mkdir "C:\Program Files (x86)\Octane"`
+    * `cp -r dist/* "C:\Program Files (x86)\Octane\"`
+  * Append Octane to `PATH`.
+    * https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
