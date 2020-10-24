@@ -3,7 +3,8 @@ dist: trusty
 env:
   global: 
     - HOME_DIR="$PWD"
+    - BUILD_SCRIPTS="$PWD/travis"
     - TEST_DIR="$HOME_DIR/core/test"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
     - FILE_NAME="octane-0.0.1-alpha-c$COMMIT_SHORT.tgz"
-script: chmod +x travis/build-linux.sh && ./travis/build-linux.sh
+script: cd $BUILD_SCRIPTS && chmod +x build-linux.sh && bash build-linux.sh
