@@ -4,7 +4,7 @@ env:
   global: 
     - HOME_DIR="$PWD"
     - TEST_DIR="$HOME_DIR/core/test"
-    - COMMIT_SHORT="${$TRAVIS_COMMIT:0:7}"
+    - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
     - FILE_NAME="octane-0.0.1-c$COMMIT_SHORT.tgz"
 before-script:
   - pip install -r requirements.txt
