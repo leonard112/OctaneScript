@@ -11,6 +11,6 @@ script:
   - cd $TEST_DIR && python TestPrinter.py
   - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
-after-script:
+after-success:
   - tar -czvf $FILE_NAME dist
   - curl -T $FILE_NAME sftp://${USER}:${USER_PW}@frs.sourceforge.net/home/frs/project/octane-lang/alpha/${FILE_NAME}
