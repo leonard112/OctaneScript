@@ -13,4 +13,4 @@ script:
   - cp -r resources dist/ && cp -r core/usage dist/
 after-script:
   - tar -czvf $FILE_NAME dist
-  - curl -T $FILE_NAME "sftp://$USER:$USER_PW@frs.sourceforge.net/home/frs/project/octane-lang/alpha/$FILE_NAME"
+  - curl -T $FILE_NAME sftp://${USER}:${USER_PW}@frs.sourceforge.net/home/frs/project/octane-lang/alpha/${FILE_NAME}
