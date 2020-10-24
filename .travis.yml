@@ -1,10 +1,15 @@
-language: python
-dist: trusty
+os:
+  - linux
+  - windows
+
 env:
   global: 
-    - HOME_DIR="$PWD"
-    - BUILD_SCRIPTS="$PWD/travis"
+    - HOME_DIR="$PWD/src"
     - TEST_DIR="$HOME_DIR/core/test"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-    - FILE_NAME="octane-0.0.1-alpha-c$COMMIT_SHORT.tgz"
-script: chmod +x travis/build-linux.sh && bash travis/build-linux.sh
+    - FILE_NAME_LINUX="octane-0.0.1-alpha-c$COMMIT_SHORT-linux-x86.tgz"
+    - FILE_NAME_WINDOWS="octane-0.0.1-alpha-c$COMMIT_SHORT-windows.tgz"
+
+script:
+  - if ["TRAVIS_OS_NAME" = "linux"]; chmod +x travis/build-linux.sh && bash travis/build-linux.sh
+  - if ["TRAVIS_OS_NAME" = "windows"]; batch travis/build-windows.bat

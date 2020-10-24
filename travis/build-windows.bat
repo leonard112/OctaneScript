@@ -1,9 +1,6 @@
-#!/bin/bash
-
-set -e
 
 # Install dependencies
-apt-get install python
+choco install python
 pip install -r requirements.txt
 
 # Test
@@ -16,6 +13,5 @@ echo "SMOKE TEST:" && cd dist && ./octane -version && cd ..
 
 # Publish
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
-chmod 400 /tmp/sftp_rsa
-cd dist && tar -czvf $FILE_NAME_LINUX *
-sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/alpha/linux <<< $"put ${FILE_NAME_LINUX}"
+cd dist && tar -x -f $FILE_NAME_WINDOWS *
+sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/alpha/windows <<< $"put ${FILE_NAME_WINDOWS}"
