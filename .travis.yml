@@ -6,4 +6,4 @@ env:
     - TEST_DIR="$HOME_DIR/core/test"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
     - FILE_NAME_LINUX="octane-0.0.1-alpha-c$COMMIT_SHORT-linux-x86.tgz"
-script: chmod +x travis/build-linux.sh && bash travis/build-linux.sh
+script: cd $HOME_DIR && chmod +x travis/build-linux.sh && bash travis/build-linux.sh
