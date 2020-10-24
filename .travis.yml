@@ -8,7 +8,7 @@ before-script:
   - pip install -r requirements.txt
 script: 
   - cd $TEST_DIR && python TestPrinter.py
-  - cd $TRAVIS_HOME && pyinstaller --onefile  --name octane  main.py
+  - cd $TRAVIS_TMPDIR && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
 after-script:
   - tar -czvf $FILE_NAME dist
