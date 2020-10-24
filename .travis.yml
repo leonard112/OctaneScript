@@ -12,6 +12,7 @@ script:
   - cd $TEST_DIR && python TestPrinter.py
   - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
+  - echo "*** Smoke Test ***" && cd dist && ./octane -version && cd ..
 after-success:
   - echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
   - chmod 400 /tmp/sftp_rsa
