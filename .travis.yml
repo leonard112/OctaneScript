@@ -2,14 +2,14 @@ language: python
 env:
   global: 
     - TEST_DIR="$PWD/core/test"
-    - HOME_DIR="$PWD"
-    - FILE_NAME="octane-0.0.1-c$TRAVIS_COMMIT.tgz"
+    - COMMIT_SHORT="${$TRAVIS_COMMIT:0:7}"
+    - FILE_NAME="octane-0.0.1-c$COMMIT_SHORT.tgz"
 before-script:
   - pip install -r requirements.txt
 script: 
   - cd $TEST_DIR && python TestPrinter.py
-  - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
+  - cd $TRAVIS_HOME && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
 after-script:
-  - tar -czvf  dist
+  - tar -czvf $FILE_NAME dist
   - curl -T $FILE_NAME "sftp://$USER:$USER_PW@frs.sourceforge.net/home/frs/project/octane-lang/alpha/$FILE_NAME"
