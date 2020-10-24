@@ -2,8 +2,6 @@
 
 set -e
 
-cd ..
-
 # Install dependencies
 pip install -r requirements.txt
 
