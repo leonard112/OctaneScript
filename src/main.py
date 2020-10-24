@@ -32,5 +32,4 @@ if __name__ == '__main__':
         print_help()
 
     else :
-        raise Exception("Bad file extension.\n" +
-            "Is your script an Octane script with the '.o' file extension?")
+        print_help()

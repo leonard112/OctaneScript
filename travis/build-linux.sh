@@ -10,7 +10,7 @@ cd $TEST_DIR && python TestPrinter.py
 
 # Build
 cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
-echo "SMOKE TEST:" && cd dist && ./octane -version && cd ..
+echo "SMOKE TEST:" && cd dist && ./octane --version && cd ..
 
 # Publish
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
