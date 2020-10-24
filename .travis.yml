@@ -1,14 +1,15 @@
 language: python
 env:
   global: 
-    - TEST_DIR="$PWD/core/test"
+    - HOME_DIR="$PWD"
+    - TEST_DIR="$HOME_DIR/core/test"
     - COMMIT_SHORT="${$TRAVIS_COMMIT:0:7}"
     - FILE_NAME="octane-0.0.1-c$COMMIT_SHORT.tgz"
 before-script:
   - pip install -r requirements.txt
 script: 
   - cd $TEST_DIR && python TestPrinter.py
-  - cd $TRAVIS_TMPDIR && pyinstaller --onefile  --name octane  main.py
+  - cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
   - cp -r resources dist/ && cp -r core/usage dist/
 after-script:
   - tar -czvf $FILE_NAME dist
