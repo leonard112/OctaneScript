@@ -4,6 +4,7 @@ env:
   global: 
     - HOME_DIR="$PWD/src"
     - TEST_DIR="$HOME_DIR/core/test"
+    - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
     - FILE_NAME_LINUX="octane-0.0.1-alpha-c$COMMIT_SHORT-linux-x86.tgz"
-script: cd $HOME_DIR && chmod +x travis/build-linux.sh && bash travis/build-linux.sh
+script: cd $HOME_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT
