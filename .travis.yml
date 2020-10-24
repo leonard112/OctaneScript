@@ -11,5 +11,5 @@ env:
     - FILE_NAME_WINDOWS="octane-0.0.1-alpha-c$COMMIT_SHORT-windows.tgz"
 
 script:
-  - if ["TRAVIS_OS_NAME" = "linux"]; chmod +x travis/build-linux.sh && bash travis/build-linux.sh
-  - if ["TRAVIS_OS_NAME" = "windows"]; batch travis/build-windows.bat
+  - if ["TRAVIS_OS_NAME" = "linux"]; chmod +x travis/build-linux.sh && bash travis/build-linux.sh ; fi
+  - if ["TRAVIS_OS_NAME" = "windows"]; batch travis/build-windows.bat ; fi
