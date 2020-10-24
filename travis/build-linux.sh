@@ -3,7 +3,6 @@
 set -e
 
 # Install dependencies
-apt-get install python
 pip install -r requirements.txt
 
 # Test
