@@ -1,21 +1,36 @@
 import sys
 from interpreter import run
 
-if len(sys.argv) == 1:
-    run("repl")
+def print_version():
+    print(
+"""
+    Octane Version: 0.0.1 alpha
+"""
+)
 
-elif sys.argv[1][-2] == '.' and sys.argv[1][-1] == 'o' :
-    run(sys.argv[1])
+def print_help():   
+    print(
+"""
+usage:
+    script_name.o   Run an Octane script." +
+    --version -v    Print Octane version info." +
+    --help -h       Get usage info.
+"""
+)
 
-elif sys.argv[1] == "-version" :
-    metadata = open("resources/metadata.txt", "r")
-    version = metadata.readline()
-    print(version)
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        run("repl")
 
-elif sys.argv[1] == "-help":
-    help_info = open("resources/help.txt", "r")
-    print(help_info.read())
+    elif sys.argv[1][-2] == '.' and sys.argv[1][-1] == 'o' :
+        run(sys.argv[1])
 
-else :
-    raise Exception("Bad file extension.\n" +
-        "Is your script an Octane script with the '.o' file extension?")
+    elif sys.argv[1] == "--version" or sys.argv[1] == "-v":
+        print_version()
+
+    elif sys.argv[1] == "--help" or sys.argv[1] == "-h":
+        print_help()
+
+    else :
+        raise Exception("Bad file extension.\n" +
+            "Is your script an Octane script with the '.o' file extension?")

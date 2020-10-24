@@ -10,7 +10,6 @@ cd $TEST_DIR && python TestPrinter.py
 
 # Build
 cd $HOME_DIR && pyinstaller --onefile  --name octane  main.py
-cp -r resources dist/ && cp -r core/usage dist/
 echo "SMOKE TEST:" && cd dist && ./octane -version && cd ..
 
 # Publish
