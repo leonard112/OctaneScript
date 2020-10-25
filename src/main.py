@@ -1,10 +1,10 @@
 import sys
-from interpreter import run
+from Interpreter import Interpreter
 
 def print_version():
     print(
 """
-    Octane Version: 0.0.1 alpha
+    Octane Version: 0.0.2 alpha
 """
 )
 
@@ -20,10 +20,12 @@ usage:
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        run("repl")
+        interpreter = Interpreter("repl")
+        interpreter.run()
 
     elif sys.argv[1][-2] == '.' and sys.argv[1][-1] == 'o' :
-        run(sys.argv[1])
+        interpreter = Interpreter(sys.argv[1])
+        interpreter.run()
 
     elif sys.argv[1] == "--version" or sys.argv[1] == "-v":
         print_version()

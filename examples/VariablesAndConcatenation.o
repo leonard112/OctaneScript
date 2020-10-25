@@ -1,0 +1,10 @@
+# Set some variables
+set x to "hello"
+set y to "world!"
+set xCopy to x
+set compoundString to x . " " . y
+
+# Print examples
+printRedBold compoundString
+printCyanItalic xCopy . " is a copy of " . x
+printYellow compoundString . y
