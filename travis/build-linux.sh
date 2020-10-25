@@ -6,7 +6,7 @@ set -e
 pip install -r requirements.txt
 
 # Test
-cd .. && pytest src/test
+cd .. && pytest --cov=src src/test
 
 # Build
 cd $SRC_DIR && pyinstaller --onefile  --name octane  Main.py
