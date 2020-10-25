@@ -4,6 +4,7 @@ env:
   global: 
     - VERSION=0.0.2-alpha
     - LICENSE="$PWD/LICENSE"
+    - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
     - TEST_DIR="$HOME_DIR/core/test"
     - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
