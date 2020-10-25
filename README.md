@@ -5,6 +5,8 @@ Octane is a scripting language built from Python. Octane is currenly in it's ear
 
 * __[Release Notes](https://github.com/leonard112/octane/blob/main/RELEASE_NOTES.md)__
 
+* __[Source Code](https://github.com/leonard112/octane)__
+
 * __[Binaries](https://sourceforge.net/projects/octane-lang/files/alpha/linux/)__ _(Linux (x86) only)_
   
 ## Installation
