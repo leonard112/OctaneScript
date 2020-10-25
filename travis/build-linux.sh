@@ -5,8 +5,11 @@ set -e
 # Install dependencies
 pip install -r requirements.txt
 
+# Test
+pytest --cov=src src/test
+
 # Build
-cd $HOME_DIR && pyinstaller --onefile  --name octane  Main.py
+cd $SRC_DIR && pyinstaller --onefile  --name octane  Main.py
 echo "SMOKE TEST:" && cd dist && ./octane --version
 
 # Publish

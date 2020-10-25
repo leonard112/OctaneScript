@@ -1,2 +1,5 @@
 ansicolors
 pyinstaller
+pytest
+pytest-cov
+pytest-mock

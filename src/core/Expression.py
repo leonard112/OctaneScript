@@ -29,8 +29,8 @@ class Expression:
                     valid_start = i + 4
                     requires_dot = i + 2
                 else:
-                    result += self.get_variable(self.expression.split(' ', 1)[0])
-                    i += len(self.expression.split(' ', 1)[0])-1
+                    result += self.get_variable(self.expression[i:].split(' ', 1)[0])
+                    i += len(self.expression[i:].split(' ', 1)[0])-1
                     valid_start = i + 4
                     requires_dot = i + 2
             elif i == requires_dot:

@@ -1,10 +1,10 @@
 from core.Fail import fail
 from core.Expression import Expression
+from Reserved import reserved
 
 class Setter:
-    def __init__ (self, parameters, line, variables, reserved):
+    def __init__ (self, parameters, line, variables):
         self.parameters = parameters
-        self.reserved = reserved
         self.line = line
         self.variables = variables
         self.error_type = "Set Error"
@@ -36,7 +36,7 @@ class Setter:
                 if char.lower() == valid_char:
                     valid_character_count += 1
 
-        for word in self.reserved:
+        for word in reserved:
             if word == variable:
                 return False
 

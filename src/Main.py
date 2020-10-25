@@ -18,20 +18,25 @@ usage:
 """
 )
 
-if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        interpreter = Interpreter("repl")
-        interpreter.run()
+def perform_operation_based_on_arguments(arguments):
+    if len(arguments) == 1:
+        enter_interpreter_as("repl")
 
-    elif sys.argv[1][-2] == '.' and sys.argv[1][-1] == 'o' :
-        interpreter = Interpreter(sys.argv[1])
-        interpreter.run()
+    elif arguments[1][-2] == '.' and arguments[1][-1] == 'o' :
+        enter_interpreter_as(arguments[1])
 
-    elif sys.argv[1] == "--version" or sys.argv[1] == "-v":
+    elif arguments[1] == "--version" or arguments[1] == "-v":
         print_version()
 
-    elif sys.argv[1] == "--help" or sys.argv[1] == "-h":
+    elif arguments[1] == "--help" or arguments[1] == "-h":
         print_help()
 
     else :
         print_help()
+
+def enter_interpreter_as(entrypoint):
+    interpreter = Interpreter(entrypoint)
+    interpreter.run()
+
+if __name__ == '__main__':
+    perform_operation_based_on_arguments(sys.argv)

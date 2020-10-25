@@ -5,29 +5,7 @@ from core.Fail import fail
 from colors import color
 import os
 import sys
-
-reserved = [
-    # PRINT
-    "print", "printRed", "printGreen", "printBlue", "printCyan", 
-    "printYellow", "printMagenta", "printWhite", "printBlack",
-    
-    "printBold", "printRedBold", "printGreenBold", "printBlueBold", "printCyanBold", 
-    "printYellowBold", "printMagentaBold", "printWhiteBold", "printBlackBold",
-    
-    "printItalic", "printRedItalic", "printGreenItalic", "printBlueItalic", "printCyanItalic", 
-    "printYellowItalic", "printMagentaItalic", "printWhiteItalic", "printBlackItalic",
-    
-    "printUnderline", "printRedUnderline", "printGreenUnderline", "printBlueUnderline", "printCyanUnderline",
-    "printYellowUnderline", "printMagentaUnderline", "printWhiteUnderline", "printBlackUnderline",
-    
-    "printNegative", "printRedNegative", "printGreenNegative", "printBlueNegative", "printCyanNegative",
-     "printYellowNegative", "printMagentaNegative", "printWhiteNegative", "printBlackNegative",
-    
-    "printConcealed", "printRedConcealed", "printGreenConcealed", "printBlueConcealed", "printCyanConcealed",
-    "printYellowConcealed", "printMagentaConcealed", "printWhiteConcealed", "printBlackConcealed",
-
-    "set"
-]
+from Reserved import reserved
 
 variables = {}
 
@@ -66,10 +44,10 @@ class Interpreter:
         elif function[:5] == "print":
             p = Printer(function, parameters, line.get_line_info(), variables)
             p.print()
-        elif function[:3] == "set":
-            setter = Setter(parameters, line.get_line_info(), variables, reserved)
+        elif function[:3] == "set" and len(function) == 3:
+            setter = Setter(parameters, line.get_line_info(), variables)
             variables.update(setter.set())
-        elif function[:4] == "exit":
+        elif function[:4] == "exit" and len(function) == 4:
             sys.exit(0)
         else:
             fail("Unknown function.", "Interpreter Error", line.get_line_info())
