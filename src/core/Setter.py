@@ -17,7 +17,7 @@ class Setter:
     def get_variable_name(self):
         for i in range(0, len(self.parameters), 1):
             if self.parameters[i] == " ":
-                if self.is_variable_valid(self.parameters[:i]):
+                if self.is_variable_name_valid(self.parameters[:i]):
                     return self.parameters[:i]
                 fail("Bad variable name.", self.error_type, self.line)
 
@@ -27,7 +27,7 @@ class Setter:
             return expression.evaluate()
         fail("Bad syntax.", self.error_type, self.line)
 
-    def is_variable_valid(self, variable):
+    def is_variable_name_valid(self, variable):
         valid_characters = "abcdefghijklmnopqrstuvwxyz"
         valid_character_count = 0
 
