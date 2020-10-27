@@ -1,5 +1,4 @@
 ansicolors
-nltk
 pyinstaller
 pytest>=5.0
 pytest-cov

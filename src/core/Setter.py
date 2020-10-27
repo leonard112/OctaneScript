@@ -8,11 +8,13 @@ class Setter:
         self.line = line
         self.variables = variables
         self.error_type = "Set Error"
+
     
     def set(self):
         variable = self.get_variable_name()
         value = self.get_value(self.parameters[len(variable):])
         return {variable : value}
+
 
     def get_variable_name(self):
         for i in range(0, len(self.parameters), 1):
@@ -21,11 +23,13 @@ class Setter:
                     return self.parameters[:i]
                 fail("Bad variable name.", self.error_type, self.line)
 
+
     def get_value(self, parameters):
         if parameters[0:4] == " to ":
             expression = Expression(parameters[4:], self.line, self.variables)
             return expression.evaluate()
         fail("Bad syntax.", self.error_type, self.line)
+
 
     def is_variable_name_valid(self, variable):
         valid_characters = "abcdefghijklmnopqrstuvwxyz"

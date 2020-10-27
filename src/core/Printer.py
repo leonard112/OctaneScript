@@ -10,6 +10,7 @@ class Printer:
         self.variables = variables
         self.error_type = "Print Error"
 
+
     def print(self):
         expression = Expression(self.expression, self.line, self.variables)
         self.expression = expression.evaluate()
@@ -19,6 +20,7 @@ class Printer:
             print(self.expression)
         else:
             fail("Bad print function.", self.error_type, self.line)
+            
 
     def print_switch(self):
         return {

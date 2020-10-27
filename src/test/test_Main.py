@@ -9,8 +9,8 @@ def test_enters_repl_when_no_arguments_passed_in(mocker):
 
 def test_runs_octane_script_when_script_name_passed_in(mocker):
     mocked_enter_interpreter_as = mocker.patch('Main.enter_interpreter_as')
-    perform_operation_based_on_arguments(['python', 'HelloWorld.o'])
-    mocked_enter_interpreter_as.assert_called_with("HelloWorld.o")
+    perform_operation_based_on_arguments(['python', 'HelloWorld.octane'])
+    mocked_enter_interpreter_as.assert_called_with("HelloWorld.octane")
 
 def test_prints_version_when_version_flag_passed_in(mocker):
     mocked_print_version = mocker.patch('Main.print_version')

@@ -7,11 +7,14 @@ import os
 import sys
 from Reserved import reserved
 
+
 variables = {}
+
 
 class Interpreter:
     def __init__ (self, script_name):
         self.script_name = script_name
+        
 
     def run(self):
         if self.script_name != "repl":
@@ -34,6 +37,7 @@ class Interpreter:
             while True:
                 line = Line(input(">> "), None, "REPL")
                 self.execute(line)
+
 
     def execute(self, line):
         function = line.get_line().split(' ')[0].strip()

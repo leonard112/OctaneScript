@@ -24,10 +24,6 @@ def test_leading_dot_fails():
     assert_error(Expression('. "test" . "test"', "TEST", {}))
 def test_trailing_dot_fails():
     assert_error(Expression('"test" . "test" .', "TEST", {}))
-def test_bad_dot_spacing_fails():
-    assert_error(Expression('"test". "test"', "TEST", {}))
-    assert_error(Expression('"test"  . "test" ', "TEST", {}))
-    assert_error(Expression('"test" ."test" ', "TEST", {}))
 def test_valid_concatenation_successful():
     assert_success(Expression('"test" . "test"', "TEST", {}))
     assert_success(Expression('"test" . "test" . "test"', "TEST", {}))

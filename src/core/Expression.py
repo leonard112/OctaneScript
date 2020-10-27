@@ -1,6 +1,7 @@
 from core.Math import Math
 from core.Fail import fail
 
+
 class Expression:
     def __init__ (self, expression, line, variables):
         self.expression = expression
@@ -8,82 +9,102 @@ class Expression:
         self.variables = variables
         self.error_type = "Expression Error"
 
-        self.i = 0
-        self.end_index = 0
-        self.requires_dot = -1
-        self.valid_start = 0
-        self.result = ""
 
     def evaluate (self):
-        while self.i < len(self.expression):
-            if self.i == self.valid_start:
-                if self.expression[self.i] == '"' or self.expression[self.i] == "'":
-                    self.evaluate_string()
-                elif self.expression[self.i] == '(':
-                    self.evaluate_math()
+        if self.expression == "":
+            return ""
+
+        tokens = self.parse_expression(self.expression, [])
+
+        self.is_valid_expression(tokens)
+
+        result = ""
+
+        for token in tokens:
+            token = token.lstrip()
+            token = token.rstrip()
+            
+            if token[0] == '"' and token[-1] == '"':
+                if token[1:-1].count('"') == 0:
+                    result += token[1:-1]
                 else:
+                    fail("String contains double quotes.", self.error_type, self.line)
+            elif token[0] == "'" and token[-1] == "'":
+                if token[1:-1].count("'") == 0:
+                    result += token[1:-1]
+                else:
+                    fail("String contains single quotes.", self.error_type, self.line)
+            elif token[0] == "(" and token[-1] == ")":
+                math_expression = Math(token, self.line, self.variables)
+                result += math_expression.calculate()
+            elif token == ".":
+                None
+            else:
+                try:
+                    result += self.get_variable(token)
+                except:
                     try:
-                        self.resolve_number()
+                        result += str(float(token))
                     except:
-                        self.resolve_variable()
-            elif self.i == self.requires_dot:
-                if self.expression[self.i] != ".":
-                    fail("Missing '.' operator for string concatenation.", self.error_type, self.line)
-                elif self.i == len(self.expression) - 1:
-                    fail("Extra '.' operator at end of line.", self.error_type, self.line)
-            self.i += 1
+                        fail("Bad argument.", self.error_type, self.line)
 
-        return self.result
+        return result
 
-    def evaluate_string(self):
-        quote_type = ""
-        if self.expression[self.i] == '"':
-            quote_type = '"'
+
+    def parse_expression(self, expression, tokens):
+        expression = expression.lstrip()
+    
+        if expression[0] == '"':
+            next_occurance = expression[1:].find('"') + 1
+            tail = expression[next_occurance + 1:]
+            tokens += [expression[0:next_occurance+1]]
+        elif expression[0] == "'":
+            next_occurance = expression[1:].find("'") + 1
+            tail = expression[next_occurance + 1:]
+            tokens += [expression[0:next_occurance+1]]
+        elif expression[0] == ".":
+            tail = expression[1:]
+            tokens += [expression[0]]
+        elif expression[0] == "(":
+            try:
+                math_expression = self.parse_math_expression(expression, 0, -1, True)
+            except:
+                fail("Extra or missing parenteses.", self.error_type, self.line)
+            tail = expression[len(math_expression):]
+            tokens += [math_expression]
         else:
-            quote_type = "'"
+            variable = expression.split(' ', 1)[0].split('.', 1)[0]
+            tail = expression[len(variable):]
+            tokens += [variable]
+        try:
+            return self.parse_expression(tail, tokens)
+        except:
+            return tokens
 
-        self.end_index = self.get_next_occurance(self.i+1, quote_type)
-        self.result += self.expression[self.i+1:self.end_index]
-        self.set_i_to_end_index_and_update_valid_start_and_requries_dot()
 
-    def resolve_number(self):
-        self.result += str(float(self.expression[self.i:].split(' ', 1)[0]))
-        self.i += len(self.expression[self.i:].split(' ', 1)[0])-1
-        self.update_valid_start_and_requires_dot()
+    # pass '0' for parentheses_count
+    # pass '-1' in for i
+    # pass 'True' in for init
+    def parse_math_expression(self, expression, parentheses_count, i, init):
+        i += 1
 
-    def evaluate_math(self):
-        self.end_index = self.get_last_occurance(self.i+1, self.expression[self.i:],  ')')
-        math_expression = Math(self.expression[self.i+1:self.end_index], self.line, self.variables)
-        self.result += str(math_expression.calculate())
-        self.set_i_to_end_index_and_update_valid_start_and_requries_dot()
+        if parentheses_count == 0 and init == False:
+            return expression[:i]
+        if expression[i] == "(":
+            return self.parse_math_expression(expression, parentheses_count + 1, i, False)
+        elif expression[i] == ")":
+            return self.parse_math_expression(expression, parentheses_count - 1, i, False)
+        else:
+            return self.parse_math_expression(expression, parentheses_count, i,  False)
 
-    def resolve_variable(self):
-        self.result += self.get_variable(self.expression[self.i:].split(' ', 1)[0])
-        self.i += len(self.expression[self.i:].split(' ', 1)[0])-1
-        self.update_valid_start_and_requires_dot()
 
-    def get_next_occurance(self, start_index, char):
-        for i in range(start_index, len(self.expression), 1):
-            if self.expression[i] == char:
-                return i
-        fail("Missing quote on string", self.error_type, self.line)
+    def is_valid_expression(self, expression):
+        dot_count = expression.count(".")
+        if dot_count * 2 != len(expression)-1:
+            fail("Extra or missing '.', '\"', or \"'\".", self.error_type, self.line)
 
-    def get_last_occurance(self, start_index, expression, char):
-        for i in range(len(expression)-1, start_index, -1):
-            if expression[i] == char:
-                return i
-        fail("Missing parentheses on Math expression", self.error_type, self.line)
-
-    def set_i_to_end_index_and_update_valid_start_and_requries_dot(self):
-        self.i = self.end_index
-        self.update_valid_start_and_requires_dot()
-
-    def update_valid_start_and_requires_dot(self):
-        self.valid_start = self.i + 4
-        self.requires_dot = self.i + 2
-
+            
     def get_variable(self, variable):
         if variable in self.variables:
             return self.variables[variable]
-        fail("Variable not found.", self.error_type, self.line)
                 
