@@ -14,3 +14,22 @@ Hello world! Here is some more text. Hellow world!
 >> exit
 $
 ```
+
+* __0.0.3-alpha__
+  * Math and numbers implemented. `print` can be used to print numbers or the results of a math expression, and `set` be used to set a number or the results of a math expression to a variable. All numbers and math must be inclosed in parentheses with the exception of integers and variables. Here are some examples:
+```
+$ octane
+>> print 5
+5
+>> print (2.4)
+2.4
+>> print (2 + (4 * 4))
+18
+>> print (10 / 4)
+2.5
+>> set x to 5
+>> set y to (3.5)
+>> set z to (x - y)
+print x . " " . y . " " . z
+5 3.5 1.5
+```
