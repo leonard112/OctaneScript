@@ -11,6 +11,8 @@ class Math:
 
 
     def calculate(self):
+        if self.expression[0] != "(" and self.expression[-1] != ")":
+            fail("Extra or missing parentheses.", self.error_type, self.line)
         return self.calculate_recursive(self.parse_math_expression(self.expression, []))[0]
 
 
@@ -92,13 +94,12 @@ class Math:
 
     def evaluate_single_operation(self, tokens):
         value = self.expression_switch(tokens)
-        if value == False:
+        if value == None:
             fail("Invalid math operation.", self.error_type, self.line)
         return [str(value)]
 
 
     def expression_switch(self, tokens):
-        print(tokens[1])
         return {
             '+' : self.resolve(tokens[0]) + self.resolve(tokens[2]),
             '-' : self.resolve(tokens[0]) - self.resolve(tokens[2]),
@@ -107,20 +108,22 @@ class Math:
             '%' : self.resolve(tokens[0]) % self.resolve(tokens[2]),
             '^' : self.resolve(tokens[0]) ** self.resolve(tokens[2]),
             'rootOf' : self.resolve(tokens[2]) ** (1/self.resolve(tokens[0]))
-        }.get(tokens[1], False)
+        }.get(tokens[1], None)
 
 
     def resolve(self, value):
         try:
             return float(value)
         except:
-            return float(self.get_variable(value))
+            try:
+                return float(self.get_variable(value))
+            except:
+                fail("Math operations can only be performed with numbers", self.error_type, self.line)
 
 
     def get_variable(self, variable):
         if variable in self.variables:
             return self.variables[variable]
-        fail("Math operations can only be performed with numbers", self.error_type, self.line)
     
 
     def is_valid_answer(self, tokens):

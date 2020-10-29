@@ -24,9 +24,28 @@ def test_leading_dot_fails():
     assert_error(Expression('. "test" . "test"', "TEST", {}))
 def test_trailing_dot_fails():
     assert_error(Expression('"test" . "test" .', "TEST", {}))
-def test_valid_concatenation_successful():
+def test_vaid_concatenation_successful():
     assert_success(Expression('"test" . "test"', "TEST", {}))
     assert_success(Expression('"test" . "test" . "test"', "TEST", {}))
+def test_valid_concanenation_with_varying_white_space_successful():
+    assert_success(Expression('"test"."test"."test"', "TEST", {}))
+    assert_success(Expression('"test" ."test"    .    "test"', "TEST", {}))
+def test_math_can_be_concatenated():
+    assert_success(Expression('"test". (1 + 1)', "TEST", {}))
+def test_numbers_can_be_concatenated():
+    assert_success(Expression('"test". 5', "TEST", {}))
+
+# NUMBERS
+def test_integer_successful():
+    assert_success(Expression('5', "TEST", {}))
+def test_decimal_successful():
+    assert_success(Expression('(3.33)', "TEST", {}))
+
+# MATH
+def test_bad_math_expression_fails():
+    assert_error(Expression('1 + 1', "TEST", {}))
+def test_valid_math_exptression_successful():
+    assert_success(Expression('(1 + 1)', "TEST", {}))
 
 # VARIABLES
 def test_not_found_fails():

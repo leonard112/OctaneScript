@@ -14,6 +14,21 @@ def test_create_new_variable_successful():
 def test_overwrite_already_defined_successful():
     assert_success(Setter('x to "new value"', "TEST", {'x' : 'value'}))
 
+# NUMBERS AND MATH    
+def test_stores_an_integer():
+    set_number = Setter("x to 5", "TEST", {})
+    assert set_number.set()['x'] == 5
+def test_stores_a_float():
+    set_number = Setter("x to (3.33)", "TEST", {})
+    assert set_number.set()['x'] == 3.33
+def test_stores_integer_result_of_math_operation():
+    set_number = Setter("x to (2 * (1 + 1))", "TEST", {})
+    assert set_number.set()['x'] == 4
+def test_stores_decimal_result_of_math_operation():
+    set_number = Setter("x to ((1 / (2 + 2)) * 5)", "TEST", {})
+    assert set_number.set()['x'] == 1.25
+
+
 def assert_error(setter):
     with pytest.raises(SystemExit) as error:
             setter.set()

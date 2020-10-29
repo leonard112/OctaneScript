@@ -44,11 +44,20 @@ class Expression:
                     result += self.get_variable(token)
                 except:
                     try:
-                        result += str(float(token))
+                        number = float(token)
+                        if number == int(number):
+                            result += str(int(number))
+                        else:
+                            result += str(int(number))
                     except:
                         fail("Bad argument.", self.error_type, self.line)
-
-        return result
+        try:
+            result = float(result)
+            if result == int(result):
+                return int(result)
+            return result
+        except:
+            return result
 
 
     def parse_expression(self, expression, tokens):
