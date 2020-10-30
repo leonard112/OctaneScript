@@ -1,6 +1,6 @@
 # Octane Language [![Build Status](https://travis-ci.com/leonard112/octane.svg?branch=main)](https://travis-ci.com/leonard112/octane)
 
-![Octane Logo](https://github.com/leonard112/octane/blob/main/images/octane-logo.svg?thumbnail)
+<img src="https://github.com/leonard112/octane/blob/main/images/octane-logo.svg" alt="Octane Logo" width=25%></img>
 
 Octane is a scripting language built from Python. Octane is currenly in it's early alpha stages, but the intent is for Octane to build on some of the key principles that languages like Python and Ruby follow. The Goal is for Octane to have a simple and easy to read and understand syntax.
 
