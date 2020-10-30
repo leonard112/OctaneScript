@@ -4,7 +4,7 @@
 
 Octane is a scripting language built from Python. Octane is currenly in it's early alpha stages, but the intent is for Octane to build on some of the key principles that languages like Python and Ruby follow. The Goal is for Octane to have a simple and easy to read and understand syntax. 
 
-Note that this language is not being developed for any customer or particular use. I am simply creating the language for fun. Feel free to do whatever you want with this software.
+Note that this language is not being developed for any customer or particular use. I am simply creating this language for fun. Feel free to do whatever you want with this software.
 
 * __[Release Notes](https://github.com/leonard112/octane/blob/main/RELEASE_NOTES.md)__
 
