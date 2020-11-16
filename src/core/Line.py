@@ -9,7 +9,3 @@ class Line:
         if self.line_number == None:
             return self.file_name + ": " + self.line
         return self.file_name + " (" + str(self.line_number + 1) + "): " + self.line 
-        
-
-    def get_line(self):
-        return self.line

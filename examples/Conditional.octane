@@ -1,0 +1,9 @@
+
+if [true]
+    if [true]
+        print "message 1"
+    end
+    if [true]
+        print "message"
+    end
+end

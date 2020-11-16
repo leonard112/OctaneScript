@@ -2,9 +2,9 @@ from core.Fail import fail
 
 
 class Math:
-    def __init__ (self, expression, line, variables):
+    def __init__ (self, expression, call_stack, variables):
         self.expression = expression
-        self.line = line
+        self.call_stack = call_stack
         self.variables = variables
         self.error_type = "Math Error"
         self.math_symbols = ['(', '+', '-', '*', '/', '%', '^', 'rootOf', ')']
@@ -12,7 +12,7 @@ class Math:
 
     def calculate(self):
         if self.expression[0] != "(" and self.expression[-1] != ")":
-            fail("Extra or missing parentheses.", self.error_type, self.line)
+            fail("Extra or missing parentheses.", self.error_type, self.call_stack)
         return self.calculate_recursive(self.parse_math_expression(self.expression, []))[0]
 
 
@@ -35,7 +35,7 @@ class Math:
             return self.evaluate_all(expression)
         
         else:
-            fail("Extra or missing parentheses.", self.error_type, self.line)
+            fail("Extra or missing parentheses.", self.error_type, self.call_stack)
 
 
     def parse_math_expression(self, expression, tokens):
@@ -89,13 +89,13 @@ class Math:
         else:
             if self.is_valid_answer(tokens):
                 return tokens
-            fail("Missing or extra operator.", self.error_type, self.line)
+            fail("Missing or extra operator.", self.error_type, self.call_stack)
 
 
     def evaluate_single_operation(self, tokens):
         value = self.expression_switch(tokens)
         if value == None:
-            fail("Invalid math operation.", self.error_type, self.line)
+            fail("Invalid math operation.", self.error_type, self.call_stack)
         return [str(value)]
 
 
@@ -118,7 +118,7 @@ class Math:
             try:
                 return float(self.get_variable(value))
             except:
-                fail("Math operations can only be performed with numbers", self.error_type, self.line)
+                fail("Math operations can only be performed with numbers", self.error_type, self.call_stack)
 
 
     def get_variable(self, variable):

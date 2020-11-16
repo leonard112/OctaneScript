@@ -3,9 +3,9 @@ from core.Expression import Expression
 from Reserved import reserved
 
 class Setter:
-    def __init__ (self, parameters, line, variables):
+    def __init__ (self, parameters, call_stack, variables):
         self.parameters = parameters
-        self.line = line
+        self.call_stack = call_stack
         self.variables = variables
         self.error_type = "Set Error"
 
@@ -21,14 +21,14 @@ class Setter:
             if self.parameters[i] == " ":
                 if self.is_variable_name_valid(self.parameters[:i]):
                     return self.parameters[:i]
-                fail("Bad variable name.", self.error_type, self.line)
+                fail("Bad variable name.", self.error_type, self.call_stack)
 
 
     def get_value(self, parameters):
         if parameters[0:4] == " to ":
-            expression = Expression(parameters[4:], self.line, self.variables)
+            expression = Expression(parameters[4:], self.call_stack, self.variables)
             return expression.evaluate()
-        fail("Bad syntax.", self.error_type, self.line)
+        fail("Bad syntax.", self.error_type, self.call_stack)
 
 
     def is_variable_name_valid(self, variable):

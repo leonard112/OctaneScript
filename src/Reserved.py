@@ -18,5 +18,7 @@ reserved = [
     "printConcealed", "printRedConcealed", "printGreenConcealed", "printBlueConcealed", "printCyanConcealed",
     "printYellowConcealed", "printMagentaConcealed", "printWhiteConcealed", "printBlackConcealed",
 
+    "log", "logWarn", "logSuccess", "logError"
+    
     "set"
 ]

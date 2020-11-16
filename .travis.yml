@@ -2,7 +2,7 @@ language: python
 dist: trusty
 env:
   global: 
-    - VERSION=0.0.3-alpha
+    - VERSION=0.0.4-alpha
     - LICENSE="$PWD/LICENSE"
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"

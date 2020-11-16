@@ -3,9 +3,9 @@ from core.Fail import fail
 
 
 class Expression:
-    def __init__ (self, expression, line, variables):
+    def __init__ (self, expression, call_stack, variables):
         self.expression = expression
-        self.line = line
+        self.call_stack = call_stack
         self.variables = variables
         self.error_type = "Expression Error"
 
@@ -28,14 +28,14 @@ class Expression:
                 if token[1:-1].count('"') == 0:
                     result += token[1:-1]
                 else:
-                    fail("String contains double quotes.", self.error_type, self.line)
+                    fail("String contains double quotes.", self.error_type, self.call_stack)
             elif token[0] == "'" and token[-1] == "'":
                 if token[1:-1].count("'") == 0:
                     result += token[1:-1]
                 else:
-                    fail("String contains single quotes.", self.error_type, self.line)
+                    fail("String contains single quotes.", self.error_type, self.call_stack)
             elif token[0] == "(" and token[-1] == ")":
-                math_expression = Math(token, self.line, self.variables)
+                math_expression = Math(token, self.call_stack, self.variables)
                 result += math_expression.calculate()
             elif token == ".":
                 None
@@ -50,7 +50,7 @@ class Expression:
                         else:
                             result += str(int(number))
                     except:
-                        fail("Bad argument.", self.error_type, self.line)
+                        fail("Bad argument.", self.error_type, self.call_stack)
         try:
             result = float(result)
             if result == int(result):
@@ -78,7 +78,7 @@ class Expression:
             try:
                 math_expression = self.parse_math_expression(expression, 0, -1, True)
             except:
-                fail("Extra or missing parenteses.", self.error_type, self.line)
+                fail("Extra or missing parenteses.", self.error_type, self.call_stack)
             tail = expression[len(math_expression):]
             tokens += [math_expression]
         else:
@@ -110,7 +110,7 @@ class Expression:
     def is_valid_expression(self, expression):
         dot_count = expression.count(".")
         if dot_count * 2 != len(expression)-1:
-            fail("Extra or missing '.', '\"', or \"'\".", self.error_type, self.line)
+            fail("Extra or missing '.', '\"', or \"'\".", self.error_type, self.call_stack)
 
             
     def get_variable(self, variable):

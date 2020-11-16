@@ -3,23 +3,23 @@ from core.Fail import fail
 from core.Expression import Expression
 
 class Printer:
-    def __init__ (self, function, expression, line, variables):
+    def __init__ (self, function, expression, call_stack, variables):
         self.function = function
         self.expression = expression
-        self.line = line 
+        self.call_stack = call_stack 
         self.variables = variables
         self.error_type = "Print Error"
 
 
     def print(self):
-        expression = Expression(self.expression, self.line, self.variables)
+        expression = Expression(self.expression, self.call_stack, self.variables)
         self.expression = expression.evaluate()
 
         self.expression = self.print_switch()
         if self.expression != False:
             print(self.expression)
         else:
-            fail("Bad print function.", self.error_type, self.line)
+            fail("Bad print function.", self.error_type, self.call_stack)
             
 
     def print_switch(self):

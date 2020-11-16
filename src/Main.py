@@ -5,7 +5,7 @@ from Interpreter import Interpreter
 def print_version():
     print(
 """
-    Octane Version: 0.0.3 alpha
+    Octane Version: 0.0.4 alpha
 """
 )
 
