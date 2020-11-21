@@ -10,5 +10,7 @@ def fail(message, error_type, call_stack):
 def format_trace(call_stack):
     trace = ""
     for line in call_stack:
+        if (line.file_name == "REPL"):
+            line.line_number += 1
         trace += "\t" + line.get_line_info()
     return trace

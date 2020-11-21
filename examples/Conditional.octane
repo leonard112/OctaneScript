@@ -1,9 +1,16 @@
-
 if [true]
-    if [true]
-        print "message 1"
+    if [false]
+        print "This is true"
+    elseIf [false]
+        print "This is an elseif"
+    elseIf [true]
+        print "This another elseif"
+        print "Here is another line."
+    elseif
+    else
+        print "Print this instead"
     end
     if [true]
-        print "message"
+        print "Also print this."
     end
 end
