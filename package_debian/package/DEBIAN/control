@@ -1,0 +1,5 @@
+Package: package
+Architecture: arch
+Maintainer: maintainer
+Version: version
+Description: A scripting langauge built using Python.

@@ -1,13 +1,15 @@
 import sys
+import platform
 from Interpreter import Interpreter
 
+name = "Octane"
+version = "Alpha DEV"
+file_extension = ".octane"
 
 def print_version():
     print(
-"""
-    Octane Version: 0.0.4 alpha
-"""
-)
+"""%s Version: %s | Arch: %s | OS: %s %s""" 
+% (name, version, platform.machine(), platform.system(), platform.version()))
 
 
 def print_license():
@@ -42,18 +44,19 @@ def print_help():
     print(
 """
 usage:
-    script_name.octane   Run an Octane script.
-    --version -v         Print Octane version information.
+    script_name%s   Run an %s script.
+    --version -v         Print %s version information.
     --license -l         Show license information.
     --help -h            Get usage information.
-"""
+""" % (file_extension, name, name)
 )
 
 
 def perform_operation_based_on_arguments(arguments):
     if len(arguments) == 1:
+        print_version()
         enter_interpreter_as("repl")
-    elif arguments[1][-7:-6] == '.' and arguments[1][-6:] == 'octane' :
+    elif arguments[1][-7:] == file_extension :
         enter_interpreter_as(arguments[1])
     elif arguments[1] == "--version" or arguments[1] == "-v":
         print_version()

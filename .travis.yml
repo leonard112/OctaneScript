@@ -2,12 +2,21 @@ language: python
 dist: trusty
 env:
   global: 
-    - VERSION=0.0.4-alpha
+    - NAME=Octane
+    - NAME_LOWER=octane
+    - MAINTAINER=lcarcaramo@gmail.com
+    - VERSION=0.0.4
+    - RELEASE="Alpha"
+    - RELEASE_LOWER="alpha"
+    - RELEASE_STATUS="DEV"
+    - RELEASE_STATUS_LOWER="dev"
+    - OS=linux
+    - ARCH=amd64
     - LICENSE="$PWD/LICENSE"
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
+    - DEB_PACKAGE_DIR="$PWD/package_debian"
     - TEST_DIR="$HOME_DIR/core/test"
     - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-    - FILE_NAME_LINUX="octane-$VERSION-c$COMMIT_SHORT-linux-x86.tgz"
 script: cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT

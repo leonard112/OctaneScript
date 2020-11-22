@@ -40,7 +40,10 @@ class Interpreter:
             try:
                 self.run_repl()
             except SystemExit as e:
-                return
+                rc = int(str(e))
+                if rc == 0:
+                    return
+                raise sys.exit(rc)
 
     
     def run_script(self, lines, overall_script_position):
@@ -111,12 +114,15 @@ class Interpreter:
                 return
             if bool_result == True or function == "else":
                 self.run_script(conditional_lines, line_number + 1)
+                self.in_if_chain = True
                 line_number += len(conditional_lines)
             else:
                 line_number = self.find_else(conditional_lines, line_number)
             return line_number
 
         elif function[:3] == "end":
+            if (self.in_if_chain == False):
+                fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
             self.in_if_chain = False
             return line_number
 

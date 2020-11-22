@@ -2,11 +2,32 @@ import pytest
 import mock
 import builtins
 import time
-from multiprocessing import Process
+import threading
+import _thread
 from core.Line import Line
 from core.Stack import Stack
 from Interpreter import Interpreter
 from Reserved import reserved
+
+
+# References for timout class
+# https://stackoverflow.com/questions/22454898/how-to-force-timeout-functions-in-python-windows-platform
+# https://creativecommons.org/licenses/by-sa/2.5/
+class timeout():
+  def __init__(self, time):
+    self.time= time
+    self.exit=False
+
+  def __enter__(self):
+    threading.Thread(target=self.callme).start()
+
+  def callme(self):
+    time.sleep(self.time)
+    if self.exit==False:
+       _thread.interrupt_main()
+  def __exit__(self, a, b, c):
+       self.exit=True
+
 
 @pytest.fixture(scope='function')
 def interpreter(request):
@@ -384,6 +405,108 @@ print x
     assert_code_works_in_repl(capfd, script, 'Changed by if in else on second if chain\n')
 
 
+# SPACING
+
+def test_valid_code_works_regardless_of_extra_lines(interpreter):
+    script = """
+
+
+set x to "Unchanged"
+
+if [true]
+
+    if [false]
+
+        set x to "This line should be skiped"
+
+    elseIf [false]
+        set x to  "This line should be skiped"
+
+
+    else
+
+
+        set x to "Changed"
+
+
+    end
+
+
+
+end
+
+
+""".splitlines(True)
+    interpreter.run_script(script, None)
+    assert interpreter.variables["x"] == 'Changed'
+def test_valid_code_works_regardless_of_extra_lines_REPL(interpreter, capfd):
+    script = """
+
+
+set x to "Unchanged"
+
+if [true]
+
+    if [false]
+
+        set x to "This line should be skiped"
+
+    elseIf [false]
+        set x to  "This line should be skiped"
+
+
+    else
+
+
+        set x to "Changed"
+
+
+    end
+
+
+
+end
+
+
+print x
+""".splitlines(True)
+    assert_code_works_in_repl(capfd, script, 'Changed\n')
+
+
+def test_valid_code_works_regardless_of_spacing(interpreter):
+    script = """
+set x to "Unchanged"
+
+    if [true]
+if [false]
+        set x to "This line should be skiped"
+            elseIf [false]
+        set x to  "This line should be skiped"
+else
+                set x to "Changed"
+end
+            end
+""".splitlines(True)
+    interpreter.run_script(script, None)
+    assert interpreter.variables["x"] == 'Changed'
+def test_valid_code_works_regardless_of_spacing_REPL(interpreter, capfd):
+    script = """
+set x to "Unchanged"
+
+    if [true]
+if [false]
+        set x to "This line should be skiped"
+            elseIf [false]
+        set x to  "This line should be skiped"
+else
+                set x to "Changed"
+end
+            end
+print x
+""".splitlines(True)
+    assert_code_works_in_repl(capfd, script, 'Changed\n')
+
+
 # BAD CODE THAT DOES NOT GET EXECUTED WILL NOT CAUSE ERROR
 
 def test_bad_code_that_does_not_execute_will_not_fail(interpreter):
@@ -433,7 +556,7 @@ if [true]
     print "This code should not be reached"
 end
 """.splitlines(True)
-    assert_code_errors_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
 
 
 def test_extra_end_fails(interpreter):
@@ -459,23 +582,111 @@ end
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_errors_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
 
 
-def timeout(seconds):
-    time.sleep(seconds)
-    raise Exception()
+# DANGLING ELSE AND ELSEIF
+
+def test_dangling_else_fails(interpreter):
+    script = """
+else
+    print "This should fail"
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_error(interpreter, script)
+def test_dangling_else_fails_REPL(interpreter, capfd):
+    script = """
+else
+    print "This should fail"
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+
+
+def test_dangling_elseif_fails(interpreter):
+    script = """
+elseIf [true]
+    print "This should fail"
+else
+    print "This should fail"
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_error(interpreter, script)
+def test_dangling_elseif_fails_REPL(interpreter, capfd):
+    script = """
+elseIf [true]
+    print "This should fail"
+else
+    print "This should fail"
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+
+
+def test_nested_dangling_else_fails(interpreter):
+    script = """
+if [true]
+    else
+        print "This should fail"
+    end
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_error(interpreter, script)
+def test_nested_dangling_else_fails_REPL(interpreter, capfd):
+    script = """
+if [true]
+    else
+        print "This should fail"
+    end
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+
+
+def test_nested_dangling_elseif_fails(interpreter):
+    script = """
+if [true]
+    elseIf [true]
+        print "This should fail"
+    else
+        print "This should fail"
+    end
+end
+    print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_error(interpreter, script)
+def test_nested_dangling_elseif_fails_REPL(interpreter, capfd):
+    script = """
+if [true]
+    elseIf [true]
+        print "This should fail"
+    else
+        print "This should fail"
+    end
+end
+print "Error will occur before this is reached."
+""".splitlines(True)
+    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+
 
 def assert_code_works_in_repl(capfd, script, expected_output):
         console = get_output_from_repl(capfd, script, expected_output)
         assert console == expected_output
 
-def assert_code_errors_in_repl(capfd, script, expected_output):
+def assert_code_fails_in_repl(capfd, script, expected_output):
     try:
-        Process(target=timeout(5)).start()
-        console = get_output_from_repl(capfd, script, expected_output)
+        with timeout(2):
+            get_output_from_repl(capfd, script, expected_output)
     except:
         assert True
+        return
+    assert False
 
 def get_output_from_repl(capfd, script, expected_output):
     interpreter = Interpreter("repl")

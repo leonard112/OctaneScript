@@ -20,5 +20,9 @@ reserved = [
 
     "log", "logWarn", "logSuccess", "logError"
     
-    "set"
+    "set",
+
+    "exit",
+
+    "if", "elseIf", "else", "end"
 ]
