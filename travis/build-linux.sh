@@ -37,8 +37,8 @@ tar -czvf package.tgz * && mv package.tgz $PACKAGE_NAME.tgz
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar <<< $"put ${PACKAGE_NAME}.tgz"
 
 # Package For Debian
-cp octane $PACKAGE_DEB_DIR/package/usr/bin
-cd $PACKAGE_DEB_DIR && dpkg --build $PACKAGE_NAME
+cp octane $DEB_PACKAGE_DIR/package/usr/bin
+cd $DEB_PACKAGE_DIR && dpkg --build $PACKAGE_NAME
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian <<< $"put ${PACKAGE_NAME}.deb"
 
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang <<< $"put ${README}"
