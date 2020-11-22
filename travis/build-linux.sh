@@ -33,8 +33,7 @@ echo -e "SMOKE TEST:" && cd dist && ./octane --version
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
 chmod 400 /tmp/sftp_rsa
 cp $LICENSE .
-tar -czvf "$PACKAGE_NAME.tgz" *
-echo "Am I failing here?"
+tar -czvf package.tgz * && mv package.tgz $PACKAGE_NAME.tgz
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar <<< $"put ${PACKAGE_NAME}.tgz"
 
 # Package For Debian
