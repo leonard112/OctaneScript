@@ -3,7 +3,7 @@
 set -e
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
-    export PACKAGE_NAME="$NAME_LOWER-$VERSION($COMMIT_SHORT)-$RELEASE_STATUS"
+    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$COMMIT_SHORT_$RELEASE_STATUS"
 else
     export PACKAGE_NAME="$NAME_LOWER-$VERSION"
 fi
@@ -15,7 +15,7 @@ cat Main.py
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
 sed -i "s/package/$PACKAGE_NAME/" $CONTROL_FILE
 sed -i "s/arch/$ARCH/" $CONTROL_FILE
-sed -i "s/maintainer/$ARCH/" $CONTROL_FILE
+sed -i "s/maintainer/$MAINTAINER/" $CONTROL_FILE
 sed -i "s/version/$VERSION($COMMIT_SHORT) $RELEASE $RELEASE_STATUS/" $CONTROL_FILE
 cat $CONTROL_FILE
 
