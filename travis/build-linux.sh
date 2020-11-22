@@ -10,22 +10,24 @@ fi
 
 # Update metadata 
 sed -i "s/Alpha Dev/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
+cat Main.py
+
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
 sed -i "s/package/$VERSION:$PACKAGE_NAME/" $CONTROL_FILE
 sed -i "s/arch/$VERSION:$ARCH/" $CONTROL_FILE
 sed -i "s/maintainer/$VERSION:$ARCH/" $CONTROL_FILE
 sed -i "s/version/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" $CONTROL_FILE
+cat $CONTROL_FILE
 
 # Install dependencies
-echo $PWD
-pip install -r requirements.txt
+cd $SRC_DIR && pip install -r requirements.txt
 
 # Test
 pytest --cov=src src/test
 
 # Build
-cd $SRC_DIR && pyinstaller --onefile  --name octane  Main.py
-echo "SMOKE TEST:" && cd dist && ./octane --version
+pyinstaller --onefile  --name octane  Main.py
+echo -e "SMOKE TEST:" && cd dist && ./octane --version
 
 # Publish Tar
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
