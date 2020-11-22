@@ -9,14 +9,14 @@ else
 fi
 
 # Update metadata 
-sed -i "s/Alpha DEV/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
+sed -i "s/Alpha DEV/$VERSION($COMMIT_SHORT) $RELEASE $RELEASE_STATUS/" Main.py
 cat Main.py
 
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
 sed -i "s/package/$PACKAGE_NAME/" $CONTROL_FILE
 sed -i "s/arch/$ARCH/" $CONTROL_FILE
 sed -i "s/maintainer/$MAINTAINER/" $CONTROL_FILE
-sed -i "s/version/$VERSION($COMMIT_SHORT)/" $CONTROL_FILE
+sed -i "s/version/$VERSION.$COMMIT_SHORT/" $CONTROL_FILE
 cat $CONTROL_FILE
 
 # Install dependencies
