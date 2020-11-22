@@ -17,7 +17,7 @@ sed -i "s/maintainer/$VERSION:$ARCH" $CONTROL_FILE
 sed -i "s/version/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS" $CONTROL_FILE
 
 # Install dependencies
-pwd
+echo $PWD
 pip install -r requirements.txt
 
 # Test
