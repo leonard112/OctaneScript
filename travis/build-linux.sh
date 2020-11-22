@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$RELEASE_STATUS" == "DEV" ] then
+if [ "$RELEASE_STATUS" == "DEV" ]; then
     export PACKAGE_NAME="$NAME_LOWER-$VERSION:$COMMIT_SHORT-$RELEASE_STATUS"
 else
     export PACKAGE_NAME="$NAME_LOWER-$VERSION"
