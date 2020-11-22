@@ -13,10 +13,10 @@ sed -i "s/Alpha DEV/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
 cat Main.py
 
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
-sed -i "s/package/$VERSION:$PACKAGE_NAME/" $CONTROL_FILE
-sed -i "s/arch/$VERSION:$ARCH/" $CONTROL_FILE
-sed -i "s/maintainer/$VERSION:$ARCH/" $CONTROL_FILE
-sed -i "s/version/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" $CONTROL_FILE
+sed -i "s/package/$PACKAGE_NAME/" $CONTROL_FILE
+sed -i "s/arch/$ARCH/" $CONTROL_FILE
+sed -i "s/maintainer/$ARCH/" $CONTROL_FILE
+sed -i "s/version/$VERSION($COMMIT_SHORT) $RELEASE $RELEASE_STATUS/" $CONTROL_FILE
 cat $CONTROL_FILE
 
 # Install dependencies
