@@ -16,7 +16,6 @@ env:
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
     - DEB_PACKAGE_DIR="$PWD/package_debian"
-    - TEST_DIR="$HOME_DIR/core/test"
     - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
 script: cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT
