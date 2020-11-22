@@ -9,7 +9,7 @@ else
 fi
 
 # Update metadata 
-sed -i "s/Alpha Dev/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
+sed -i "s/\"Alpha Dev\"/$VERSION:$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
 cat Main.py
 
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
@@ -23,7 +23,7 @@ cat $CONTROL_FILE
 cd $SRC_DIR && pip install -r requirements.txt
 
 # Test
-pytest --cov=src src/test
+pytest --cov=src test
 
 # Build
 pyinstaller --onefile  --name octane  Main.py
