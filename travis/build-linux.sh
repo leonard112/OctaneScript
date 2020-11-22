@@ -38,7 +38,8 @@ sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.n
 
 # Package For Debian
 mkdir -p $DEB_PACKAGE_DIR/package/usr/bin && cp octane $DEB_PACKAGE_DIR/package/usr/bin
-cd $DEB_PACKAGE_DIR && dpkg --build $PACKAGE_NAME
+cd $DEB_PACKAGE_DIR && mv package $PACKAGE_NAME
+dpkg --build $PACKAGE_NAME
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian <<< $"put ${PACKAGE_NAME}.deb"
 
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang <<< $"put ${README}"
