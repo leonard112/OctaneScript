@@ -1,16 +1,16 @@
-if [true]
-    if [false]
-        print "This is true"
-    elseIf [false]
-        print "This is an elseif"
-    elseIf [true]
-        print "This another elseif"
-        print "Here is another line."
-    elseif
-    else
-        print "Print this instead"
-    end
+set x to "Unchanged"
     if [true]
-        print "Also print this."
+        set x to "Changed by initial if"
+        if [true]
+            set x to "Changed by first nested if"
+        end
+        if [false]
+            set x to "Nothing should be changed here"
+        else
+            if [true]
+                set x to "Changed by if in else on second if chain"
+            elseIf [true]
+                set x to "should not execute because if was true"
+            end
+        end
     end
-end

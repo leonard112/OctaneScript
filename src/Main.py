@@ -42,9 +42,10 @@ def print_help():
     print(
 """
 usage:
-    script_name.octane   Run an Octane script."
-    --version -v         Print Octane version info."
-    --help -h            Get usage info.
+    script_name.octane   Run an Octane script.
+    --version -v         Print Octane version information.
+    --license -l         Show license information.
+    --help -h            Get usage information.
 """
 )
 
