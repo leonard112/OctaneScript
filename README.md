@@ -4,17 +4,18 @@
 
 OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages, but the intent is for OctaneScript to build on some of the key principles that languages like Python and Ruby follow. The Goal is for OctaneScript to have a simple and easy to read and understand syntax. 
 
-Note that this language is not being developed for any customer or particular use. I am simply creating this language for fun. Feel free to do whatever you want with this software. See [License](LICENSE)
+Note that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to do whatever you want with this software. See [License](LICENSE)
 
-Feel free to open and [issue](https://github.com/leonard112/OctaneScript/issues) if you find any bugs or if you have any feature suggestions.
+Feel free to open an [issue](issues) if you find any bugs or if you have any feature suggestions.
 
 * __[Source Code](https://github.com/leonard112/OctaneScript)__
 
-* __[Binaries](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev)__ _(Linux (amd64) only)_
+* __[Binaries](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev)__
   
-## Linux Installation
+## Linux Installation (amd64 only)
 
 ### Debian
+> _This package can be installed on any [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
 * Download Debian package from sourceforge.net.
 ```console
 $ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>.deb
