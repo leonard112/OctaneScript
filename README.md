@@ -1,12 +1,11 @@
-# OctaneScript [![Build Status](https://travis-ci.com/leonard112/octane.svg?branch=main)](https://travis-ci.com/leonard112/octanescript)
-
+# OctaneScript [![Build Status](https://travis-ci.com/leonard112/OctaneScript.svg?branch=main)](https://travis-ci.com/leonard112/OctaneScript)
 <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.svg" alt="OctaneScript Logo" width=25%></img>
 
 OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages, but the intent is for OctaneScript to build on some of the key principles that languages like Python and Ruby follow. The Goal is for OctaneScript to have a simple and easy to read and understand syntax. 
 
-Note that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to do whatever you want with this software. See [License](LICENSE)
+Note that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to do whatever you want with this software. See [License](https://github.com/leonard112/OctaneScript/blob/main/LICENSE)
 
-Feel free to open an [issue](issues) if you find any bugs or if you have any feature suggestions.
+Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) if you find any bugs or if you have any feature suggestions.
 
 * __[Source Code](https://github.com/leonard112/OctaneScript)__
 
@@ -42,8 +41,8 @@ $ sudo mkdir /opt/octanescript
 $ sudo tar -xzvf <file name> --directory /opt/octanescript/
 ```
 * Append the following line to `.bashrc`.
-```console
-$ PATH=/opt/octanescript:$PATH
+```shell
+PATH=/opt/octanescript:$PATH
 ```
 * Smoke test.
 ```console
