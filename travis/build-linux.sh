@@ -26,8 +26,8 @@ cd $SRC_DIR && pip install -r requirements.txt
 pytest --cov=src test
 
 # Build
-pyinstaller --onefile  --name octane  Main.py
-echo -e "SMOKE TEST:" && cd dist && ./octane --version
+pyinstaller --onefile  --name os  Main.py
+echo -e "SMOKE TEST:" && cd dist && ./os --version
 
 # Publish Tar
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
