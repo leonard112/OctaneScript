@@ -14,7 +14,7 @@ Feel free to open and [issue](https://github.com/leonard112/OctaneScript/issues)
   
 ## Linux Installation
 
-### DEBIAN
+### Debian
 * Download Debian package from sourceforge.net.
 ```console
 $ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>.deb
