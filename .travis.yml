@@ -10,6 +10,7 @@ env:
     - RELEASE_LOWER="alpha"
     - RELEASE_STATUS="DEV"
     - RELEASE_STATUS_LOWER="dev"
+    - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
     - OS=linux
     - ARCH=amd64
     - LICENSE="$PWD/LICENSE"
@@ -17,5 +18,5 @@ env:
     - SRC_DIR="$PWD/src"
     - DEB_PACKAGE_DIR="$PWD/package_debian"
     - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
-    - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
+    - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang"
 script: cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT
