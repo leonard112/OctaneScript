@@ -9,8 +9,7 @@ maintainer = "lcarcaramo@gmail.com"
 
 def print_version():
     print(
-"""%s Version: %s | Arch: %s | OS: %s %s
-License: MIT | Maintainer: %s""" 
+"%s Version: %s | Arch: %s | OS: %s %s | License: MIT | Maintainer: %s" 
 % (name, version, platform.machine(), platform.system(), platform.version(), maintainer))
 
 
