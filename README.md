@@ -6,9 +6,7 @@ OctaneScript is a scripting language built from Python. OctaneScript is currenly
 
 Note that this language is not being developed for any customer or particular use. I am simply creating this language for fun. Feel free to do whatever you want with this software. See [MIT License](LICENSE)
 
-Feel free to open and issue if you find any bugs or if you have any feature suggestions.
-
-* __[Release Notes](https://github.com/leonard112/OctaneScript/blob/main/RELEASE_NOTES.md)__
+Feel free to open and issue if you find any bugs or if you have any feature suggestions
 
 * __[Source Code](https://github.com/leonard112/OctaneScript)__
 
@@ -18,11 +16,13 @@ Feel free to open and issue if you find any bugs or if you have any feature sugg
 
 ### Linux
 * __Debian:__
-  * Download binaries from sourceforge.net
-    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript<version>.tgz`
+  * Download Debian package from sourceforge.net.
+    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript-<version>.tgz`
+  * Install package.
+    * `$ sudo dpkg -i octanescript-<version>`
 * __Tar:__
   * Download binaries from sourceforge.net.
-    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript<version>.tgz`
+    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript-<version>.tgz`
   * Create a dedicated folder for the binaries to live.
     * `$ sudo mkdir /opt/octanescript`
   * Extract the contents ot the tar file to the folder where you want the binaries to live.
