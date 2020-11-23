@@ -2,8 +2,8 @@ language: python
 dist: trusty
 env:
   global: 
-    - NAME=Octane
-    - NAME_LOWER=octane
+    - NAME=OctaneScript
+    - NAME_LOWER=octanescript
     - MAINTAINER=lcarcaramo@gmail.com
     - VERSION=0.0.4
     - RELEASE="Alpha"
@@ -18,5 +18,5 @@ env:
     - SRC_DIR="$PWD/src"
     - DEB_PACKAGE_DIR="$PWD/package_debian"
     - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
-    - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang"
+    - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 script: cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT
