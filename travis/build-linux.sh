@@ -45,4 +45,4 @@ dpkg --build $PACKAGE_NAME
 export DEB_UPLOAD_LOCATION="/tmp/sftp_rsa $PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian"
 sftp -o "StrictHostKeyChecking=no" -i $DEB_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.deb"
 
-sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa lcarcaramo@frs.sourceforge.net:/home/frs/project/octane-lang <<< $"put ${README}"
+sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $PUBLISH_REPO <<< $"put ${README}"
