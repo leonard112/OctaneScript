@@ -1,30 +1,36 @@
-# Octane Language [![Build Status](https://travis-ci.com/leonard112/octane.svg?branch=main)](https://travis-ci.com/leonard112/octane)
+# OctaneScript [![Build Status](https://travis-ci.com/leonard112/octane.svg?branch=main)](https://travis-ci.com/leonard112/octanescript)
 
-<img src="https://github.com/leonard112/octane/blob/main/images/octane-logo.svg" alt="Octane Logo" width=25%></img>
+<img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.svg" alt="OctaneScript Logo" width=25%></img>
 
-Octane is a scripting language built from Python. Octane is currenly in it's early alpha stages, but the intent is for Octane to build on some of the key principles that languages like Python and Ruby follow. The Goal is for Octane to have a simple and easy to read and understand syntax. 
+OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages, but the intent is for OctaneScript to build on some of the key principles that languages like Python and Ruby follow. The Goal is for Octane to have a simple and easy to read and understand syntax. 
 
-Note that this language is not being developed for any customer or particular use. I am simply creating this language for fun. Feel free to do whatever you want with this software.
+Note that this language is not being developed for any customer or particular use. I am simply creating this language for fun. Feel free to do whatever you want with this software. See [MIT License](LICENSE)
 
-* __[Release Notes](https://github.com/leonard112/octane/blob/main/RELEASE_NOTES.md)__
+Feel free to open and issue if you find any bugs or if you have any feature suggestions.
 
-* __[Source Code](https://github.com/leonard112/octane)__
+* __[Release Notes](https://github.com/leonard112/OctaneScript/blob/main/RELEASE_NOTES.md)__
 
-* __[Binaries](https://sourceforge.net/projects/octane-lang/files/alpha/linux/)__ _(Linux (x86) only)_
+* __[Source Code](https://github.com/leonard112/OctaneScript)__
+
+* __[Binaries](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev)__ _(Linux (amd64) only)_
   
 ## Installation
 
-* __Linux (x86):__
+### Linux
+* __Debian:__
+  * Download binaries from sourceforge.net
+    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript<version>.tgz`
+* __Tar:__
   * Download binaries from sourceforge.net.
-    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octane-lang/alpha/linux/<file name>.tgz`
+    * `$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/octanescript<version>.tgz`
   * Create a dedicated folder for the binaries to live.
-    * `$ sudo mkdir /opt/octane`
+    * `$ sudo mkdir /opt/octanescript`
   * Extract the contents ot the tar file to the folder where you want the binaries to live.
-    * `$ sudo tar -xzvf <file name> --directory /opt/octane/`
+    * `$ sudo tar -xzvf <file name> --directory /opt/octanescript/`
   * Append the following line to `.bashrc`.
-    * `$ PATH=/opt/octane:$PATH`
+    * `$ PATH=/opt/octanescript:$PATH`
   * Smoke test.
-    * `octane --version`
+    * `os --version`
 
 > _Before Installing Octane on __Windows__, ensure that you have __Python__ installed and __Pip__ package manager installed before you begin. Also ensure that you are running cmd or Powershell as __Administrator__._
 
@@ -32,17 +38,17 @@ Note that this language is not being developed for any customer or particular us
 
 * __Windows:__
   * Clone this repository.
-    * `> git clone https://github.com/leonard112/octane.git`
+    * `> git clone https://github.com/leonard112/OctaneScript.git`
   * Navigate to the source code.
-    * `> cd octane/src`
+    * `> cd OctaneScript/src`
   * Install dependencies.
     * `> pip install -r requirements.txt`
-  * Build octane.exe
-    * `> pyinstaller --onefile  --name octane  main.py`
+  * Build os.exe
+    * `> pyinstaller --onefile  --name os  main.py`
   * Copy everything in the `octane.exe` to your `Program Files (x86)` folder.
-    * `> mkdir "C:\Program Files (x86)\Octane"`
-    * `cp -r dist/octane.exe "C:\Program Files (x86)\Octane\"`
-  * Append Octane to `PATH`.
+    * `> mkdir "C:\Program Files (x86)\OctaneScript"`
+    * `cp -r dist/os.exe "C:\Program Files (x86)\OctaneScript\"`
+  * Append OctaneScript to `PATH`.
     * https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
   * Smoke test.
-    * `octane --version`
+    * `os --version`
