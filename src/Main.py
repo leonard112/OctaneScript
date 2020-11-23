@@ -2,9 +2,9 @@ import sys
 import platform
 from Interpreter import Interpreter
 
-name = "Octane"
+name = "OctaneScript"
 version = "Alpha DEV"
-file_extension = ".octane"
+file_extension = ".os"
 maintainer = "lcarcaramo@gmail.com"
 
 def print_version():
