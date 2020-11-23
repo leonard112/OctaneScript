@@ -38,7 +38,7 @@ export TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STAT
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
 
 # Package For Debian
-mkdir -p $DEB_PACKAGE_DIR/package/usr/bin && cp octane $DEB_PACKAGE_DIR/package/usr/bin
+mkdir -p $DEB_PACKAGE_DIR/package/usr/bin && cp os $DEB_PACKAGE_DIR/package/usr/bin
 mkdir -p $DEB_PACKAGE_DIR/package/usr/share/doc && cp LICENSE $DEB_PACKAGE_DIR/package/usr/share/doc/copyright
 cd $DEB_PACKAGE_DIR && mv package $PACKAGE_NAME
 dpkg --build $PACKAGE_NAME
