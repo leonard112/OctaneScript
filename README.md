@@ -1,5 +1,6 @@
-# OctaneScript [![Build Status](https://travis-ci.com/leonard112/OctaneScript.svg?branch=main)](https://travis-ci.com/leonard112/OctaneScript)
-<img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.svg" alt="OctaneScript Logo" width=25%></img>
+# OctaneScript [![Build Status](https://travis-ci.com/leonard112/OctaneScript.svg?branch=main)](https://travis-ci.com/leonard112/OctaneScript) [![Download OctaneScript](https://img.shields.io/sourceforge/dt/octanescript.svg)](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/)
+
+  <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.svg" alt="OctaneScript Logo" width=25%></img>
 
 OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages, but the intent is for OctaneScript to build on some of the key principles that languages like Python and Ruby follow. The Goal is for OctaneScript to have a simple and easy to read and understand syntax. 
 
@@ -15,7 +16,7 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 
 ### Debian
 > _This package can be installed on any [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
-* Download Debian package from sourceforge.net.
+* Download [Debian package](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/debian/) from SourceForge.
 ```console
 $ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>.deb
 ```
@@ -28,7 +29,8 @@ $ sudo dpkg -i octanescript-<version>.deb
 $ os --version
 ```
 ### Tar
-* Download binaries from sourceforge.net.
+_These binaries should work for most Linux distributions._
+* Download [tar file](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/tar/) from sourceforge.net.
 ```console
 $ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/tar/octanescript-<version>.tgz
 ```
