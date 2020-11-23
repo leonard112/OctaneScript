@@ -5,11 +5,13 @@ from Interpreter import Interpreter
 name = "Octane"
 version = "Alpha DEV"
 file_extension = ".octane"
+maintainer = "lcarcaramo@gmail.com"
 
 def print_version():
     print(
-"""%s Version: %s | Arch: %s | OS: %s %s""" 
-% (name, version, platform.machine(), platform.system(), platform.version()))
+"""%s Version: %s | Arch: %s | OS: %s %s
+License: MIT | Maintainer: %s""" 
+% (name, version, platform.machine(), platform.system(), platform.version(), maintainer))
 
 
 def print_license():
