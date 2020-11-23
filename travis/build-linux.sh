@@ -34,15 +34,15 @@ echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
 chmod 400 /tmp/sftp_rsa
 cp $LICENSE .
 tar -czvf $PACKAGE_NAME.tgz *
-export TAR_UPLOAD_LOCATION="/tmp/sftp_rsa $PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
-sftp -o "StrictHostKeyChecking=no" -i  $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
+export TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
+sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
 
 # Package For Debian
 mkdir -p $DEB_PACKAGE_DIR/package/usr/bin && cp octane $DEB_PACKAGE_DIR/package/usr/bin
 mkdir -p $DEB_PACKAGE_DIR/package/usr/share/doc && cp LICENSE $DEB_PACKAGE_DIR/package/usr/share/doc/copyright
 cd $DEB_PACKAGE_DIR && mv package $PACKAGE_NAME
 dpkg --build $PACKAGE_NAME
-export DEB_UPLOAD_LOCATION="/tmp/sftp_rsa $PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian"
-sftp -o "StrictHostKeyChecking=no" -i $DEB_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.deb"
+export DEB_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian"
+sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $DEB_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.deb"
 
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $PUBLISH_REPO <<< $"put ${README}"
