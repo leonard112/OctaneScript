@@ -5,7 +5,7 @@ from Main import *
 def test_enters_repl_when_no_arguments_passed_in(mocker):
     mocked_enter_interpreter_as = mocker.patch('Main.enter_interpreter_as')
     perform_operation_based_on_arguments(['python'])
-    mocked_enter_interpreter_as.assert_called_with("repl")
+    mocked_enter_interpreter_as.assert_called_with("REPL")
 
 def test_runs_octanescript_script_when_script_name_passed_in(mocker):
     mocked_enter_interpreter_as = mocker.patch('Main.enter_interpreter_as')

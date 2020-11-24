@@ -17,6 +17,7 @@ class Interpreter:
         self.lines = []
         self.variables = {}
         self.call_stack = Stack()
+        self.repl_counter = 0
         self.in_if_chain = False
         self.looking_for_else = False
         self.in_nested_repl = False
@@ -24,7 +25,7 @@ class Interpreter:
         
 
     def run(self):
-        if self.script_name != "repl":
+        if self.script_name != "REPL":
             self.script_name = os.path.abspath(self.script_name)
 
             try:
@@ -37,6 +38,7 @@ class Interpreter:
             self.run_script(self.lines, 0)
             
         else:
+            self.repl_counter = 1
             try:
                 self.run_repl()
             except SystemExit as e:
@@ -55,7 +57,7 @@ class Interpreter:
         i = 0
 
         while(i < line_count) :
-            line = Line(lines[i].lstrip(), i + overall_script_position, self.script_name)
+            line = Line(lines[i].lstrip(), i + overall_script_position + self.repl_counter, self.script_name)
             self.call_stack.push(line)
             i = self.execute(self.call_stack) - overall_script_position
             self.call_stack.pop()
@@ -68,10 +70,12 @@ class Interpreter:
         while True:
             line_raw = input(">> ") + "\n"
             self.lines.append(line_raw)
-            line = Line(line_raw, len(self.lines)-1, "REPL")
+            line = Line(line_raw, self.repl_counter, "REPL")
             self.call_stack.push(line)
             self.execute(self.call_stack)
-            self.call_stack.pop()
+            if self.call_stack.peek() != None:
+                self.call_stack.pop()
+            self.repl_counter += 1
 
 
     def find_else(self, lines, line_number):
@@ -88,7 +92,7 @@ class Interpreter:
         line_raw = call_stack.peek().line
         function = line_raw.split(' ')[0].strip()
         parameters = line_raw[len(function)+1:].strip()
-        line_number = call_stack.peek().line_number
+        line_number = call_stack.peek().line_number - self.repl_counter
 
         if function == "#" or function == "":
             print(end="")
@@ -107,10 +111,13 @@ class Interpreter:
                 b = Boolean(parameters, call_stack, self.variables)
                 bool_result = b.evaluate()
             conditional_lines = self.get_conditional_code(line_number + 1)
-            if self.script_name == "repl" and self.in_nested_repl == False:
+            if self.script_name == "REPL" and self.in_nested_repl == False:
                 self.in_nested_repl = True
+                self.call_stack.pop()
+                self.repl_counter -= 1
                 self.run_script([line_raw] + conditional_lines, None)
                 self.in_nested_repl = False
+                self.repl_counter += len(conditional_lines)
                 return
             if bool_result == True or function == "else":
                 self.run_script(conditional_lines, line_number + 1)
@@ -151,7 +158,7 @@ class Interpreter:
         required_end_count = 1
         end_count = 0
 
-        if self.script_name == "repl" and self.in_nested_repl == False:
+        if self.script_name == "REPL" and self.in_nested_repl == False:
             while(True):
                 line_raw = input(" ~ ") + "\n"
                 if line_raw.strip()[:2] == "if":

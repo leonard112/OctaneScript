@@ -9,7 +9,7 @@ else
 fi
 
 # Update metadata 
-sed -i "s/Alpha DEV/$VERSION($COMMIT_SHORT) $RELEASE $RELEASE_STATUS/" Main.py
+sed -i "s/Alpha DEV/$VERSION-$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
 cat Main.py
 
 cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"

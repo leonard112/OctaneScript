@@ -8,7 +8,7 @@ if [true]
         set x to "Nothing should be changed here"
     else
         if [true]
-            set x to "Changed by if in else on second if chain"
+            set x to "Changed by if in else on second if chain
         elseIf [true]
             set x to "should not execute because if was true"
         end

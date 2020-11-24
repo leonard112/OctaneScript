@@ -9,6 +9,9 @@ class Stack:
     def pop(self):
         return self.stack.pop()
     def peek(self):
-        return self.stack[-1]
+        try:
+            return self.stack[-1]
+        except:
+            return None
     def get_stack(self):
         return self.stack

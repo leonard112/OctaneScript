@@ -556,7 +556,7 @@ if [true]
     print "This code should not be reached"
 end
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
 
 
 def test_extra_end_fails(interpreter):
@@ -582,7 +582,7 @@ end
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
 
 
 # DANGLING ELSE AND ELSEIF
@@ -602,7 +602,7 @@ else
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
 
 
 def test_dangling_elseif_fails(interpreter):
@@ -624,7 +624,7 @@ else
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
 
 
 def test_nested_dangling_else_fails(interpreter):
@@ -646,7 +646,7 @@ if [true]
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
 
 
 def test_nested_dangling_elseif_fails(interpreter):
@@ -672,24 +672,29 @@ if [true]
 end
 print "Error will occur before this is reached."
 """.splitlines(True)
-    assert_code_fails_in_repl(capfd, script, 'This should fail\n')
+    assert_code_fails_in_repl(capfd, script)
+
+
+# CALL STACK
+
+#todo
 
 
 def assert_code_works_in_repl(capfd, script, expected_output):
-        console = get_output_from_repl(capfd, script, expected_output)
+        console = get_output_from_repl(capfd, script)
         assert console == expected_output
 
-def assert_code_fails_in_repl(capfd, script, expected_output):
+def assert_code_fails_in_repl(capfd, script):
     try:
         with timeout(2):
-            get_output_from_repl(capfd, script, expected_output)
+            get_output_from_repl(capfd, script)
     except:
         assert True
         return
     assert False
 
-def get_output_from_repl(capfd, script, expected_output):
-    interpreter = Interpreter("repl")
+def get_output_from_repl(capfd, script):
+    interpreter = Interpreter("REPL")
     def input_side_effect():
         nonlocal script
         if (len(script) == 0):

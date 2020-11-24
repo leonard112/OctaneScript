@@ -56,7 +56,7 @@ usage:
 def perform_operation_based_on_arguments(arguments):
     if len(arguments) == 1:
         print_version()
-        enter_interpreter_as("repl")
+        enter_interpreter_as("REPL")
     elif arguments[1][-3:] == file_extension :
         enter_interpreter_as(arguments[1])
     elif arguments[1] == "--version" or arguments[1] == "-v":
