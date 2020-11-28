@@ -1,17 +1,10 @@
-set x to "Unchanged"
-if [true]
-    set x to "Changed by initial if"
-    if [true]
-        set x to "Changed by first nested if"
-    end
+
+print "Outside of if"
+if [false]
     if [false]
-        set x to "Nothing should be changed here"
+        print "in second if"
     else
-        if [true]
-            set x to "Changed by if in else on second if chain
-        elseIf [true]
-            set x to "should not execute because if was true"
-        end
+        print "in second else"
     end
 end
-print x
+print "This won't print"

@@ -38,7 +38,6 @@ class Interpreter:
             self.run_script(self.lines, 0)
             
         else:
-            self.repl_counter = 1
             try:
                 self.run_repl()
             except SystemExit as e:
@@ -80,12 +79,22 @@ class Interpreter:
 
     def find_else(self, lines, line_number):
         line_count = len(lines)
-        for i in range(1, line_count, 1):
+        i = 0
+        while(i < line_count):
             line_raw = lines[i]
-            if line_raw.strip() == "else" or line_raw.strip()[:6] == "elseIf":
+            if line_raw.strip()[:2] == "if":
+                i = self.find_next_end(lines, line_count, i)
+            elif line_raw.strip() == "else" or line_raw.strip()[:6] == "elseIf":
                 self.looking_for_else = True
                 return line_number + i
+            i += 1
         return line_number + line_count
+
+
+    def find_next_end(self, lines, line_count, start_line):
+        for i in range(start_line, line_count, 1):
+            if lines[i].strip()[:3] == "end":
+                return i
 
 
     def execute(self, call_stack):
