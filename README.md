@@ -18,11 +18,11 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 > _This package can be installed on any [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
 * Download [Debian package](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/debian/) from SourceForge.
 ```console
-$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>.deb
+$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>-linux-amd64.deb
 ```
 * Install package.
 ```console
-$ sudo dpkg -i octanescript-<version>.deb
+$ sudo dpkg -i octanescript-<version>-linux-amd64.deb
 ```
 * Smoke test.
 ```console
@@ -32,7 +32,7 @@ $ os --version
 _These binaries should work for most Linux distributions._
 * Download [tar file](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/tar/) from sourceforge.net.
 ```console
-$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/tar/octanescript-<version>.tgz
+$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/tar/octanescript-<version>-linux-amd64.tgz
 ```
 * Create a dedicated folder for the binaries to live.
 ```console
@@ -40,7 +40,7 @@ $ sudo mkdir /opt/octanescript
 ```
 * Extract the contents ot the tar file to the folder where you want the binaries to live.
 ```console
-$ sudo tar -xzvf <file name> --directory /opt/octanescript/
+$ sudo tar -xzvf octanescript-<version>-linux-amd64.tgz --directory /opt/octanescript/
 ```
 * Append the following line to `.bashrc`.
 ```shell
