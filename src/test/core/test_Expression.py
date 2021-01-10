@@ -59,8 +59,15 @@ def test_not_found_fails():
 def test_reserved_fails():
     for word in reserved:
         assert_error(Expression(word, test_stack, {}))
-def test_existing_variable_successful():
+def test_existing_string_variable_successful():
+    assert_success(Expression('x', test_stack, {'x' : 'value'}))
     assert_success(Expression('"test" . x', test_stack, {'x' : 'value'}))
+def test_existing_integer_variable_successful():
+    assert_success(Expression('x', test_stack, {'x' : 5}))
+    assert_success(Expression('"test" . x', test_stack, {'x' : 5}))
+def test_existing_float_variable_successful():
+    assert_success(Expression('x', test_stack, {'x' : 5.5}))
+    assert_success(Expression('"test" . x', test_stack, {'x' : 5.5}))
 def test_valid_complex_expression_successful():
     assert_success(Expression(
         '"hello " . x . \' this expression is valid. Here is y \' . y', test_stack,

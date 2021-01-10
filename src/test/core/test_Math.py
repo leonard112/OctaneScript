@@ -19,8 +19,14 @@ def test_extra_right_parentheses_fails():
     assert_error(Math('((1 + 1)', test_stack, {}))
 def test_extra_left_parentheses_fails():
     assert_error(Math('(1 + 1))', test_stack, {}))
-def test_extra_left_right_parentheses_success():
+def test_extra_left_right_parentheses_equal_success():
     assert_success(Math('((1 + 1))', test_stack, {}))
+def test_adding_two_separate_expressions_works():
+    assert_success(Math('((1 + 1) + (1 + 1))', test_stack, {}))
+def test_adding_three_separate_expressions_works():
+    assert_success(Math('((1 + 1) + (1 + 1 + 1) + (1 + 1))', test_stack, {}))
+def test_adding_four_separate_expressions_works():
+    assert_success(Math('((1 + 1) + (1 + 1 + 1) + (1 + 1) + (1 + 1))', test_stack, {}))
 
 def test_complex_missing_right_parentheses_fails():
     assert_error(Math('(1 + (2 * (2 ^ 3) * 2)', test_stack, {}))
@@ -28,8 +34,6 @@ def test_complex_missing_left_parentheses_fails():
     assert_error(Math('(1 + 2 * (2 ^ 3) * 2))', test_stack, {}))
 def test_complex_extra_right_parentheses_fails():
     assert_error(Math('(1 + (2 * (2 ^ 3)) * 2))', test_stack, {}))
-def test_complex_extra_left_parentheses_fails():
-    assert_error(Math('(1 + ((2 * (2 ^ 3) * 2))', test_stack, {}))
 def test_complex_extra_left_parentheses_fails():
     assert_error(Math('(1 + ((2 * (2 ^ 3) * 2))', test_stack, {}))
 def test_complex_extra_left_right_parentheses_sucess():
@@ -56,6 +60,10 @@ def test_root_of_successful():
     assert Math('(2 rootOf 25)', test_stack, {}).calculate() == "5.0"
 def test_commplex_valid_operation_successful():
     assert Math('(10 * 2 * ((1 + 1) rootOf 25) + 1)', test_stack, {}).calculate() == "101.0"
+def test_three_separate_expressions_with_multiple_operations_works():
+    assert Math('((4 ^ 2) + (2 * 4 / 2) - (1 + 1))', test_stack, {}).calculate() == "18.0"
+def test_four_separate_expressions_with_multiple_operations_works():
+    assert Math('((4 ^ 2) + (2 * 4 / 2) - (1 + 1) - (2 * 4))', test_stack, {}).calculate() == "10.0"
 
 # SPACING
 def test_no_spaces_successful():

@@ -123,7 +123,6 @@ class Interpreter:
             if self.script_name == "REPL" and self.in_nested_repl == False:
                 self.in_nested_repl = True
                 self.call_stack.pop()
-                self.repl_counter -= 1
                 self.run_script([line_raw] + conditional_lines, None)
                 self.in_nested_repl = False
                 self.repl_counter += len(conditional_lines)

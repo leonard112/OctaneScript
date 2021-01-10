@@ -754,7 +754,7 @@ print "This won't print"
 """.splitlines(True)
     assert_stack_trace(interpreter, script, [11, 10, 7, 3])
 def test_stack_trace_valid_for_nesting_REPL(interpreter, capfd):
-    script = """\n
+    script = """
 print "Outside of if"
 if [true]
     print "In first if"
@@ -773,6 +773,30 @@ end
 print "This won't print"
 """.splitlines(True)
     assert_stack_trace_REPL(capfd, script, [11, 10, 7, 3])
+
+
+def test_stack_trace_after_completion_of_if(interpreter):
+    script = """
+print "Outside of if"
+if [true]
+    print "Inside if"
+end
+if [true]
+    print "err
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [7, 6])
+def test_stack_trace_after_completion_of_if_REPL(interpreter, capfd):
+    script = """
+print "Outside of if"
+if [true]
+    print "Inside if"
+end
+if [true]
+    print "err
+end
+""".splitlines(True)
+    assert_stack_trace_REPL(capfd, script, [7, 6])
 
 
 def assert_stack_trace(interpreter, script, line_numbers):

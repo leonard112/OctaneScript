@@ -1,3 +1,5 @@
+# IMPORTANT: Real data type must be stored when setting a variable (i.e. store integer 1 NOT string "1")
+
 from core.Fail import fail
 from core.Expression import Expression
 from Reserved import reserved
@@ -13,6 +15,10 @@ class Setter:
     def set(self):
         variable = self.get_variable_name()
         value = self.get_value(self.parameters[len(variable):])
+        if value == "true":
+            value = True
+        elif value == "false":
+            value = False
         return {variable : value}
 
 

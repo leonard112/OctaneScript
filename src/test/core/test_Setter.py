@@ -35,6 +35,21 @@ def test_stores_decimal_result_of_math_operation():
     assert set_number.set()['x'] == 1.25
 
 
+# BOOLEANS
+def test_stores_true_boolean():
+    set_number = Setter("x to true", test_stack, {})
+    assert set_number.set()['x'] == True
+def test_stores_false_boolean():
+    set_number = Setter("x to false", test_stack, {})
+    assert set_number.set()['x'] == False
+def test_stores_complex_true_result_of_boolean():
+    set_number = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {})
+    assert set_number.set()['x'] == True
+def test_stores_complex_false_result_of_boolean():
+    set_number = Setter("x to false", test_stack, {})
+    assert set_number.set()['x'] == False
+
+
 def assert_error(setter):
     with pytest.raises(SystemExit) as error:
             setter.set()

@@ -1,10 +1,4 @@
-
-print "Outside of if"
-if [false]
-    if [false]
-        print "in second if"
-    else
-        print "in second else"
-    end
+print "This works"
+if [t]
+    print "err
 end
-print "This won't print"

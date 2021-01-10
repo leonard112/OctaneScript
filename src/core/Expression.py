@@ -1,3 +1,4 @@
+from core.Boolean import Boolean
 from core.Math import Math
 from core.Fail import fail
 
@@ -37,11 +38,26 @@ class Expression:
             elif token[0] == "(" and token[-1] == ")":
                 math_expression = Math(token, self.call_stack, self.variables)
                 result += math_expression.calculate()
+            elif token[0] == "[" and token[-1] == "]":
+                boolean = Boolean(token, self.call_stack, self.variables)
+                result += str(boolean.evaluate()).lower()
             elif token == ".":
                 None
             else:
-                try:
-                    result += self.get_variable(token)
+                try:   
+                    if len(tokens) == 1:
+                        if token == "true":
+                            return token
+                        elif token == "false":
+                            return token
+                        else:
+                            variable = self.variables[token]
+                            if variable == True:
+                                return "true"
+                            elif variable == False:
+                                return "false"
+                            else:
+                                return variable
                 except:
                     try:
                         number = float(token)
@@ -50,7 +66,7 @@ class Expression:
                         else:
                             result += str(int(number))
                     except:
-                        fail("Bad argument.", self.error_type, self.call_stack)
+                        fail("Bad argument.\n\nDefined variables: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
         try:
             result = float(result)
             if result == int(result):
@@ -76,11 +92,18 @@ class Expression:
             tokens += [expression[0]]
         elif expression[0] == "(":
             try:
-                math_expression = self.parse_math_expression(expression, 0, -1, True)
+                math_expression = self.parse_specialized_expression(expression, 0, -1, "(", ")", True)
             except:
-                fail("Extra or missing parenteses.", self.error_type, self.call_stack)
+                fail("Extra or missing parentheses on math expression.", self.error_type, self.call_stack)
             tail = expression[len(math_expression):]
             tokens += [math_expression]
+        elif expression[0] == "[":
+            try:
+                boolean = self.parse_specialized_expression(expression, 0, -1, "[", "]", True)
+            except:
+                fail("Extra or missing bracket on boolean expression.", self.error_type, self.call_stack)
+            tail = expression[len(boolean):]
+            tokens += [boolean]
         else:
             variable = expression.split(' ', 1)[0].split('.', 1)[0]
             tail = expression[len(variable):]
@@ -94,17 +117,17 @@ class Expression:
     # pass '0' for parentheses_count
     # pass '-1' in for i
     # pass 'True' in for init
-    def parse_math_expression(self, expression, parentheses_count, i, init):
+    def parse_specialized_expression(self, expression, parentheses_count, i, start_parentheses_type, end_parentheses_type, init):
         i += 1
 
         if parentheses_count == 0 and init == False:
             return expression[:i]
-        if expression[i] == "(":
-            return self.parse_math_expression(expression, parentheses_count + 1, i, False)
-        elif expression[i] == ")":
-            return self.parse_math_expression(expression, parentheses_count - 1, i, False)
+        if expression[i] == start_parentheses_type:
+            return self.parse_specialized_expression(expression, parentheses_count + 1, i, start_parentheses_type, end_parentheses_type, False)
+        elif expression[i] == end_parentheses_type:
+            return self.parse_specialized_expression(expression, parentheses_count - 1, i, start_parentheses_type, end_parentheses_type, False)
         else:
-            return self.parse_math_expression(expression, parentheses_count, i,  False)
+            return self.parse_specialized_expression(expression, parentheses_count, i, start_parentheses_type, end_parentheses_type, False)
 
 
     def is_valid_expression(self, expression):
@@ -113,7 +136,11 @@ class Expression:
             fail("Extra or missing '.', '\"', or \"'\".", self.error_type, self.call_stack)
 
             
-    def get_variable(self, variable):
-        if variable in self.variables:
-            return self.variables[variable]
+    def defined_variables_to_string(self):
+        variables = ""
+        for variable in self.variables:
+            variables += "( " + variable + " : " + str(self.variables[variable]) + " ), "
+        if variables == "":
+            return "(None)"
+        return variables[:-2]
                 
