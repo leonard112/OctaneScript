@@ -23,7 +23,7 @@ def test_print_concatenation_works():
 def test_print_integer_works():
     assert_success(Printer("print", "5", test_stack, {}))
 def test_print_decimal_works():
-    assert_success(Printer("print", "(5.55)", test_stack, {}))
+    assert_success(Printer("print", "5.55", test_stack, {}))
 
 # MATH
 def test_print_math_integer_works():

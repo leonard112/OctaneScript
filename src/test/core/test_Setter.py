@@ -46,7 +46,7 @@ def test_stores_complex_true_result_of_boolean():
     set_number = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {})
     assert set_number.set()['x'] == True
 def test_stores_complex_false_result_of_boolean():
-    set_number = Setter("x to false", test_stack, {})
+    set_number = Setter("x to [[15 notEquals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {})
     assert set_number.set()['x'] == False
 
 

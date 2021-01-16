@@ -13,7 +13,10 @@ class Printer:
 
     def print(self):
         expression = Expression(self.expression, self.call_stack, self.variables)
-        self.expression = expression.evaluate()
+        self.expression = str(expression.evaluate())
+        
+        if self.expression == "True" or self.expression == "False":
+            self.expression = self.expression.lower()
 
         self.expression = self.print_switch()
         if self.expression != False:

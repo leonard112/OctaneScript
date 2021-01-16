@@ -17,36 +17,68 @@ class NestableExpression:
         expression = expression.lstrip()
 
         if len(expression) == 0:
-            return self.detokenize_operands(tokens)
-        else:
-            for symbol in self.symbols:
-                symbol_length = len(symbol)
-                if expression[0:symbol_length] == symbol:
-                    tokens += [expression[0:symbol_length]]
-                    return self.parse_expression(expression[symbol_length:], tokens)
-        current_token = expression.split(' ', 1)[0]
-        if current_token[0] != '"' and current_token[0] != "'":
-            for symbol in self.symbols:
-                current_token = current_token.split(symbol, 1)[0]
-        else:
-            if current_token[0] == '"':
-                current_token = current_token[:current_token[1:].find('"')+2]
-            else:
-                current_token = current_token[:current_token[1:].find("'")+2]
-
-        tokens += [current_token]
-        token_length = len(current_token)
-        return self.parse_expression(expression[token_length:], tokens)
-
-
-    def detokenize_operands(self, tokens):
-        if len(tokens) == 0 or len(tokens) == 1:
             return tokens
-        elif tokens[0] not in self.symbols and tokens[1] not in self.symbols:
-            return self.detokenize_operands([tokens[0] + " " + tokens[1]] + tokens[2:])
-        
         else:
-            return [tokens[0]] + self.detokenize_operands(tokens[1:])
+            first_word = expression.split(' ', 1)[0].split(self.right_enclosing_symbol, 1)[0]
+            if first_word.isalpha(): # parse entire alpha words proceeded by space or right enclosing symbol
+                first_word_length = len(first_word)
+                rest_of_expression = expression[first_word_length:]
+                if rest_of_expression.lstrip()[0] == ".":
+                    token = self.parse_string_expression(expression)
+                    token_length = len(token)
+                    tokens += [token]
+                    return self.parse_expression(expression[token_length:], tokens)
+                tokens += [expression[0:first_word_length]]
+                return self.parse_expression(expression[first_word_length:], tokens)
+            elif expression[0] == '"' or expression[0] == "'": # parse entire string values
+                token = self.parse_string_expression(expression)
+                token_length = len(token)
+                tokens += [token]
+                return self.parse_expression(expression[token_length:], tokens)
+            else: # parse expression symbols
+                for symbol in self.symbols: # when expression currently starts with expression symbol
+                    symbol_length = len(symbol)
+                    if expression[0:symbol_length] == symbol:
+                        tokens += [expression[0:symbol_length]]
+                        return self.parse_expression(expression[symbol_length:], tokens)
+                token = expression
+                for symbol in self.symbols: # when expression does not start with expression symbol but contains them
+                    if symbol in expression:
+                        token = token.split(symbol, 1)[0]
+                token_length = len(token)
+                tokens += [expression[0:token_length]]
+                return self.parse_expression(expression[token_length:], tokens)
+
+
+    def parse_string_expression(self, expression):
+        expression_no_white_space = expression.replace(" ", "")
+        start_symbol = expression_no_white_space[0]
+        if start_symbol == '"' or start_symbol == "'":
+            string = expression[:expression[1:].index(start_symbol)+2]
+            if expression_no_white_space.find(".") == len(string):
+                partitions = self.split_string_expression_on_dot_operator(expression)
+                return partitions[0] + self.parse_string_expression(partitions[1])
+            return string.replace(self.right_enclosing_symbol, "")
+        else:
+            variable_token = expression.split(' ', 1)[0]
+            rest_of_expression = expression[len(variable_token):]
+            if len(rest_of_expression) > 0:
+                if rest_of_expression.lstrip()[0] == ".":
+                    partitions = self.split_string_expression_on_dot_operator(expression)
+                    return partitions[0] + self.parse_string_expression(partitions[1])
+            return expression.split(' ', 1)[0].replace(self.right_enclosing_symbol, "")
+
+
+    def split_string_expression_on_dot_operator(self, expression):
+        dot_index = expression.find(".")
+        expression_after_dot = expression[dot_index+1:].lstrip()
+        expression_start = self.get_first_string_token_up_to_and_including_dot_operator(expression, dot_index)
+        return [expression_start, expression_after_dot]
+
+    def get_first_string_token_up_to_and_including_dot_operator(self, expression, dot_index):
+        next_token_starting_char = expression[dot_index+1:].lstrip()[0]
+        next_token_starting_char_index = expression[dot_index:].index(next_token_starting_char) + dot_index
+        return expression[:next_token_starting_char_index]
 
 
     def evaluate_nestable_expression(self, expression, single_operation_evaluator):

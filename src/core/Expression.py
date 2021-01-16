@@ -16,7 +16,6 @@ class Expression:
             return ""
 
         tokens = self.parse_expression(self.expression, [])
-
         self.is_valid_expression(tokens)
 
         result = ""
@@ -37,43 +36,54 @@ class Expression:
                     fail("String contains single quotes.", self.error_type, self.call_stack)
             elif token[0] == "(" and token[-1] == ")":
                 math_expression = Math(token, self.call_stack, self.variables)
-                result += math_expression.calculate()
+                result += str(self.perform_type_conversion(math_expression.calculate()))
             elif token[0] == "[" and token[-1] == "]":
                 boolean = Boolean(token, self.call_stack, self.variables)
                 result += str(boolean.evaluate()).lower()
             elif token == ".":
                 None
             else:
-                try:   
-                    if len(tokens) == 1:
-                        if token == "true":
-                            return token
-                        elif token == "false":
-                            return token
-                        else:
-                            variable = self.variables[token]
-                            if variable == True:
-                                return "true"
-                            elif variable == False:
-                                return "false"
-                            else:
-                                return variable
-                except:
-                    try:
-                        number = float(token)
-                        if number == int(number):
-                            result += str(int(number))
-                        else:
-                            result += str(int(number))
-                    except:
-                        fail("Bad argument.\n\nDefined variables: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
+                token = str(self.resolve_handle_failure(token))
+                if token == "True" or token == "False":
+                    result += token.lower()
+                else:
+                    result += token
+        return self.perform_type_conversion(result)
+            
+
+    def resolve(self, token):
+        token = self.perform_type_conversion(token)
+        if type(token) == str:
+            return self.variables[token]
+        else:
+            return token
+                    
+
+    def perform_type_conversion(self, token):
+        if token == "true" or token == "True":
+            return True
+        elif token == "false" or token == "False":
+            return False
+
         try:
-            result = float(result)
-            if result == int(result):
-                return int(result)
-            return result
+            return int(token)
         except:
-            return result
+            try:
+                float_token = float(token)
+                int_token = int(float_token)
+                if float_token == int_token:
+                    return int_token
+                else:
+                    return float_token
+            except:
+                return token
+
+
+    def resolve_handle_failure(self, token):
+        try:
+            return self.resolve(token)
+        except:
+            fail("The variable \"" + token + "\" is undefined.\n\nDefined variables: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
 
 
     def parse_expression(self, expression, tokens):
@@ -105,9 +115,14 @@ class Expression:
             tail = expression[len(boolean):]
             tokens += [boolean]
         else:
-            variable = expression.split(' ', 1)[0].split('.', 1)[0]
-            tail = expression[len(variable):]
-            tokens += [variable]
+            non_string_token = expression.split(' ', 1)[0].split('.', 1)[0]
+            non_string_token_type = self.perform_type_conversion(non_string_token)
+            tail = expression[len(non_string_token):]
+            if type(non_string_token_type) == int and len(tail) > 0:
+                if tail[0] == ".":
+                    non_string_token = non_string_token + "." + tail[1:].split(' ', 1)[0].split('.', 1)[0]
+                    tail = expression[len(non_string_token):]
+            tokens += [non_string_token]
         try:
             return self.parse_expression(tail, tokens)
         except:
