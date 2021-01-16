@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 import sys
 import platform
 from Interpreter import Interpreter

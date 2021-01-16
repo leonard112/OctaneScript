@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 from core.NestableExpression import NestableExpression
 from core.Fail import fail
 
@@ -10,7 +13,7 @@ class Math(NestableExpression):
         self.error_type = "Math Error"
         self.right_enclosing_symbol = ")"
         self.left_enclosing_symbol = "("
-        self.symbols = ['(', '+', '-', '*', '/', '%', '^', 'rootOf', ')']
+        self.symbols = ['(', ')', '+', '-', '*', '/', '%', '^', 'rootOf']
 
 
     def calculate(self):

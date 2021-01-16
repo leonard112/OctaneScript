@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 import pytest
 from core.Line import Line
 from core.Stack import Stack
@@ -8,7 +11,7 @@ line = Line("TEST", 0, "test")
 test_stack = Stack()
 test_stack.push(line)
 
-# Brackets
+# BRACKETS
 def test_no_brackets_fails():
     assert_error(Boolean('true', test_stack, {}))
 def test_no_right_bracket_fails():
@@ -27,19 +30,6 @@ def test_evaluating_three_separate_conditionals_works():
     assert Boolean('[[true] and [true] and [true]]', test_stack, {}).evaluate() == True
 def test_evaluating_four_separate_conditionals_works():
     assert Boolean('[[true] and [true] and [true] and [true]]', test_stack, {}).evaluate() == True
-
-"""
-def test_complex_missing_right_bracket_fails():
-    assert_error(Math('[true equals [true notEquals [false and false] * 2)', test_stack, {}))
-def test_complex_missing_left_parentheses_fails():
-    assert_error(Math('(1 + 2 * (2 ^ 3) * 2))', test_stack, {}))
-def test_complex_extra_right_parentheses_fails():
-    assert_error(Math('(1 + (2 * (2 ^ 3)) * 2))', test_stack, {}))
-def test_complex_extra_left_parentheses_fails():
-    assert_error(Math('(1 + ((2 * (2 ^ 3) * 2))', test_stack, {}))
-def test_complex_extra_left_right_parentheses_sucess():
-    assert_success(Math('(1 + ((2 * (2 ^ 3))) * 2)', test_stack, {}))
-"""
 
 
 # SINGLE VALUES
@@ -364,9 +354,159 @@ def test_string_concatenated_variables_can_be_compared_using_boolean():
 def test_complex_boolean_that_works_with_string_expressions():
     assert Boolean('[[x . "hello" lessThan x . \'world\'] and [x . "hello" lessThanEquals x . y]]', test_stack, {'x': 1, 'y': "world"}).evaluate() == True
 
+
 # SPACING
-def test_no_spaces_between_operators_and_operands_raises_error():
-    assert_error(Boolean('["hello"equals"world"]', test_stack, {}))
+
+# LACK OF SPACES
+def test_no_spaces_between_variable_operators_and_operands_raises_error():
+    assert_error(Boolean('[xequalsy]', test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_unenclosed_boolean_operators_and_operands_raises_error():
+    assert_error(Boolean('[trueequalsfalse]', test_stack, {}))
+def test_no_spaces_between_complex_double_quote_string_expression_operators_and_operands_with_variables_touching_operator_raises_error():
+    assert_error(Boolean('["hello".xequalsy."world"]', test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_complex_single_quote_string_expression_operators_and_operands_with_variables_touching_operator_raises_error():
+    assert_error(Boolean("['hello'.xequalsy.'world']", test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_complex_string_expression_operators_and_operands_with_math_and_variables_touching_operator_raises_error():
+    assert_error(Boolean('[(1+1).xequalsy.(2*2)]', test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_complex_string_expression_operators_and_operands_with_boolean_expression_and_variables_touching_operator_raises_error():
+    assert_error(Boolean('[[true].xequalsy.[false]]', test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_complex_double_quote_string_expression_operators_and_operands_with_strings_touching_operator_works():
+    assert Boolean('[x."hello"equals"world".y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_between_complex_single_quote_string_expression_operators_and_operands_with_strings_touching_operator_works():
+    assert Boolean("[x.'hello'equals'world'.y]", test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_between_complex_string_expression_operators_and_operands_with_math_touching_operator_works():
+    assert Boolean('[x.(1+1)equals(2*2).y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_between_complex_string_expression_operators_and_operands_with_boolean_expression_touching_operator_works():
+    assert Boolean('[x.[true]equals[false].y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_when_comparing_single_enclosed_true_false_booleans_works():
+    assert Boolean('[[true]equals[false]]', test_stack, {}).evaluate() == False
+def test_no_spaces_when_comparing_double_quote_strings_works():
+    assert Boolean('["hello"equals"world"]', test_stack, {}).evaluate() == False
+def test_no_spaces_when_comparing_single_quote_strings_works():
+    assert Boolean("['hello'equals'world']", test_stack, {}).evaluate() == False
+def test_no_spaces_when_comparing_math_operations_works():
+    assert Boolean('[(1 + 1)equals(2 * 2)]', test_stack, {}).evaluate() == False
+# EXTRA SPACES
+def test_extra_spaces_in_boolean_operation_on_variables_works():
+    assert Boolean('[   x   equals   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_unenclosed_booleans_works():
+    assert Boolean('[   true   equals   false   ]', test_stack, {}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_double_quote_strings_expressions_concatenated_with_variables_facing_operator_works():
+    assert Boolean('[   "hello"   .   x   equals   y   .   "world"   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_double_quote_string_expressions_concatenated_with_variables_facing_operator_works():
+    assert Boolean("[   'hello'   .   x   equals   y   .   'world'   ]", test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_string_expressions_with_math_concatenated_with_variables_facing_operator_works():
+    assert Boolean('[   (   1   +   1   )   .   x   equals   y   .   (   2   *   2   )   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_string_expressions_with_boolean_expressions_concatenated_with_variables_facing_operator_works():
+    assert Boolean('[   [   true   ]   .   x   equals   y   .   [   false   ]   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_double_quote_strings_expressions_concatenated_with_strings_facing_operator_works():
+    assert Boolean('[   x   .   "hello"   equals   "world"   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_single_quote_strings_expressions_concatenated_with_strings_facing_operator_works():
+    assert Boolean("[   x   .   'hello'   equals   'world'   .   y   ]", test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_string_expressions_with_variables_concatenated_with_math_operation_facing_operator_works():
+    assert Boolean('[   x   .   (   1   +   1   )   equals   (   2   *   2   )   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_string_expressions_with_variables_concatenated_with_boolean_operation_facing_operator_works():
+    assert Boolean('[   x   .   [   true   ]   equals   [   false   ]   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_when_comparing_single_enclosed_true_false_booleans_works():
+    assert Boolean('[   [   true   ]   equals   [   false   ]   ]', test_stack, {}).evaluate() == False
+def test_extra_spaces_when_comparing_double_quote_strings_works():
+    assert Boolean('[   "hello"   equals   "world"   ]', test_stack, {}).evaluate() == False
+def test_extra_spaces_when_comparing_single_quote_strings_works():
+    assert Boolean("[   'hello'   equals   'world'   ]", test_stack, {}).evaluate() == False
+def test_extra_spaces_when_comparing_math_operations_works():
+    assert Boolean('[   (   1   +   1   )   equals   (2   *   2)   ]', test_stack, {}).evaluate() == False
+
+
+# MISSING OR EXTRA ENCLOSING SYMBOLS AND OPERATORS
+# BOOLEAN BRACKETS
+def test_extra_right_brackets_on_complex_boolean_raises_error():
+    assert_error(Boolean('[[true equals true]] and [true notEquals false]]', test_stack, {}))
+def test_missing_right_brackets_on_complex_boolean_raises_error():
+    assert_error(Boolean('[[true equals true and [true notEquals false]]', test_stack, {}))
+def test_extra_left_brackets_on_complex_boolean_raises_error():
+    assert_error(Boolean('[[true equals true] and [[true notEquals false]]', test_stack, {}))
+def test_missing_left_brackets_on_complex_boolean_raises_error():
+    assert_error(Boolean('[[true equals true] and true notEquals false]]', test_stack, {}))
+# STRINGS
+def test_extra_dot_operator_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" . "world" . equals "hello" . "world"]', test_stack, {}))
+def test_missing_dot_operator_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" "world" equals "hello" . "world"]', test_stack, {}))
+def test_extra_closing_double_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" . "world"" equals "hello" . "world"]', test_stack, {}))
+def test_extra_leading_double_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" . "world" equals ""hello" . "world"]', test_stack, {}))
+def test_extra_closing_single_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean("['hello' . 'world'' equals 'hello' . 'world']", test_stack, {}))
+def test_extra_leading_single_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean("['hello' . 'world' equals ''hello' . 'world']", test_stack, {}))
+def test_missing_closing_double_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" . "world equals "hello" . "world"]', test_stack, {}))
+def test_missing_leading_double_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean('["hello" . "world" equals hello" . "world"]', test_stack, {}))
+def test_missing_closing_single_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean("['hello' . 'world equals 'hello' . 'world']", test_stack, {}))
+def test_missing_leading_single_quote_when_comparing_strings_raises_error():
+    assert_error(Boolean("['hello' . 'world' equals hello' . 'world']", test_stack, {}))
+# MATH
+def test_extra_closing_parenthesis_when_comparing_math_raises_error():
+    assert_error(Boolean('[(1 + 1)) equals (2 * 2)]', test_stack, {}))
+def test_extra_leading_parenthesis_when_comparing_math_raises_error():
+    assert_error(Boolean('[(1 + 1) equals ((2 * 2)]', test_stack, {}))
+def test_missing_closing_parenthesis_when_comparing_math_raises_error():
+    assert_error(Boolean('[(1 + 1 equals (2 * 2)]', test_stack, {}))
+def test_missing_leading_parenthesis_when_comparing_math_raises_error():
+    assert_error(Boolean('[(1 + 1) equals 2 * 2)]', test_stack, {}))
+
+
+# INLINE OPERATIONS
+# EQUALS
+def test_inline_equals_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" equals "hello" equals true]', test_stack, {}).evaluate() == True
+def test_inline_equals_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" equals "hello" equals "hello"]', test_stack, {}))
+# NOT EQUALS
+def test_inline_not_equals_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" notEquals "hello" notEquals true]', test_stack, {}).evaluate() == True
+def test_inline_not_equals_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" notEquals "hello" notEquals "hello"]', test_stack, {}))
+# LESS THAN
+def test_inline_lessThan_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" lessThan "hello" lessThan true]', test_stack, {}).evaluate() == True
+def test_inline_lessThan_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" lessThan "hello" lessThan "hello"]', test_stack, {}))
+# LESS THAN EQUALS
+def test_inline_lessThanEquals_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" lessThanEquals "world" lessThanEquals true]', test_stack, {}).evaluate() == True
+def test_inline_lessThanEquals_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" lessThanEquals "hello" lessThanEquals "hello"]', test_stack, {}))
+# GREATER THAN
+def test_inline_greaterThan_works_if_third_operator_is_boolean():
+    assert Boolean('["world" greaterThan "hello" greaterThan true]', test_stack, {}).evaluate() == False
+def test_inline_greaterThan_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["world" greaterThan "hello" greaterThan "hello"]', test_stack, {}))
+# GREATER THAN EQUALS
+def test_inline_greaterThanEquals_works_if_third_operator_is_boolean():
+    assert Boolean('["world" greaterThanEquals "hello" greaterThanEquals true]', test_stack, {}).evaluate() == True
+def test_inline_greaterThanEquals_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["world" greaterThanEquals "hello" greaterThanEquals "hello"]', test_stack, {}))
+# AND
+def test_inline_and_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" and "hello" and true]', test_stack, {}).evaluate() == True
+def test_inline_and_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" and "hello" and "hello"]', test_stack, {}))
+# OR
+def test_inline_or_works_if_third_operator_is_boolean():
+    assert Boolean('["hello" or "hello" or true]', test_stack, {}).evaluate() == True
+def test_inline_or_fails_if_third_operator_is_not_boolean():
+    assert_error(Boolean('["hello" or "hello" or "hello"]', test_stack, {}))
+
+
+# COMPLICATED
+def test_complicated_expression_successful():
+    assert Boolean('[[x."hello" equals (1 + 1)."hello"] lessThan ["world" or "test"] and true]', test_stack, {'x': 2}).evaluate() == False
+    assert Boolean('[true and [x."hello" equals (1 + 1)."hello"] lessThan ["world" or "test"]]', test_stack, {'x': 2}).evaluate() == False
+
 
 def assert_error(expression):
     with pytest.raises(SystemExit) as error:

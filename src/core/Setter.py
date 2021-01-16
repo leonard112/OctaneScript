@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 # IMPORTANT: Real data type must be stored when setting a variable (i.e. store integer 1 NOT string "1")
 
 from core.Fail import fail

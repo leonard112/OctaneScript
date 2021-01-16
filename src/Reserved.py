@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 reserved = [
     # PRINT
     "print", "printRed", "printGreen", "printBlue", "printCyan", 
@@ -18,11 +21,19 @@ reserved = [
     "printConcealed", "printRedConcealed", "printGreenConcealed", "printBlueConcealed", "printCyanConcealed",
     "printYellowConcealed", "printMagentaConcealed", "printWhiteConcealed", "printBlackConcealed",
 
-    "log", "logWarn", "logSuccess", "logError"
+    # LOG
+    "log", "logWarn", "logSuccess", "logError",
     
+    # SET
     "set",
 
+    # EXIT
     "exit",
 
-    "if", "elseIf", "else", "end"
+    # CONDITIONAL
+    "if", "elseIf", "else", "end",
+
+    # BOOLEAN
+    "lessThanEquals", "greaterThanEquals", "lessThan", "greaterThan", "equals", "notEquals", 
+    "and", "or", "true", "false"
 ]

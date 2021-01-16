@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 class Line:
     def __init__ (self, line, line_number, file_name):
         self.line = line

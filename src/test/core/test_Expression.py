@@ -1,8 +1,11 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 import pytest
 from core.Line import Line
 from core.Stack import Stack
 from core.Expression import Expression
-from Interpreter import reserved
+from Reserved import reserved
 
 line = Line("TEST", 0, "test")
 test_stack = Stack()
@@ -83,7 +86,8 @@ def test_not_found_fails():
     assert_error(Expression('x', test_stack, {}))
 def test_reserved_fails():
     for word in reserved:
-        assert_error(Expression(word, test_stack, {}))
+        if word != "true" and word != "false":
+            assert_error(Expression(word, test_stack, {}))
 def test_string_value_can_be_resolved_from_variable():
     assert Expression('x', test_stack, {'x' : 'value'}).evaluate() == "value"
 def test_integer_value_can_be_resolved_from_variable():

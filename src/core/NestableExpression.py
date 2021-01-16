@@ -1,3 +1,6 @@
+# This file is licensed under the MIT license.
+# See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
+
 # IMPORTANT: This is only intended to be used as a base class
 
 from core.Fail import fail
@@ -19,10 +22,12 @@ class NestableExpression:
         if len(expression) == 0:
             return tokens
         else:
-            first_word = expression.split(' ', 1)[0].split(self.right_enclosing_symbol, 1)[0]
-            if first_word.isalpha(): # parse entire alpha words proceeded by space or right enclosing symbol
+            first_word = expression.split(' ', 1)[0].split(self.right_enclosing_symbol, 1)[0].split(".", 1)[0]
+            # parse entire alpha words proceeded by space, right enclosing symbol, or "." operator
+            if first_word.isalpha():
                 first_word_length = len(first_word)
                 rest_of_expression = expression[first_word_length:]
+                # if word is following by . operator tokenize string expression
                 if rest_of_expression.lstrip()[0] == ".":
                     token = self.parse_string_expression(expression)
                     token_length = len(token)
@@ -30,37 +35,79 @@ class NestableExpression:
                     return self.parse_expression(expression[token_length:], tokens)
                 tokens += [expression[0:first_word_length]]
                 return self.parse_expression(expression[first_word_length:], tokens)
-            elif expression[0] == '"' or expression[0] == "'": # parse entire string values
-                token = self.parse_string_expression(expression)
+            else:
+                if expression[0] == '"' or expression[0] == "'": # parse entire string expressions
+                    token = self.parse_string_expression(expression)
+                else: # parse expression symbols
+                    token = self.tokenize_on_symbol(expression)
                 token_length = len(token)
                 tokens += [token]
                 return self.parse_expression(expression[token_length:], tokens)
-            else: # parse expression symbols
-                for symbol in self.symbols: # when expression currently starts with expression symbol
-                    symbol_length = len(symbol)
-                    if expression[0:symbol_length] == symbol:
-                        tokens += [expression[0:symbol_length]]
-                        return self.parse_expression(expression[symbol_length:], tokens)
-                token = expression
-                for symbol in self.symbols: # when expression does not start with expression symbol but contains them
-                    if symbol in expression:
-                        token = token.split(symbol, 1)[0]
-                token_length = len(token)
-                tokens += [expression[0:token_length]]
-                return self.parse_expression(expression[token_length:], tokens)
+
+
+    def tokenize_on_symbol(self, expression):
+        for symbol in self.symbols: # when expression currently starts with expression symbol
+            symbol_length = len(symbol)
+            if expression[0:symbol_length] == symbol:
+                if symbol == "[" and expression.find(".") > expression.find("]"):
+                    first_char_following_boolean = expression[expression.find(self.right_enclosing_symbol)+1:].lstrip()[0]
+                    if first_char_following_boolean == ".":
+                        token = self.parse_string_expression(expression)
+                        if token.count("[") == token.count("]"):
+                            return token
+                return symbol
+        token = expression
+        for symbol in self.symbols: # when expression contains an expression symbol
+            if symbol in expression:
+                token = token.split(symbol, 1)[0]
+                if symbol.isalpha():
+                    token = self.tokenize_on_alpha_symbol_after_initial_token(expression, symbol, token)
+                    return token
+        return token
+
+
+    def tokenize_on_alpha_symbol_after_initial_token(self, expression, symbol, token):
+        symbol_index = expression.index(symbol)
+        char_before_symbol = expression[symbol_index-1]
+        symbol_length = len(symbol)
+        if char_before_symbol.isalpha():
+            token = token.split(symbol, 1)[0] + symbol
+        if len(token)+symbol_length < len(expression):
+            char_after_token = expression[symbol_index+symbol_length]
+            if char_after_token.isalpha():
+                expression_after_token = expression[symbol_index+len(symbol):]
+                char_after_symbol_index = self.get_first_non_alpha_char_or_end(expression_after_token)
+                char_after_token = expression[symbol_index+symbol_length+char_after_symbol_index]
+                token = expression[:symbol_index+symbol_length+char_after_symbol_index]
+            if char_after_token == ".":
+                token = self.parse_string_expression(expression)
+        if token.rstrip()[-1] == self.right_enclosing_symbol:
+            token = token[:token.index(self.right_enclosing_symbol)]
+        return token
 
 
     def parse_string_expression(self, expression):
         expression_no_white_space = expression.replace(" ", "")
         start_symbol = expression_no_white_space[0]
-        if start_symbol == '"' or start_symbol == "'":
-            string = expression[:expression[1:].index(start_symbol)+2]
-            if expression_no_white_space.find(".") == len(string):
+        if start_symbol == '"' or start_symbol == "'" or start_symbol == "(" or start_symbol == "[":
+            token = ""
+            if start_symbol == "(":
+                token = expression[:expression.index(")")+1]
+            elif start_symbol == "[":
+                token = expression[:expression.index("]")+1]
+            else:
+                try:
+                    token = expression[:expression[1:].index(start_symbol)+2]
+                except: # let erronious value bubble up to be handled later
+                    token = expression
+            if expression_no_white_space.find(".") == len(token.replace(" ", "")):
                 partitions = self.split_string_expression_on_dot_operator(expression)
                 return partitions[0] + self.parse_string_expression(partitions[1])
-            return string.replace(self.right_enclosing_symbol, "")
+            if start_symbol == self.left_enclosing_symbol:
+                return token
+            return token.replace(self.right_enclosing_symbol, "")
         else:
-            variable_token = expression.split(' ', 1)[0]
+            variable_token = expression.split(' ', 1)[0].split('.', 1)[0]
             rest_of_expression = expression[len(variable_token):]
             if len(rest_of_expression) > 0:
                 if rest_of_expression.lstrip()[0] == ".":
@@ -68,6 +115,12 @@ class NestableExpression:
                     return partitions[0] + self.parse_string_expression(partitions[1])
             return expression.split(' ', 1)[0].replace(self.right_enclosing_symbol, "")
 
+
+    def get_first_non_alpha_char_or_end(self, expression):
+        for char in expression:
+            if char.isalpha() == False:
+                return expression.index(char)
+        return -1
 
     def split_string_expression_on_dot_operator(self, expression):
         dot_index = expression.find(".")
