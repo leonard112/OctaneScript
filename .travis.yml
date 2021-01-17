@@ -5,7 +5,7 @@ env:
     - NAME=OctaneScript
     - NAME_LOWER=octanescript
     - MAINTAINER=lcarcaramo@gmail.com
-    - VERSION=0.0.4
+    - VERSION=0.0.5
     - RELEASE="Alpha"
     - RELEASE_LOWER="alpha"
     - RELEASE_STATUS="DEV"
