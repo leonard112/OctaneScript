@@ -8,6 +8,7 @@ from core.Stack import Stack
 from core.Setter import Setter
 from core.Fail import fail
 from core.Boolean import Boolean
+from core.Function import Function
 from colors import color
 import os
 import sys
@@ -19,6 +20,10 @@ class Interpreter:
         self.script_name = script_name
         self.lines = []
         self.variables = {}
+        self.variables_out_of_scope = {}
+        self.functions = {}
+        self.in_function = False
+        self.function_called_from = 0
         self.call_stack = Stack()
         self.repl_counter = 0
         self.in_if_chain = False
@@ -115,14 +120,14 @@ class Interpreter:
                 if self.in_if_chain == False:
                     fail("Dangling \"" + function + "\".", self.error_type, call_stack)
                 elif self.looking_for_else == False:
-                    return line_number + len(self.get_conditional_code(line_number + 1))
+                    return line_number + len(self.get_nested_code(line_number + 1))
             bool_result = False
             if function == "if" or function == "elseIf":
                 self.in_if_chain = True
                 self.looking_for_else = False
                 b = Boolean(parameters, call_stack, self.variables)
                 bool_result = b.evaluate()
-            conditional_lines = self.get_conditional_code(line_number + 1)
+            conditional_lines = self.get_nested_code(line_number + 1)
             if self.script_name == "REPL" and self.in_nested_repl == False:
                 self.in_nested_repl = True
                 self.call_stack.pop()
@@ -138,11 +143,22 @@ class Interpreter:
                 line_number = self.find_else(conditional_lines, line_number)
             return line_number
 
+        elif function == "function":
+            function_start = line_number
+            function_end = len(self.get_nested_code(line_number + 1))
+            f = Function(parameters, call_stack, function_start)
+            self.functions[f.function_name] = f
+            return line_number + function_end + 1
+
         elif function[:3] == "end":
-            if (self.in_if_chain == False):
-                fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
-            self.in_if_chain = False
-            return line_number
+            if self.in_if_chain == True:
+                self.in_if_chain = False
+                return line_number
+            if self.in_function == True:
+                self.in_function = False
+                self.variables = self.variables_out_of_scope
+                return self.function_called_from
+            fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
 
         elif function[:5] == "print":
             p = Printer(function, parameters, call_stack, self.variables)
@@ -162,9 +178,25 @@ class Interpreter:
         elif function[:4] == "exit" and len(function) == 4:
             sys.exit(0)
         else:
-            fail("Unknown function.", self.error_type, call_stack)
+            try:
+                function_name = function.split("(")[0]
+                if function_name in self.functions:
+                    function_name_length = len(function_name)
+                    if function[function_name_length] == "(":
+                        function_parameters = function[function_name_length:] + parameters
+                        self.functions[function_name].populate_variables(function_parameters)
+                        self.function_called_from = line_number
+                        line_number = self.functions[function_name].function_start
+                        self.variables_out_of_scope = self.variables
+                        self.variables = self.functions[function_name].function_variables
+                        self.in_function = True
+                        return line_number
+                else:
+                    raise Exception
+            except Exception:
+                fail("Unknown function.", self.error_type, call_stack)
 
-    def get_conditional_code(self, start_line):
+    def get_nested_code(self, start_line):
         conditional_lines = []
         required_end_count = 1
         end_count = 0

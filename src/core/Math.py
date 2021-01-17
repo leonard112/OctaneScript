@@ -41,7 +41,7 @@ class Math(NestableExpression):
         except:
             try:
                 return float(self.get_variable(value))
-            except:
+            except Exception:
                 fail("Math operations can only be performed with numbers", self.error_type, self.call_stack)
 
 

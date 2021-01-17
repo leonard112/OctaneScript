@@ -85,7 +85,7 @@ class Expression:
     def resolve_handle_failure(self, token):
         try:
             return self.resolve(token)
-        except:
+        except Exception:
             fail("The variable \"" + token + "\" is undefined.\n\nDefined variables: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
 
 

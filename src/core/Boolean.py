@@ -42,7 +42,7 @@ class Boolean(NestableExpression):
                 'and' : self.perform_and_or(token_1, token_2, "and"),
                 'or' : self.perform_and_or(token_1, token_2, "or")
             }.get(tokens[1], None)
-        except:
+        except Exception:
             fail("Differing value types cannot be compared.", self.error_type, self.call_stack)
 
 
