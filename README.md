@@ -1,6 +1,6 @@
 # OctaneScript [![Build Status](https://travis-ci.com/leonard112/OctaneScript.svg?branch=main)](https://travis-ci.com/leonard112/OctaneScript) [![Download OctaneScript](https://img.shields.io/sourceforge/dt/octanescript.svg)](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/)
 
-  <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.svg" alt="OctaneScript Logo" width=25%></img>
+  <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.png" alt="OctaneScript Logo" width=25%></img>
 
 OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages.
 
