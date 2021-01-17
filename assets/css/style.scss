@@ -3,7 +3,11 @@
 
 @import "jekyll-theme-minimal";
 
-code, strong {
+header ul a strong {
+  color: #eee;
+}
+
+code {
   color: #eee;
 }
 
