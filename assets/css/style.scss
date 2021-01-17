@@ -12,13 +12,9 @@ a {
   color: #b33;  
 }
 
-a:hover
+a:hover, a:focus
 {
   color: #c44;
-}
-
-a:focus {
-  color: #b33; 
 }
 
 h1 {
