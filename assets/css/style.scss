@@ -14,7 +14,7 @@ a {
 
 a:hover, a:focus
 {
-  color: #b55;
+  color: #f22;
   border: none;
 }
 
@@ -34,7 +34,15 @@ h2, h3, h4, h5, h6
   border-radius: 10px;
 }
 
-code {
+code, strong {
   color: #eee;
 }
 
+.downloads {
+ background: #222;
+ border: 0 solid #111;
+ width: 100%;
+}
+li {
+ 1.5px solid #111
+}
