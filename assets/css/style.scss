@@ -3,6 +3,16 @@
 
 @import "jekyll-theme-minimal";
 
+code, strong {
+  color: #eee;
+}
+
+.downloads {
+ background: #222;
+ border: 0 solid #111;
+ width: 100%;
+}
+
 body {
  background-color: #111;
  color: #bbb;
@@ -34,15 +44,6 @@ h2, h3, h4, h5, h6
   border-radius: 10px;
 }
 
-code, strong {
-  color: #eee;
-}
-
-.downloads {
- background: #222;
- border: 0 solid #111;
- width: 100%;
-}
 li {
  border: 1.5px solid #111;
 }
