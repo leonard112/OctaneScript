@@ -2,4 +2,4 @@ theme: jekyll-theme-minimal
 
 logo: https://raw.githubusercontent.com/leonard112/OctaneScript/main/images/octanescript-logo.png
 
-show-downloads: true
+show-downloads: "true"
