@@ -3,22 +3,42 @@
 
 @import "jekyll-theme-minimal";
 
+body {
+ background-color: #111;
+ color: #bbb;
+}
+
 a {
-  color: #8B0000;  
+  color: #c33;  
 }
 
 a:hover
 {
-  color: #8B0000;
-  font-size: 105%;
+  color: #e55;
 }
 
 a.selected
 {
-  color: #8B0000; 
+  color: #c33; 
 }
 
 h1 {
   font-size: 40px;
   text-align: center;
 }
+
+h2, h3, h4, h5, h6
+{
+  color: #eee
+}
+
+.highlight {
+  background-color: #222; 
+  border: none;
+  border-radius: 10px;
+}
+
+code {
+  color: #eee;
+}
+
