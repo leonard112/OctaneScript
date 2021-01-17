@@ -3,6 +3,10 @@
 
 @import "jekyll-theme-minimal";
 
+li {
+ border: 1.5px solid #111;
+}
+
 header ul a strong {
   color: #eee;
 }
@@ -46,8 +50,4 @@ h2, h3, h4, h5, h6
   background-color: #222; 
   border: none;
   border-radius: 10px;
-}
-
-li {
- border: 0 solid #111;
 }
