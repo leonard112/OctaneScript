@@ -39,7 +39,12 @@ a:hover, a:focus
 {
   color: #f22;
   border: none;
-  font-weight: normal;
+  font-weight: inherit;
+}
+
+a small
+{
+  color: #999;
 }
 
 h1 {
@@ -47,9 +52,6 @@ h1 {
   text-align: center;
 }
 
-h1:hover, h1:focus {
-  font-weight: bold;
-}
 
 h2, h3, h4, h5, h6
 {
