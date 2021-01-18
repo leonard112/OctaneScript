@@ -3,6 +3,10 @@
 
 @import "jekyll-theme-minimal";
 
+header li {
+  border: 1.5px solid #111;
+}
+
 header ul a strong {
   color: #eee;
 }
