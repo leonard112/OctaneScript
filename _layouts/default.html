@@ -37,6 +37,7 @@
         {% endif %}
         <!--from: https://github.com/armsp/minimally/blob/master/_layouts/default.html-->
         {% assign sorted = site.html_pages | sort:"rank" %}
+        <div>
         <ul>
           <li class = "page-list-item">
             <a class="page-link" href="{{ "/" | absolute_url }}">Home</a>
@@ -50,6 +51,7 @@
             {% endif %}
           {% endfor %}
         </ul>
+        </div>
       </header>
       <section>
 
