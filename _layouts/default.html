@@ -38,7 +38,7 @@
         <!--from: https://github.com/armsp/minimally/blob/master/_layouts/default.html-->
         {% assign sorted = site.html_pages | sort:"rank" %}
         <li class = "page-list_item">
-          <a href="{{ "/" | absolute_url }}"></a>
+          <a href="{{ "/" | absolute_url }}">Home</a>
         </li>
         {% for item in sorted %}
           {% if item.path != "index.md" and item.title and item.rank %}
