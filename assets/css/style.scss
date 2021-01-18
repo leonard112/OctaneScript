@@ -128,6 +128,10 @@ footer
   text-align: center;
 }
 
+header ul li + li + li {
+  width: 88px;
+}
+
 @media only screen and (max-width: 960px) {
   @media only screen and (min-width: 720px) {
     header {
