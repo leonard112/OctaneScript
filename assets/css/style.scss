@@ -11,7 +11,7 @@
   border-width: 1.5px;
   height: auto;
   width: 100%;
-  margin: 10px 0 10px 0;
+  padding: 10px 0 10px 0;
 }
 
 .page-link {
@@ -22,6 +22,7 @@
 
 .page-link:hover {
   color: #eee;
+  font-weight: bold;
 }
 
 header ul a:hover, header ul a:focus {
