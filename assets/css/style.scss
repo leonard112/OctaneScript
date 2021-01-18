@@ -5,23 +5,24 @@
 
 .page-list {
   background-color: #333;
-  color: #222;
-  list-style-type: none;
-  border-bottom: solid;
-  border-width: 1.5px;
   height: auto;
-  width: 100%;
-  padding: 10px 0 10px 0;
+  border: 1px solid #222;
 }
 
 .page-list-item {
-  color: red;
+  float: none;
+  width: 100%;
+  border-bottom: 1.5px solid #222;
+  padding: 0;
+  height: auto;
 }
 
 .page-link {
   font-weight: bold;
   padding: 10px;
-  color: #ccc
+  color: #ccc;
+  text-align: left;
+  height: auto;
 }
 
 .page-link:hover {
