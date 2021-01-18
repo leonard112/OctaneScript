@@ -69,6 +69,11 @@ header ul a strong {
   color: #eee;
 }
 
+header ul a:active {
+  background-color: none;
+  font-weight: normal;
+}
+
 code {
   color: #eee;
 }
