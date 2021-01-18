@@ -4,7 +4,7 @@
 @import "jekyll-theme-minimal";
 
 header li {
-  border-color: #111;
+  border-color: #222;
   border-width: 1.5px;
 }
 
@@ -17,13 +17,13 @@ code {
 }
 
 .downloads {
- background: #222;
- border: 1px solid #111;
+ background: #333;
+ border: 1px solid #222;
  width: 100%;
 }
 
 body {
- background-color: #111;
+ background-color: #222;
  color: #bbb;
 }
 
@@ -48,7 +48,7 @@ h2, h3, h4, h5, h6
 }
 
 .highlight {
-  background-color: #222; 
+  background-color: #333; 
   border: none;
   border-radius: 10px;
 }
