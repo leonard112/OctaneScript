@@ -3,6 +3,10 @@
 
 @import "jekyll-theme-minimal";
 
+.page-list li:last-child {
+  border: none;
+}
+
 .page-list {
   background-color: #333;
   height: auto;
