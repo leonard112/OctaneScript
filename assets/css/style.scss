@@ -41,7 +41,7 @@ section {
   height: auto;
 }
 
-.page-link:hover {
+.page-link:hover, .page-link:focus {
   color: #eee;
   font-weight: bold;
 }
@@ -92,6 +92,7 @@ a:hover, a:focus
   color: #f66;
   border: none;
   font-weight: inherit;
+  outline: none;
 }
 
 a small
