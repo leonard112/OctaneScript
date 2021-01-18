@@ -34,16 +34,11 @@ section {
 }
 
 .page-link {
-  font-weight: bold;
   padding: 10px;
   color: #aaa;
   text-align: left;
   height: auto;
-}
-
-.page-link:hover, .page-link:focus {
-  color: #eee;
-  font-weight: bold;
+  font-size: 15px;
 }
 
 .image-link:focus {
@@ -51,7 +46,7 @@ section {
 }
 
 header ul a:hover, header ul a:focus {
-  color: #aaa
+  color: #eee
 }
 
 header ul {
