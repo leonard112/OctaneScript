@@ -4,12 +4,12 @@
 @import "jekyll-theme-minimal";
 
 .wrapper {
-  width: max-content;
+  width: auto;
 }
 
 section {
   width: auto;
-  margin: 350px;
+  margin-left: 350px;
 }
 
 .page-list li:last-child {
