@@ -128,8 +128,12 @@ h1, h2, h3, h4, h5, h6
     header ul {
       position: inherit;  
     }
-    section {
-      margin-left: auto;
-    }
+  }
+  header {
+    text-align: center;
+  }
+  section {
+    margin-left: auto;
+    margin-top: 20px;
   }
 }
