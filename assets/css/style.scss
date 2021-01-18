@@ -46,6 +46,10 @@ section {
   font-weight: bold;
 }
 
+.image-link:focus {
+  background-color: red;
+}
+
 header ul a:hover, header ul a:focus {
   color: #aaa
 }
