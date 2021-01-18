@@ -3,6 +3,10 @@
 
 @import "jekyll-theme-minimal";
 
+.page-link {
+  color: blue;
+}
+
 header ul a:hover, header ul a:focus {
   color: #aaa
 }
