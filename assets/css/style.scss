@@ -11,11 +11,17 @@
   border-width: 1.5px;
   height: auto;
   width: 100%;
-  padding: 10px;
+  margin: 10px 0 10px 0;
 }
 
 .page-link {
   font-weight: bold;
+  padding: 10px;
+  color: #ccc
+}
+
+.page-link:hover {
+  color: #eee;
 }
 
 header ul a:hover, header ul a:focus {
