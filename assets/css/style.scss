@@ -4,7 +4,8 @@
 @import "jekyll-theme-minimal";
 
 header li {
-  border: 1.5px solid #111;
+  border-color: #111;
+  border-width: 1.5px;
 }
 
 header ul a strong {
