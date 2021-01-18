@@ -3,10 +3,6 @@
 
 @import "jekyll-theme-minimal";
 
-a, .page-link {
-  color: #eee;
-}
-
 .page-link {
   background-color: #333;
   color: #222;
@@ -15,6 +11,10 @@ a, .page-link {
   border-width: 1px;
   height: 30px;
   width: 100%;
+}
+
+a, .page-link {
+  color: #eee;
 }
 
 header ul a:hover, header ul a:focus {
