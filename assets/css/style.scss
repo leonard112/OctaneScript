@@ -3,6 +3,18 @@
 
 @import "jekyll-theme-minimal";
 
+@media only screen and (max-width: 960px) {
+  header {
+    margin-right: auto;
+    margin-left: auto;
+    width: 50%;
+    text-align: center;
+  }
+  header ul {
+    position: inherit;  
+  }
+}
+
 .wrapper {
   width: auto;
   max-width: 1597.8px;
