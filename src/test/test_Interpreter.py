@@ -802,6 +802,171 @@ end
     assert_stack_trace_REPL(capfd, script, [7, 6])
 
 
+# FUNCTIONS DEFINITION
+def test_function_can_be_defined(interpreter):
+    script = """
+function testFunc(x, y, z)
+    print x
+end
+""".splitlines(True)
+    interpreter.run_script(script, None)
+    assert interpreter.functions["testFunc"]
+    assert interpreter.functions["testFunc"].function_start == 1
+def test_multiple_functions_can_be_defined(interpreter):
+    script = """
+function testFunc(x, y, z)
+    print z
+end
+function testFunc2(x, y)
+    print y
+end
+function testFunc3(x)
+    print x
+end
+""".splitlines(True)
+    interpreter.run_script(script, None)
+    assert interpreter.functions["testFunc"]
+    assert interpreter.functions["testFunc"].function_start == 1
+    assert interpreter.functions["testFunc2"]
+    assert interpreter.functions["testFunc2"].function_start == 4
+    assert interpreter.functions["testFunc3"]
+    assert interpreter.functions["testFunc3"].function_start == 7
+def test_function_cannot_be_defined_more_than_once(capfd, interpreter):
+    script = """
+function testFunc(x, y, z)
+    print x
+end
+function testFunc(x, y)
+    print y
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [5])
+    assert_stack_trace_REPL(capfd, script, [5])
+def test_function_cannot_have_the_same_name_as_a_defined_variable(capfd, interpreter):
+    script = """
+set test to "test"
+function test(x, y, z)
+    print x
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [3])
+    assert_stack_trace_REPL(capfd, script, [3])
+def test_variable_cannot_have_the_same_name_as_a_defined_function(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    print x
+end
+set test to "test"
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [5])
+    assert_stack_trace_REPL(capfd, script, [5])
+def test_function_can_be_called_and_executes_as_expected_after_being_defined(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    print x
+    invalid
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [4, 7])
+    assert_stack_trace_REPL(capfd, script, [4, 7])
+def test_code_after_function_call_continues_execution_where_it_left_off_after_function_finishes(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    print x
+end
+print "Entering function"
+test(1, 2, 3)
+print "Function finished"
+invalid
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [8])
+    assert_stack_trace_REPL(capfd, script, [8])
+def test_function_can_be_called_from_another_function(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    test2(x)
+end
+function test2(x)
+    print x
+    invalid
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [7, 3, 10])
+    assert_stack_trace_REPL(capfd, script, [7, 3, 10])
+def test_function_cannot_access_variables_that_are_out_of_scope(capfd, interpreter):
+    script = """
+set a to "global but not available to functions."
+function test(x, y, z)
+    print a
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [4, 7])
+    assert_stack_trace_REPL(capfd, script, [4, 7])
+def test_variables_can_be_created_within_function_scope(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    set a to "local"
+    print a
+end
+test(1, 2, 3)
+print a
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [7])
+    assert_stack_trace_REPL(capfd, script, [7])
+def test_conditionals_work_inside_function(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    if [false]
+        print "This wont execute"
+    else
+        if [true]
+            invalid
+        end
+    end
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [7, 6, 5, 12])
+    assert_stack_trace_REPL(capfd, script, [7, 6, 5, 12])
+def test_function_cannot_be_defined_inside_function(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    function test2(x, y)
+        print x
+    end
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [2])
+    assert_stack_trace_REPL(capfd, script, [2])
+def test_function_cannot_be_defined_inside_conditional_inside_function(capfd, interpreter):
+    script = """
+function test(x, y, z)
+    if [false]
+        print "wont execute"
+    else
+        if [true]
+            function test2(x, y)
+                print x
+            end
+        end
+    end
+end
+print "Entering function"
+test(1, 2, 3)
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [2])
+    assert_stack_trace_REPL(capfd, script, [2])
+
+
 def assert_stack_trace(interpreter, script, line_numbers):
     try:
         interpreter.run_script(script, None)

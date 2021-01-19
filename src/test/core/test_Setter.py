@@ -12,44 +12,44 @@ test_stack = Stack()
 test_stack.push(line)
 
 def test_invalid_variable_name_fails():
-    assert_error(Setter('&invlaid to "no good"', test_stack, {}))
-    assert_error(Setter('invlaid1 to "no good"', test_stack, {}))
-    assert_error(Setter('invla\'d to "no good"', test_stack, {}))
+    assert_error(Setter('&invlaid to "no good"', test_stack, {}, {}))
+    assert_error(Setter('invlaid1 to "no good"', test_stack, {}, {}))
+    assert_error(Setter('invla\'d to "no good"', test_stack, {}, {}))
 def test_set_to_resserved_fails():
     for word in reserved:
-        assert_error(Setter(word + ' to "no good"', test_stack, {}))
+        assert_error(Setter(word + ' to "no good"', test_stack, {}, {}))
 def test_create_new_variable_successful():
-    assert_success(Setter('x to "new value"', test_stack, {}))
+    assert_success(Setter('x to "new value"', test_stack, {}, {}))
 def test_overwrite_already_defined_successful():
-    assert_success(Setter('x to "new value"', test_stack, {'x' : 'value'}))
+    assert_success(Setter('x to "new value"', test_stack, {'x' : 'value'}, {}))
 
 # NUMBERS AND MATH    
 def test_stores_an_integer():
-    set_number = Setter("x to 5", test_stack, {})
+    set_number = Setter("x to 5", test_stack, {}, {})
     assert set_number.set()['x'] == 5
 def test_stores_a_float():
-    set_number = Setter("x to (3.33)", test_stack, {})
+    set_number = Setter("x to (3.33)", test_stack, {}, {})
     assert set_number.set()['x'] == 3.33
 def test_stores_integer_result_of_math_operation():
-    set_number = Setter("x to (2 * (1 + 1))", test_stack, {})
+    set_number = Setter("x to (2 * (1 + 1))", test_stack, {}, {})
     assert set_number.set()['x'] == 4
 def test_stores_decimal_result_of_math_operation():
-    set_number = Setter("x to ((1 / (2 + 2)) * 5)", test_stack, {})
+    set_number = Setter("x to ((1 / (2 + 2)) * 5)", test_stack, {}, {})
     assert set_number.set()['x'] == 1.25
 
 
 # BOOLEANS
 def test_stores_true_boolean():
-    set_number = Setter("x to true", test_stack, {})
+    set_number = Setter("x to true", test_stack, {}, {})
     assert set_number.set()['x'] == True
 def test_stores_false_boolean():
-    set_number = Setter("x to false", test_stack, {})
+    set_number = Setter("x to false", test_stack, {}, {})
     assert set_number.set()['x'] == False
 def test_stores_complex_true_result_of_boolean():
-    set_number = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {})
+    set_number = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
     assert set_number.set()['x'] == True
 def test_stores_complex_false_result_of_boolean():
-    set_number = Setter("x to [[15 notEquals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {})
+    set_number = Setter("x to [[15 notEquals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
     assert set_number.set()['x'] == False
 
 

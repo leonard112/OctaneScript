@@ -2,6 +2,7 @@
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
 from core.Printer import Printer
+from core.Expression import Expression
 from core.Logger import Logger
 from core.Line import Line
 from core.Stack import Stack
@@ -23,8 +24,8 @@ class Interpreter:
         self.variables_out_of_scope = {}
         self.functions = {}
         self.in_function = False
-        self.function_called_from = 0
         self.call_stack = Stack()
+        self.function_call_stack = Stack()
         self.repl_counter = 0
         self.in_if_chain = False
         self.looking_for_else = False
@@ -75,7 +76,7 @@ class Interpreter:
         line = ""
 
         while True:
-            line_raw = input(">> ") + "\n"
+            line_raw = input(str(self.repl_counter+1) + "\t\b\b>> ") + "\n"
             self.lines.append(line_raw)
             line = Line(line_raw, self.repl_counter, "REPL")
             self.call_stack.push(line)
@@ -111,11 +112,13 @@ class Interpreter:
         parameters = line_raw[len(function)+1:].strip()
         line_number = call_stack.peek().line_number - self.repl_counter
 
-        if function == "#" or function == "":
+        if function[:1] == "#" or function == "":
             print(end="")
             return line_number
 
         elif function == "if" or function == "elseIf" or function == "else":
+            if self.in_function == True:
+                self.in_nested_repl = True
             if function == "elseIf" or function == "else":
                 if self.in_if_chain == False:
                     fail("Dangling \"" + function + "\".", self.error_type, call_stack)
@@ -131,9 +134,10 @@ class Interpreter:
             if self.script_name == "REPL" and self.in_nested_repl == False:
                 self.in_nested_repl = True
                 self.call_stack.pop()
+                self.repl_counter -= len(conditional_lines)
                 self.run_script([line_raw] + conditional_lines, None)
-                self.in_nested_repl = False
                 self.repl_counter += len(conditional_lines)
+                self.in_nested_repl = False
                 return
             if bool_result == True or function == "else":
                 self.run_script(conditional_lines, line_number + 1)
@@ -143,12 +147,29 @@ class Interpreter:
                 line_number = self.find_else(conditional_lines, line_number)
             return line_number
 
-        elif function == "function":
+        elif function[:8] == "function":
+            function_name = parameters.split("(")[0].strip()
+            if function_name in self.functions:
+                fail("Function \"" + function_name + "\" is already defined." , self.error_type, self.call_stack)
+            if function_name in self.variables:
+                fail("Function cannot have the same name as a defined variable." , self.error_type, self.call_stack)
             function_start = line_number
-            function_end = len(self.get_nested_code(line_number + 1))
-            f = Function(parameters, call_stack, function_start)
+            if self.script_name == "REPL":
+                function_start = self.repl_counter
+            function_body = self.get_nested_code(line_number + 1)
+            function_end = len(function_body)
+            f = Function(parameters, function_body, call_stack, self.functions, self.variables, function_start)
             self.functions[f.function_name] = f
             return line_number + function_end + 1
+
+        elif function[:6] == "return":
+            if self.in_function == "False":
+                fail("\"return\" can only be used in functions", self.error_type, self.call_stack)
+            function_name = self.function_call_stack.peek()
+            e = Expression(parameters, self.call_stack, self.variables)
+            return_value = e.evaluate()
+            self.functions[function_name].return_value = return_value
+            return line_number
 
         elif function[:3] == "end":
             if self.in_if_chain == True:
@@ -156,11 +177,13 @@ class Interpreter:
                 return line_number
             if self.in_function == True:
                 self.in_function = False
+                self.function_call_stack.pop()
                 self.variables = self.variables_out_of_scope
-                return self.function_called_from
+                return line_number
             fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
 
         elif function[:5] == "print":
+            parameters = self.resolve_function_calls(parameters, line_number)
             p = Printer(function, parameters, call_stack, self.variables)
             p.print()
             return line_number
@@ -171,7 +194,7 @@ class Interpreter:
             return line_number
 
         elif function[:3] == "set" and len(function) == 3:
-            setter = Setter(parameters, call_stack, self.variables)
+            setter = Setter(parameters, call_stack, self.variables, self.functions)
             self.variables.update(setter.set())
             return line_number
 
@@ -181,37 +204,110 @@ class Interpreter:
             try:
                 function_name = function.split("(")[0]
                 if function_name in self.functions:
-                    function_name_length = len(function_name)
-                    if function[function_name_length] == "(":
-                        function_parameters = function[function_name_length:] + parameters
-                        self.functions[function_name].populate_variables(function_parameters)
-                        self.function_called_from = line_number
-                        line_number = self.functions[function_name].function_start
-                        self.variables_out_of_scope = self.variables
-                        self.variables = self.functions[function_name].function_variables
-                        self.in_function = True
-                        return line_number
+                    self.execute_function(function, parameters, function_name, line_number)
+                    return line_number
                 else:
                     raise Exception
             except Exception:
                 fail("Unknown function.", self.error_type, call_stack)
 
+    def resolve_function_calls(self, parameters, line_number):
+        expression = Expression(parameters, self.call_stack, self.variables)
+        parameter_tokens = expression.parse_expression(parameters, [])
+        function_calls = self.get_functions(parameter_tokens)
+        parameter_tokens = self.execute_functions(function_calls, parameter_tokens, line_number)
+        return ' '.join(parameter_tokens)
+
+    def get_functions(self, parameter_tokens):
+        function_calls = []
+        for token in parameter_tokens:
+            for function in self.functions:
+                if function in token:
+                    if token.count('"') == 0 and token.count("'") == 0:
+                        if token[0] == "(" or token[0] == "[":
+                            specialized_expression_functions = self.get_functions_from_specialized_expression(token, function)
+                            for specialized_token in specialized_expression_functions:
+                                function_calls += [specialized_token]
+                        else:
+                            function_calls += [token]
+        return function_calls
+
+    def get_functions_from_specialized_expression(self, math_expression, function):
+        parameter_tokens = math_expression.split(function)
+        functions = []
+        for token in parameter_tokens:
+            if token.count("(") <= token.count(")") and token.count("(") >= 1:
+                left_count = 0
+                right_count = 0
+                function_parameter = ""
+                for char in token:
+                    if char == "(":
+                        left_count += 1
+                    if char == ")":
+                        right_count += 1
+                    function_parameter += char
+                    if right_count == left_count:
+                        break 
+                if function_parameter[0] == "(":
+                    functions += [function + function_parameter]
+        return functions
+
+    def execute_functions(self, function_calls, parameter_tokens, line_number):
+        parameter_tokens_length = len(parameter_tokens)
+        for i in range(0, parameter_tokens_length, 1):
+            for function_call in function_calls:
+                if function_call in parameter_tokens[i]:
+                    if parameter_tokens[i].count('"') == 0 and parameter_tokens[i].count("'") == 0:
+                        function_name = function_call.split("(")[0]
+                        self.execute_function(function_call, "", function_name, line_number)
+                        return_value = self.functions[function_name].return_value
+                        return_value = str(return_value)
+                        if return_value == "True" or return_value == "False":
+                            return_value =return_value.lower()
+                        parameter_tokens[i] = parameter_tokens[i].replace(function_call, return_value)
+        return parameter_tokens
+
+
+    def execute_function(self, function, parameters, function_name, line_number):
+        function_name_length = len(function_name)
+        if function[function_name_length] == "(":
+            function_parameters = function[function_name_length:] + parameters
+            self.functions[function_name].populate_variables(function_parameters)
+            self.variables_out_of_scope = self.variables
+            self.variables = self.functions[function_name].function_variables
+            self.in_function = True
+            self.function_call_stack.push(function_name)
+            start_line = self.functions[function_name].function_start + 1
+            function_body = self.functions[function_name].function_body
+            function_call_line = self.repl_counter
+            if self.script_name == "REPL":
+                self.repl_counter = start_line
+                self.run_script(function_body, None)
+            else:
+                self.run_script(function_body, start_line)
+            if self.script_name == "REPL":
+                self.repl_counter = line_number
+            self.repl_counter = function_call_line
+
     def get_nested_code(self, start_line):
-        conditional_lines = []
+        nestable_lines = []
         required_end_count = 1
         end_count = 0
 
         if self.script_name == "REPL" and self.in_nested_repl == False:
             while(True):
-                line_raw = input(" ~ ") + "\n"
+                self.repl_counter += 1
+                line_raw = input(str(self.repl_counter+1) + "\t\b\b~ ") + "\n"
                 if line_raw.strip()[:2] == "if":
                     required_end_count += 1
                 elif line_raw.strip() == "end":
                     end_count += 1
+                elif line_raw.strip()[:8] == "function":
+                    fail("A function cannot be defined inside a function or a conditional." , self.error_type, self.call_stack)
                 if required_end_count == end_count:
-                    conditional_lines.append(line_raw)
-                    return conditional_lines
-                conditional_lines.append(line_raw)
+                    nestable_lines.append(line_raw)
+                    return nestable_lines
+                nestable_lines.append(line_raw)
 
         line_count = len(self.lines)
         for i in range(start_line,line_count,1):
@@ -220,10 +316,12 @@ class Interpreter:
                 required_end_count += 1
             elif line_raw.strip() == "end":
                 end_count += 1
+            elif line_raw.strip()[:8] == "function":
+                fail("A function cannot be defined inside a function or a conditional." , self.error_type, self.call_stack)
             if required_end_count == end_count:
-                return conditional_lines
-            conditional_lines.append(line_raw)
-        fail("Missing end to conditional.", self.error_type, self.call_stack)
+                return nestable_lines
+            nestable_lines.append(line_raw)
+        fail("Missing end to nestable.", self.error_type, self.call_stack)
 
 
 

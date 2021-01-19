@@ -7,8 +7,8 @@ class Stack:
     def __init__ (self):
         self.stack = []
 
-    def push(self, line):
-        self.stack.append(line)
+    def push(self, item):
+        self.stack.append(item)
     def pop(self):
         return self.stack.pop()
     def peek(self):

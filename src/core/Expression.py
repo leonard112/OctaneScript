@@ -86,7 +86,7 @@ class Expression:
         try:
             return self.resolve(token)
         except Exception:
-            fail("The variable \"" + token + "\" is undefined.\n\nDefined variables: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
+            fail("The variable \"" + token + "\" is undefined within the current scope.\n\nVariables Within Scope: " + self.defined_variables_to_string(), self.error_type, self.call_stack)
 
 
     def parse_expression(self, expression, tokens):

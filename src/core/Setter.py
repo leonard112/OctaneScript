@@ -8,10 +8,11 @@ from core.Expression import Expression
 from Reserved import reserved
 
 class Setter:
-    def __init__ (self, parameters, call_stack, variables):
+    def __init__ (self, parameters, call_stack, variables, functions):
         self.parameters = parameters
         self.call_stack = call_stack
         self.variables = variables
+        self.functions = functions
         self.error_type = "Set Error"
 
     
@@ -30,7 +31,6 @@ class Setter:
             if self.parameters[i] == " ":
                 if self.is_variable_name_valid(self.parameters[:i]):
                     return self.parameters[:i]
-                fail("Bad variable name.", self.error_type, self.call_stack)
 
 
     def get_value(self, parameters):
@@ -51,9 +51,13 @@ class Setter:
 
         for word in reserved:
             if word == variable:
-                return False
+                fail("The name \"" + variable + "\" is a reserved word.", self.error_type, self.call_stack)
+
+        for function in self.functions:
+            if function == variable:
+                fail("The name \"" + variable + "\" is already used to define a function.", self.error_type, self.call_stack)
 
         if valid_character_count == len(variable):
             return True
-        return False
+        fail("Variable names may only contain letters.", self.error_type, self.call_stack)
         

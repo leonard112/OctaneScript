@@ -13,5 +13,7 @@ def fail(message, error_type, call_stack):
 def format_trace(call_stack):
     trace = ""
     for line in call_stack:
+        if "\n" not in line.line:
+            line.line += "\n"
         trace += "\t" + line.get_line_info()
     return trace
