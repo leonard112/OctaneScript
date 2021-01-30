@@ -43,7 +43,9 @@ class Boolean(NestableExpression):
                 'or' : self.perform_and_or(token_1, token_2, "or")
             }.get(tokens[1], None)
         except Exception:
-            fail("Differing value types cannot be compared.", self.error_type, self.call_stack)
+            fail("Differing value types cannot be compared.\n\t\t" +
+                 "Operand 1: " + str(self.resolve(tokens[0])) + "\n\t\t" +
+                 "Operand 2: " + str(self.resolve(tokens[2])), self.error_type, self.call_stack)
 
 
     def perform_and_or(self, operand_1, operand_2, operator):
@@ -69,10 +71,11 @@ class Boolean(NestableExpression):
                 return float(value)
             except:
                 e = core.Expression.Expression(value, self.call_stack, self.variables)
+                value = e.evaluate()
                 try:
-                    return float(e.evaluate())
+                    return float(value)
                 except:
-                    return '"' + str(e.evaluate()) + '"'
+                    return '"' + str(value) + '"'
 
 
     def is_valid_answer(self, tokens):

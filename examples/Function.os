@@ -1,10 +1,20 @@
-function test(x)
-    return (x + 1)
-end
-function equals(x, y)
-    return [x equals y]
+function countDown(x)
+    if [x greaterThan 0]
+        return countDown((x-1))
+    else
+        return x
+    end
 end
 
-print "hello" . test(5) . "world" . test(10) . "test(5)"
-print (test(1) + 1 + test(2) + test(3))
-print [[test(1) and test(2)] equals equals(2, 4)]
+function shortCircuit()
+    return "hello"
+    print err
+end
+
+set val to countDown(100)
+
+print val
+
+#print shortCircuit()
+
+print "done"

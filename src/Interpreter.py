@@ -13,6 +13,7 @@ from core.Function import Function
 from colors import color
 import os
 import sys
+from functools import lru_cache
 from Reserved import reserved
 
 
@@ -23,7 +24,7 @@ class Interpreter:
         self.variables = {}
         self.variables_out_of_scope = {}
         self.functions = {}
-        self.in_function = False
+        self.recursion_level = 0
         self.call_stack = Stack()
         self.function_call_stack = Stack()
         self.repl_counter = 0
@@ -54,6 +55,8 @@ class Interpreter:
                 if rc == 0:
                     return
                 raise sys.exit(rc)
+            except KeyboardInterrupt:
+                sys.exit(0)
 
     
     def run_script(self, lines, overall_script_position):
@@ -68,6 +71,8 @@ class Interpreter:
             line = Line(lines[i].lstrip(), i + overall_script_position + self.repl_counter, self.script_name)
             self.call_stack.push(line)
             i = self.execute(self.call_stack) - overall_script_position
+            if i < 0:
+                return -1
             self.call_stack.pop()
             i += 1
 
@@ -105,7 +110,7 @@ class Interpreter:
             if lines[i].strip()[:3] == "end":
                 return i
 
-
+    #@lru_cache(maxsize=2)
     def execute(self, call_stack):
         line_raw = call_stack.peek().line
         function = line_raw.split(' ')[0].strip()
@@ -117,7 +122,7 @@ class Interpreter:
             return line_number
 
         elif function == "if" or function == "elseIf" or function == "else":
-            if self.in_function == True:
+            if self.recursion_level > 0:
                 self.in_nested_repl = True
             if function == "elseIf" or function == "else":
                 if self.in_if_chain == False:
@@ -140,7 +145,9 @@ class Interpreter:
                 self.in_nested_repl = False
                 return
             if bool_result == True or function == "else":
-                self.run_script(conditional_lines, line_number + 1)
+                exiting_function = self.run_script(conditional_lines, line_number + 1)
+                if exiting_function == -1:
+                    return -1
                 self.in_if_chain = True
                 line_number += len(conditional_lines)
             else:
@@ -163,22 +170,24 @@ class Interpreter:
             return line_number + function_end + 1
 
         elif function[:6] == "return":
-            if self.in_function == "False":
+            if self.recursion_level == 0:
                 fail("\"return\" can only be used in functions", self.error_type, self.call_stack)
             function_name = self.function_call_stack.peek()
+            parameters = self.resolve_function_calls(parameters, line_number)
             e = Expression(parameters, self.call_stack, self.variables)
             return_value = e.evaluate()
+            if type(return_value) == str:
+                return_value = '"' + return_value + '"'
             self.functions[function_name].return_value = return_value
-            return line_number
+            self.function_cleanup()
+            return -1
 
         elif function[:3] == "end":
             if self.in_if_chain == True:
                 self.in_if_chain = False
                 return line_number
-            if self.in_function == True:
-                self.in_function = False
-                self.function_call_stack.pop()
-                self.variables = self.variables_out_of_scope
+            if self.recursion_level > 0:
+                self.function_cleanup()
                 return line_number
             fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
 
@@ -189,11 +198,13 @@ class Interpreter:
             return line_number
 
         elif function[:3] == "log":
+            parameters = self.resolve_function_calls(parameters, line_number)
             l = Logger(function, parameters, call_stack, self.variables)
             l.log()
             return line_number
 
         elif function[:3] == "set" and len(function) == 3:
+            parameters = self.resolve_function_calls(parameters, line_number)
             setter = Setter(parameters, call_stack, self.variables, self.functions)
             self.variables.update(setter.set())
             return line_number
@@ -210,6 +221,17 @@ class Interpreter:
                     raise Exception
             except Exception:
                 fail("Unknown function.", self.error_type, call_stack)
+
+    def function_cleanup(self):
+        self.recursion_level -= 1
+        if self.recursion_level == 0:
+            self.variables = self.variables_out_of_scope
+
+    def pop_off_stack_until_last_function_call(self, function_name):
+        line_raw = self.call_stack.peek().line
+        print(function_name)
+        if function_name in line_raw:
+            print(line_raw)
 
     def resolve_function_calls(self, parameters, line_number):
         expression = Expression(parameters, self.call_stack, self.variables)
@@ -252,6 +274,7 @@ class Interpreter:
                     functions += [function + function_parameter]
         return functions
 
+    
     def execute_functions(self, function_calls, parameter_tokens, line_number):
         parameter_tokens_length = len(parameter_tokens)
         for i in range(0, parameter_tokens_length, 1):
@@ -273,21 +296,32 @@ class Interpreter:
         if function[function_name_length] == "(":
             function_parameters = function[function_name_length:] + parameters
             self.functions[function_name].populate_variables(function_parameters)
-            self.variables_out_of_scope = self.variables
+            if self.recursion_level == 0:
+                self.variables_out_of_scope = self.variables
             self.variables = self.functions[function_name].function_variables
-            self.in_function = True
+            self.recursion_level += 1
             self.function_call_stack.push(function_name)
             start_line = self.functions[function_name].function_start + 1
             function_body = self.functions[function_name].function_body
             function_call_line = self.repl_counter
+            in_if_chain_tmp = self.in_if_chain
+            looking_for_else_tmp = self.looking_for_else
+            in_nested_repl_tmp = self.in_nested_repl
+            self.in_if_chain = False
+            self.looking_for_else = False
+            self.in_nested_repl = False
             if self.script_name == "REPL":
                 self.repl_counter = start_line
                 self.run_script(function_body, None)
             else:
                 self.run_script(function_body, start_line)
+            self.in_if_chain = in_if_chain_tmp
+            self.looking_for_else = looking_for_else_tmp
+            self.in_nested_repl = in_nested_repl_tmp
             if self.script_name == "REPL":
                 self.repl_counter = line_number
             self.repl_counter = function_call_line
+
 
     def get_nested_code(self, start_line):
         nestable_lines = []

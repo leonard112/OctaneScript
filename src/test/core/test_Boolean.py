@@ -506,6 +506,7 @@ def test_inline_or_fails_if_third_operator_is_not_boolean():
 def test_complicated_expression_successful():
     assert Boolean('[[x."hello" equals (1 + 1)."hello"] lessThan ["world" or "test"] and true]', test_stack, {'x': 2}).evaluate() == False
     assert Boolean('[true and [x."hello" equals (1 + 1)."hello"] lessThan ["world" or "test"]]', test_stack, {'x': 2}).evaluate() == False
+    assert Boolean('[[2 and 3] equals false]', test_stack, {}).evaluate() == False
 
 
 def assert_error(expression):

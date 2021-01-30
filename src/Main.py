@@ -73,6 +73,7 @@ def perform_operation_based_on_arguments(arguments):
 
 
 def enter_interpreter_as(entrypoint):
+    sys.setrecursionlimit(10**6)
     interpreter = Interpreter(entrypoint)
     interpreter.run()
 

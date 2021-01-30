@@ -59,10 +59,13 @@ class NestableExpression:
         token = expression
         for symbol in self.symbols: # when expression contains an expression symbol
             if symbol in expression:
-                token = token.split(symbol, 1)[0]
-                if symbol.isalpha():
+                tokens = token.split(symbol, 1)
+                token = tokens[0]
+                after_token = None
+                if len(tokens) > 1:
+                    after_token = tokens[1]
+                if symbol.isalpha() and after_token != None:
                     token = self.tokenize_on_alpha_symbol_after_initial_token(expression, symbol, token)
-                    return token
         return token
 
 

@@ -44,9 +44,10 @@ class Setter:
         valid_characters = "abcdefghijklmnopqrstuvwxyz"
         valid_character_count = 0
 
-        for char in variable:
+        variable_lower = variable.lower()
+        for char in variable_lower:
             for valid_char in valid_characters:
-                if char.lower() == valid_char:
+                if char == valid_char:
                     valid_character_count += 1
 
         for word in reserved:
