@@ -11,8 +11,17 @@ function shortCircuit()
     print err
 end
 
-set val to countDown(100)
+function factorial(n)
+    if [n equals 0]
+        return 1
+    else
+        return (n * factorial(n - 1))
+    end
+end
 
+# set val to countDown(498)
+
+set val to factorial(10)
 print val
 
 #print shortCircuit()

@@ -13,7 +13,6 @@ from core.Function import Function
 from colors import color
 import os
 import sys
-from functools import lru_cache
 from Reserved import reserved
 
 
@@ -24,7 +23,8 @@ class Interpreter:
         self.variables = {}
         self.variables_out_of_scope = {}
         self.functions = {}
-        self.recursion_level = 0
+        self.recursion_depth = 0
+        self.recursion_limit = 500
         self.call_stack = Stack()
         self.function_call_stack = Stack()
         self.repl_counter = 0
@@ -81,7 +81,7 @@ class Interpreter:
         line = ""
 
         while True:
-            line_raw = input(str(self.repl_counter+1) + "\t\b\b>> ") + "\n"
+            line_raw = input("| " + str(self.repl_counter+1) + "\t\b\b>> ") + "\n"
             self.lines.append(line_raw)
             line = Line(line_raw, self.repl_counter, "REPL")
             self.call_stack.push(line)
@@ -110,7 +110,7 @@ class Interpreter:
             if lines[i].strip()[:3] == "end":
                 return i
 
-    #@lru_cache(maxsize=2)
+
     def execute(self, call_stack):
         line_raw = call_stack.peek().line
         function = line_raw.split(' ')[0].strip()
@@ -122,7 +122,7 @@ class Interpreter:
             return line_number
 
         elif function == "if" or function == "elseIf" or function == "else":
-            if self.recursion_level > 0:
+            if self.recursion_depth > 0:
                 self.in_nested_repl = True
             if function == "elseIf" or function == "else":
                 if self.in_if_chain == False:
@@ -170,7 +170,7 @@ class Interpreter:
             return line_number + function_end + 1
 
         elif function[:6] == "return":
-            if self.recursion_level == 0:
+            if self.recursion_depth == 0:
                 fail("\"return\" can only be used in functions", self.error_type, self.call_stack)
             function_name = self.function_call_stack.peek()
             parameters = self.resolve_function_calls(parameters, line_number)
@@ -186,7 +186,7 @@ class Interpreter:
             if self.in_if_chain == True:
                 self.in_if_chain = False
                 return line_number
-            if self.recursion_level > 0:
+            if self.recursion_depth > 0:
                 self.function_cleanup()
                 return line_number
             fail("Extra or dangling \"end\".", self.error_type, self.call_stack)
@@ -222,16 +222,12 @@ class Interpreter:
             except Exception:
                 fail("Unknown function.", self.error_type, call_stack)
 
+
     def function_cleanup(self):
-        self.recursion_level -= 1
-        if self.recursion_level == 0:
+        self.recursion_depth -= 1
+        if self.recursion_depth == 0:
             self.variables = self.variables_out_of_scope
 
-    def pop_off_stack_until_last_function_call(self, function_name):
-        line_raw = self.call_stack.peek().line
-        print(function_name)
-        if function_name in line_raw:
-            print(line_raw)
 
     def resolve_function_calls(self, parameters, line_number):
         expression = Expression(parameters, self.call_stack, self.variables)
@@ -296,10 +292,12 @@ class Interpreter:
         if function[function_name_length] == "(":
             function_parameters = function[function_name_length:] + parameters
             self.functions[function_name].populate_variables(function_parameters)
-            if self.recursion_level == 0:
+            if self.recursion_depth == 0:
                 self.variables_out_of_scope = self.variables
             self.variables = self.functions[function_name].function_variables
-            self.recursion_level += 1
+            self.recursion_depth += 1
+            if self.recursion_depth == self.recursion_limit:
+                fail("Maximum recursion depth exceeded." , self.error_type, self.call_stack)
             self.function_call_stack.push(function_name)
             start_line = self.functions[function_name].function_start + 1
             function_body = self.functions[function_name].function_body
@@ -331,7 +329,7 @@ class Interpreter:
         if self.script_name == "REPL" and self.in_nested_repl == False:
             while(True):
                 self.repl_counter += 1
-                line_raw = input(str(self.repl_counter+1) + "\t\b\b~ ") + "\n"
+                line_raw = input("| " + str(self.repl_counter+1) + "\t\b\b~ ") + "\n"
                 if line_raw.strip()[:2] == "if":
                     required_end_count += 1
                 elif line_raw.strip() == "end":

@@ -12,8 +12,14 @@ def fail(message, error_type, call_stack):
 
 def format_trace(call_stack):
     trace = ""
+    max_length = 40
+    count = 0
     for line in call_stack:
+        if count == max_length:
+            trace += "\t...\n"
+            break
         if "\n" not in line.line:
             line.line += "\n"
         trace += "\t" + line.get_line_info()
+        count += 1
     return trace

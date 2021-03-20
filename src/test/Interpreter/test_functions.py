@@ -16,6 +16,13 @@ end
     assert interpreter.functions["testFunc"]
     assert interpreter.functions["testFunc"].function_start == 1
 
+def test_function_fails_if_not_proceeded_by_end(interpreter):
+    script = """
+function testFunc(x, y, z)
+    print x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
 def test_multiple_functions_can_be_defined(interpreter):
     script = """
 function testFunc(x, y, z)

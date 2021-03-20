@@ -63,8 +63,6 @@ def test_passing_in_decimal_value_as_parameter_in_function_definition_raises_err
     assert_error_on_init("testFunc(x, 5.3, z)")
 def test_passing_in_math_as_parameter_in_function_definition_raises_error():
     assert_error_on_init("testFunc(x, (1 + 1), z)")
-def test_passing_in_boolean_as_parameter_in_function_definition_raises_error():
-    assert_error_on_init("testFunc(x, [true], z)")
 
 
 # PARAMETER SUBSTITUION
@@ -135,8 +133,6 @@ def test_passing_no_parameters_into_function_that_takes_no_parameters_with_white
 def test_extra_non_space_characters_after_right_parenthesis_raises_error():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
     assert_error_on_populating_variables(b, "(1, 2, 3) print 'test'")
-
-
 
 
 def assert_error_on_init(function_definition):
