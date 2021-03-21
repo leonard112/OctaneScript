@@ -85,6 +85,15 @@ def test_math_using_invalid_variable_fails():
     assert_error(Math('(1 + ( x * (2 ^ y)) * 2)', test_stack, {'x': "string is no good", 'y': 3}))
 
 
+# ZERO RELATED ERRORS
+def test_math_divide_by_zero_raises_error():
+    assert_error(Math('(1 / 0)', test_stack, {}))
+    assert_error(Math('(1 % 0)', test_stack, {}))
+
+def test_math_zero_root_raises_error():
+    assert_error(Math('(0 rootOf 4)', test_stack, {}))
+
+
 def assert_error(expression):
     with pytest.raises(SystemExit) as error:
             expression.calculate()

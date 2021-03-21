@@ -24,15 +24,32 @@ class Math(NestableExpression):
 
 
     def perform_operation(self, tokens):
-        return {
-            '+' : self.resolve(tokens[0]) + self.resolve(tokens[2]),
-            '-' : self.resolve(tokens[0]) - self.resolve(tokens[2]),
-            '*' : self.resolve(tokens[0]) * self.resolve(tokens[2]),
-            '/' : self.resolve(tokens[0]) / self.resolve(tokens[2]),
-            '%' : self.resolve(tokens[0]) % self.resolve(tokens[2]),
-            '^' : self.resolve(tokens[0]) ** self.resolve(tokens[2]),
-            'rootOf' : self.resolve(tokens[2]) ** (1/self.resolve(tokens[0]))
-        }.get(tokens[1], None)
+        operator = tokens[1]
+        operand_1 = self.resolve(tokens[0])
+        operand_2 = self.resolve(tokens[2])
+        if operator == '+': 
+            return operand_1 + operand_2
+        elif operator =='-': 
+            return operand_1 - operand_2
+        elif operator == '*': 
+            return operand_1 * operand_2
+        elif operator == '/': 
+            try:
+                return operand_1 / operand_2
+            except:
+                fail("Cannot divide by 0.", self.error_type, self.call_stack)
+        elif operator == '%': 
+            try:
+                return operand_1 % operand_2
+            except:
+                fail("Cannot divide by 0.", self.error_type, self.call_stack)
+        elif operator == '^': 
+            return operand_1 ** operand_2
+        elif operator == 'rootOf':
+            try: 
+                return operand_2 ** (1/operand_1)
+            except:
+                fail("Cannot take 0 root.", self.error_type, self.call_stack)
 
 
     def resolve(self, value):
@@ -42,7 +59,7 @@ class Math(NestableExpression):
             try:
                 return float(self.get_variable(value))
             except Exception:
-                fail("Math operations can only be performed with numbers", self.error_type, self.call_stack)
+                fail("Math operations can only be performed with numbers.", self.error_type, self.call_stack)
 
 
     def is_valid_answer(self, tokens):

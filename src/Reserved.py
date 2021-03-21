@@ -35,5 +35,11 @@ reserved = [
 
     # BOOLEAN
     "lessThanEquals", "greaterThanEquals", "lessThan", "greaterThan", "equals", "notEquals", 
-    "and", "or", "true", "false"
+    "and", "or", "true", "false",
+
+    # FUNCTION
+    "function", "return",
+
+    # REPEAT
+    "repeat", "while", "counter", "step", "start"
 ]

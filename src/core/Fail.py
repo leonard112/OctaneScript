@@ -7,7 +7,7 @@ import sys
 
 def fail(message, error_type, call_stack):
     print(color("\n" + error_type + ":\n\t" + message + "\n\nStack Trace:\n" +
-                format_trace(call_stack.get_stack()), fg="red"))
+                format_trace(call_stack.get_stack()), fg="red"), file=sys.stderr)
     sys.exit(1)
 
 def format_trace(call_stack):

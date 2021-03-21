@@ -154,7 +154,86 @@ class Interpreter:
                 line_number = self.find_else(conditional_lines, line_number)
             return line_number
 
-        elif function[:8] == "function":
+        elif function == "repeat":
+            parameters = ' '.join(parameters.split())
+            if parameters[:6] == "while ":
+                boolean = self.resolve_function_calls(parameters[6:], line_number)
+                b = Boolean(boolean, call_stack, self.variables)
+                repeat_while_lines = self.get_nested_code(line_number + 1)
+                if self.script_name == "REPL":
+                    repeat_while_lines = repeat_while_lines[:-1]
+                while b.evaluate() == True:
+                    self.run_script(repeat_while_lines, line_number + 1)
+                    boolean = self.resolve_function_calls(parameters[6:], line_number)
+                    b = Boolean(boolean, call_stack, self.variables)
+                if self.script_name != "REPL": 
+                    line_number += 1
+                return line_number + len(repeat_while_lines)
+            is_counter = False
+            counter = None
+            counter_overrides_an_existing_variable = False
+            counter_original_value = None
+            is_custom_step = False
+            step = 1
+            is_custom_start = False
+            start = 0
+            parameter_tokens = parameters.split(",")
+            if len(parameter_tokens) > 1:
+                option_tokens = parameter_tokens[1:]
+                for option_token in option_tokens:
+                    option_token = option_token.strip()
+                    if option_token[:8] == "counter ":
+                        if is_counter == True:
+                            fail("\"counter\" already defined. Only define a counter once." , self.error_type, self.call_stack)
+                        counter = option_token[8:]
+                        if counter in self.variables:
+                            counter_overrides_an_existing_variable = True
+                            counter_original_value = self.variables[counter]
+                        setter = Setter(counter + " to  0", call_stack, self.variables, self.functions)
+                        self.variables.update(setter.set())
+                        is_counter = True
+                    elif option_token[:5] == "step ":
+                        if is_custom_step == True:
+                            fail("\"step\" already defined. Only define a step once." , self.error_type, self.call_stack)
+                        step = self.resolve_function_calls(option_token[5:], line_number)
+                        step_expression = Expression(step, self.call_stack, self.variables)
+                        step = step_expression.evaluate()
+                        if type(step) != int:
+                                fail("\"step\" must be an integer." , self.error_type, self.call_stack)
+                        is_custom_step = True
+                    elif option_token[:6] == "start ":
+                        if is_custom_start == True:
+                            fail("\"start\" already defined. Only define a start value once." , self.error_type, self.call_stack)
+                        start = self.resolve_function_calls(option_token[6:], line_number)
+                        start_expression = Expression(start, self.call_stack, self.variables)
+                        start = start_expression.evaluate()
+                        if type(start) != int:
+                                fail("\"start\" must be an integer." , self.error_type, self.call_stack)
+                        is_custom_start = True
+                    else:
+                        fail("Unknown option for repeat loop." , self.error_type, self.call_stack)
+            repeat_to = self.resolve_function_calls(parameter_tokens[0], line_number)
+            repeat_expression = Expression(repeat_to, self.call_stack, self.variables)
+            repeat_to = repeat_expression.evaluate()
+            if type(repeat_to) != int:
+                fail("The number of times to repeat the code block must be an integer." , self.error_type, self.call_stack)
+            repeat_lines = self.get_nested_code(line_number + 1)
+            if self.script_name == "REPL":
+                repeat_lines = repeat_lines[:-1]
+            for i in range(start, repeat_to, step):
+                if is_counter == True:
+                    self.variables[counter] = i
+                self.run_script(repeat_lines, line_number + 1)
+            if is_counter == True:
+                self.variables.pop(counter)
+            line_number += len(repeat_lines)
+            if self.script_name != "REPL": 
+                line_number += 1
+            if counter_overrides_an_existing_variable == True:
+                self.variables[counter] = counter_original_value
+            return line_number
+
+        elif function == "function":
             function_name = parameters.split("(")[0].strip()
             if function_name in self.functions:
                 fail("Function \"" + function_name + "\" is already defined." , self.error_type, self.call_stack)
@@ -169,7 +248,7 @@ class Interpreter:
             self.functions[f.function_name] = f
             return line_number + function_end + 1
 
-        elif function[:6] == "return":
+        elif function == "return":
             if self.recursion_depth == 0:
                 fail("\"return\" can only be used in functions", self.error_type, self.call_stack)
             function_name = self.function_call_stack.peek()
@@ -182,7 +261,7 @@ class Interpreter:
             self.function_cleanup()
             return -1
 
-        elif function[:3] == "end":
+        elif function == "end":
             if self.in_if_chain == True:
                 self.in_if_chain = False
                 return line_number
@@ -203,13 +282,13 @@ class Interpreter:
             l.log()
             return line_number
 
-        elif function[:3] == "set" and len(function) == 3:
+        elif function == "set" and len(function) == 3:
             parameters = self.resolve_function_calls(parameters, line_number)
             setter = Setter(parameters, call_stack, self.variables, self.functions)
             self.variables.update(setter.set())
             return line_number
 
-        elif function[:4] == "exit" and len(function) == 4:
+        elif function == "exit" and len(function) == 4:
             sys.exit(0)
         else:
             try:

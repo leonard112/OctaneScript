@@ -1,9 +1,21 @@
 # This file is licensed under the MIT license.
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
+from contextlib import contextmanager,redirect_stderr,redirect_stdout
+from os import devnull
 from core.Fail import fail
 from core.Expression import Expression
 from core.Setter import Setter
+
+# References for suppress_stdout_stderr
+# https://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
+# https://creativecommons.org/licenses/by-sa/2.5/
+@contextmanager
+def suppress_stdout_stderr():
+    """A context manager that redirects stdout and stderr to devnull"""
+    with open(devnull, 'w') as fnull:
+        with redirect_stderr(fnull) as err, redirect_stdout(fnull) as out:
+            yield (err, out)
 
 
 class Function:
@@ -55,7 +67,8 @@ class Function:
             for variable in self.function_variables:
                 try:
                     expression = Expression(parameters[0], self.call_stack, self.function_variables)
-                    self.function_variables[variable] = expression.evaluate()
+                    with suppress_stdout_stderr():
+                        self.function_variables[variable] = expression.evaluate()
                 except:
                     expression = Expression(parameters[0], self.call_stack, self.global_variables)
                     self.function_variables[variable] = expression.evaluate()
