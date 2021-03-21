@@ -1,3 +1,7 @@
+env:
+  global:
+    - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
+
 jobs:
   include:
     - os: linux
@@ -19,7 +23,6 @@ jobs:
         - README="$PWD/README.md"
         - SRC_DIR="$PWD/src"
         - DEB_PACKAGE_DIR="$PWD/package_debian"
-        - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
         - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
     - os: windows
       env: 
@@ -38,7 +41,6 @@ jobs:
         - README="$PWD/README.md"
         - SRC_DIR="$PWD/src"
         - DEB_PACKAGE_DIR="$PWD/package_debian"
-        - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
         - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 script: 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT; fi
