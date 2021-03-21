@@ -24,9 +24,9 @@ sed -i "s/version/$VERSION.$COMMIT_SHORT/" $CONTROL_FILE
 cat $CONTROL_FILE
 
 # Install dependencies
-if [ "$OS" == "linux"]; then
+if [ "$OS" == "linux" ]; then
     cd $SRC_DIR && pip install -r requirements.txt
-elif [ "$OS" == "windows"]; then
+elif [ "$OS" == "windows" ]; then
     cd $SRC_DIR && py -m pip install -r requirements.txt
 fi
 
@@ -34,10 +34,10 @@ fi
 pytest --cov=src test
 
 # Build
-if [ "$OS" == "linux"]; then 
+if [ "$OS" == "linux" ]; then 
     pyinstaller --onefile  --name os  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os --version
-elif [ "$OS" == "windows"]; then 
+elif [ "$OS" == "windows" ]; then 
     pyinstaller --onefile  --name os.exe  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os.exe --version
 fi
@@ -46,18 +46,18 @@ fi
 echo -e "${SFTP_KEY}" > /tmp/sftp_rsa
 chmod 400 /tmp/sftp_rsa
 cp $LICENSE .
-if [ "$OS" == "linux"]; then 
+if [ "$OS" == "linux" ]; then 
     tar -czvf $PACKAGE_NAME.tgz *
     export TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
-elif [ "$OS" == "windows"]; then
+elif [ "$OS" == "windows" ]; then
     tar.exe -a -c -f $PACKAGE_NAME.zip *
     export ZIP_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/zip"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $ZIP_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.zip"
 fi
 
 # Package For Debian
-if [ "$OS" == "linux"]; then
+if [ "$OS" == "linux" ]; then
     mkdir -p $DEB_PACKAGE_DIR/package/usr/bin && cp os $DEB_PACKAGE_DIR/package/usr/bin
     mkdir -p $DEB_PACKAGE_DIR/package/usr/share/doc && cp LICENSE $DEB_PACKAGE_DIR/package/usr/share/doc/copyright
     cd $DEB_PACKAGE_DIR && mv package $PACKAGE_NAME
