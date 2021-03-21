@@ -4,43 +4,41 @@ jobs:
       language: python
       dist: trusty
       env:
-        global: 
-          - NAME=OctaneScript
-          - NAME_LOWER=octanescript
-          - MAINTAINER=lcarcaramo@gmail.com
-          - VERSION=0.0.5
-          - RELEASE="Alpha"
-          - RELEASE_LOWER="alpha"
-          - RELEASE_STATUS="DEV"
-          - RELEASE_STATUS_LOWER="dev"
-          - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-          - OS=linux
-          - ARCH=amd64
-          - LICENSE="$PWD/LICENSE"
-          - README="$PWD/README.md"
-          - SRC_DIR="$PWD/src"
-          - DEB_PACKAGE_DIR="$PWD/package_debian"
-          - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
-          - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
+        - NAME=OctaneScript
+        - NAME_LOWER=octanescript
+        - MAINTAINER=lcarcaramo@gmail.com
+        - VERSION=0.0.5
+        - RELEASE="Alpha"
+        - RELEASE_LOWER="alpha"
+        - RELEASE_STATUS="DEV"
+        - RELEASE_STATUS_LOWER="dev"
+        - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
+        - OS=linux
+        - ARCH=amd64
+        - LICENSE="$PWD/LICENSE"
+        - README="$PWD/README.md"
+        - SRC_DIR="$PWD/src"
+        - DEB_PACKAGE_DIR="$PWD/package_debian"
+        - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
+        - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
     - os: windows
-      env:
-        global: 
-          - NAME=OctaneScript
-          - NAME_LOWER=octanescript
-          - MAINTAINER=lcarcaramo@gmail.com
-          - VERSION=0.0.5
-          - RELEASE="Alpha"
-          - RELEASE_LOWER="alpha"
-          - RELEASE_STATUS="DEV"
-          - RELEASE_STATUS_LOWER="dev"
-          - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-          - OS=linux
-          - ARCH=amd64
-          - LICENSE="$PWD/LICENSE"
-          - README="$PWD/README.md"
-          - SRC_DIR="$PWD/src"
-          - DEB_PACKAGE_DIR="$PWD/package_debian"
-          - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
-          - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
+      env: 
+        - NAME=OctaneScript
+        - NAME_LOWER=octanescript
+        - MAINTAINER=lcarcaramo@gmail.com
+        - VERSION=0.0.5
+        - RELEASE="Alpha"
+        - RELEASE_LOWER="alpha"
+        - RELEASE_STATUS="DEV"
+        - RELEASE_STATUS_LOWER="dev"
+        - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
+        - OS=linux
+        - ARCH=amd64
+        - LICENSE="$PWD/LICENSE"
+        - README="$PWD/README.md"
+        - SRC_DIR="$PWD/src"
+        - DEB_PACKAGE_DIR="$PWD/package_debian"
+        - BUILD_LINUX_SCRIPT="$PWD/travis/build-linux.sh"
+        - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 script: 
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd $SRC_DIR && chmod +x $BUILD_LINUX_SCRIPT && bash $BUILD_LINUX_SCRIPT; fi
