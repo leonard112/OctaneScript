@@ -25,7 +25,7 @@ reserved = [
     "log", "logWarn", "logSuccess", "logError",
     
     # SET
-    "set",
+    "set", "input", "randomDecimal", "randomInteger",
 
     # EXIT
     "exit",

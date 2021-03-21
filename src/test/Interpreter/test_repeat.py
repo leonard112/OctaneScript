@@ -61,6 +61,15 @@ end
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == 10
 
+def test_amount_of_times_to_repeat_cannot_be_zero(interpreter):
+    script = """
+set x to 0
+repeat 0
+    set x to (x + 1)
+end
+""".splitlines(True)
+    assert_error(interpreter, script)
+
 def test_amount_of_times_to_repeat_cannot_be_a_decimal(interpreter):
     script = """
 set x to 0
@@ -140,6 +149,15 @@ end
 """.splitlines(True)
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == 5
+
+def test_repeat_step_cannot_be_zero(interpreter):
+    script = """
+set x to 0
+repeat 10, step 0
+    set x to (x + 1)
+end
+""".splitlines(True)
+    assert_error(interpreter, script)
 
 def test_repeat_step_can_be_result_of_math_expression(interpreter):
     script = """
@@ -321,6 +339,34 @@ end
 """.splitlines(True)
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == 18
+
+def test_difference_between_repeat_and_start_cannot_be_positive_if_the_step_is_negative(interpreter):
+    script = """
+set x to 0
+repeat 10, start 0, step -1
+    set x to (x + 1)
+end
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_difference_between_repeat_and_start_cannot_be_negative_if_the_step_is_positive(interpreter):
+    script = """
+set x to 0
+repeat -10, start 0, step 1
+    set x to (x + 1)
+end
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_difference_between_repeat_and_start_can_be_negative_if_the_step_is_negative(interpreter):
+    script = """
+set x to 0
+repeat -10, start 0, step -2
+    set x to (x + 1)
+end
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == 5
 
 # REPEAT WHILE
 def test_repeat_while_works(interpreter):

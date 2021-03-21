@@ -17,12 +17,16 @@ python_trace_banner = "\n_____________________________________ PYTHON TRACE ____
 def fail(message, error_type, call_stack):
     import Main
     metadata = """Time of Error: [%s]
-OctanScript Version: %s
+OctaneScript Version: %s
+OctaneScript Maintainer: %s
 Python Version: %s
 Architecture: %s
 Processor: %s
 Operating System: %s %s
-""" % (datetime.now(), Main.version, platform.python_version(), platform.machine(), 
+
+If this error report was generated as a result of a bug with OctaneScript, you can submit
+an issue at https://github.com/leonard112/OctaneScript/issues, and attach this error report.
+""" % (datetime.now(), Main.version, Main.maintainer, platform.python_version(), platform.machine(), 
        platform.processor(), platform.system(), platform.version())
     error_summary = "\n" + error_type + ":\n\t" + message + "\n\nStack Trace:\n"
     console_trace = color(error_summary + format_trace(call_stack.get_stack(), False), fg="red")

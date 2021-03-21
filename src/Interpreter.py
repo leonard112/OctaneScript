@@ -13,6 +13,8 @@ from core.Function import Function
 from colors import color
 import os
 import sys
+import random
+import time
 from Reserved import reserved
 
 
@@ -221,6 +223,14 @@ class Interpreter:
             repeat_to = repeat_expression.evaluate()
             if type(repeat_to) != int:
                 fail("The number of times to repeat the code block must be an integer." , self.error_type, self.call_stack)
+            if repeat_to == 0:
+                fail("The number of times to repeat the code block cannot be '0'." , self.error_type, self.call_stack)
+            if step == 0:
+                fail("\"step\" cannot be '0'." , self.error_type, self.call_stack)
+            if repeat_to - start > 0 and step < 0:
+                fail("\"step\" cannot be less than '0' if the difference between the amount of times to repeat the code block and \"start\" is greater than '0'." , self.error_type, self.call_stack)
+            if repeat_to - start < 0 and step > 0:
+                fail("\"step\" cannot be greater than '0' if the difference between the amount of times to repeat the code block and \"start\" is less than '0'." , self.error_type, self.call_stack)
             repeat_lines = self.get_nested_code(line_number + 1)
             if self.script_name == "REPL":
                 repeat_lines = repeat_lines[:-1]
@@ -290,14 +300,59 @@ class Interpreter:
             l.log()
             return line_number
 
-        elif function == "set" and len(function) == 3:
+        elif function == "set":
             parameters = self.resolve_function_calls(parameters, line_number)
+            parameter_tokens = parameters.split()
+            if parameter_tokens[-1] == "input":
+                user_input = input("")
+                parameters = ' '.join(parameter_tokens[:-1]) + ' "' + user_input + '"'
+            elif parameter_tokens[2] == "input":
+                prompt = ' '.join(parameter_tokens[3:])
+                expression = Expression(prompt, self.call_stack, self.variables)
+                prompt = expression.evaluate()
+                user_input = input(prompt)
+                parameters = ' '.join(parameter_tokens[:2]) + ' "' + user_input + '"'
+            elif parameter_tokens[2][:13] == "randomInteger":
+                random_integer_parameters = ' '.join(parameter_tokens[2:])
+                random_integer_parameter_tokens = random_integer_parameters.split(",")
+                random_integer_parameter_tokens_length = len(random_integer_parameter_tokens)
+                if random_integer_parameter_tokens_length > 3 or random_integer_parameter_tokens_length < 2:
+                    fail("'randomInteger' can only take 2 parameters, and must take at least 1.", self.error_type, call_stack)
+                if random_integer_parameter_tokens_length == 3:
+                    expression = Expression(random_integer_parameter_tokens[1], self.call_stack, self.variables)
+                    lower_limit = expression.evaluate()
+                    expression = Expression(random_integer_parameter_tokens[2], self.call_stack, self.variables)
+                    upper_limit = expression.evaluate()
+                if random_integer_parameter_tokens_length == 2:
+                    lower_limit = 0
+                    expression = Expression(random_integer_parameter_tokens[1], self.call_stack, self.variables)
+                    upper_limit = expression.evaluate()
+                if type(lower_limit) != int or type(upper_limit) != int:
+                    fail("'randomInteger' can only take integer parameters.", self.error_type, call_stack)
+                if upper_limit < lower_limit:
+                    fail("Lower limit cannot be greater than upper limit.", self.error_type, call_stack)
+                parameter_tokens[2] = str(random.randint(lower_limit, upper_limit))
+                parameters = ' '.join(parameter_tokens[:3])
+            elif parameter_tokens[-1] == "randomDecimal":
+                parameter_tokens[-1] = str(random.random())
+                parameters = ' '.join(parameter_tokens)
             setter = Setter(parameters, call_stack, self.variables, self.functions)
             self.variables.update(setter.set())
             return line_number
 
-        elif function == "exit" and len(function) == 4:
+        elif function == "sleep":
+            parameters = self.resolve_function_calls(parameters, line_number)
+            expression = Expression(parameters, self.call_stack, self.variables)
+            seconds = expression.evaluate()
+            if type(seconds) == int or type(seconds) == float:
+                time.sleep(seconds)
+            else:
+                fail("Number of seconds to sleep for must be a number.", self.error_type, call_stack)
+            return line_number
+
+        elif function == "exit":
             sys.exit(0)
+
         else:
             try:
                 function_name = function.split("(")[0]
@@ -334,6 +389,7 @@ class Interpreter:
                             for specialized_token in specialized_expression_functions:
                                 function_calls += [specialized_token]
                         else:
+                            token = token.strip(",")
                             function_calls += [token]
         return function_calls
 
