@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$OS" == "windows"]; then
+if [ "$OS" == "windows" ]; then
     choco install python
     choco install pip
 fi
