@@ -3,7 +3,7 @@
 set -e
 
 if [ "$OS" == "windows" ]; then
-    choco install python3 --pre
+    choco install python3 --version=3.8.1
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then

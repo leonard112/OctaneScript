@@ -1,5 +1,5 @@
 ansicolors
-pyinstaller==4.0
+pyinstaller
 pytest>=5.0
 pytest-cov
 pytest-mock
