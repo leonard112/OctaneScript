@@ -24,7 +24,11 @@ sed -i "s/version/$VERSION.$COMMIT_SHORT/" $CONTROL_FILE
 cat $CONTROL_FILE
 
 # Install dependencies
-cd $SRC_DIR && pip install -r requirements.txt
+if [ "$OS" == "linux"]; then
+    cd $SRC_DIR && pip install -r requirements.txt
+elif [ "$OS" == "windows"]; then
+    cd $SRC_DIR && py -m pip install -r requirements.txt
+fi
 
 # Test
 pytest --cov=src test
