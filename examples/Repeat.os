@@ -8,4 +8,6 @@ end
 
 set x to 0
 
-print [isLessThanTen(x)]
+repeat while [true]
+    invalid
+end

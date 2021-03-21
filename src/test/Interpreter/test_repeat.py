@@ -27,6 +27,16 @@ invalid
     assert_stack_trace(interpreter, script, [6])
     assert_stack_trace_REPL(capfd, script, [6])
 
+def test_repeat_gets_same_stack_trace_when_error_occurs_in_loop_from_script_or_REPL(capfd, interpreter):
+    script = """
+repeat 10
+    print "This fails"
+    invalid
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [4, 2])
+    assert_stack_trace_REPL(capfd, script, [4, 2])
+
 def test_repeat_can_loop_for_the_result_of_a_math_expression(interpreter):
     script = """
 set x to 0
@@ -333,6 +343,16 @@ invalid
 """.splitlines(True)
     assert_stack_trace(interpreter, script, [6])
     assert_stack_trace_REPL(capfd, script, [6])
+
+def test_repeat_while_gets_same_stack_trace_when_error_occurs_in_loop_from_script_or_REPL(capfd, interpreter):
+    script = """
+repeat while [true]
+    print "This fails"
+    invalid
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [4, 2])
+    assert_stack_trace_REPL(capfd, script, [4, 2])
 
 def test_repeat_while_can_take_the_result_of_a_fuction(interpreter):
     script = """

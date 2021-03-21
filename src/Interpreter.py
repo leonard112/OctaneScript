@@ -56,7 +56,7 @@ class Interpreter:
                     return
                 raise sys.exit(rc)
             except KeyboardInterrupt:
-                sys.exit(0)
+                fail("Recieved Keyboard Interrupt (ctl+c). Terminating program..." , self.error_type, self.call_stack)
 
     
     def run_script(self, lines, overall_script_position):
@@ -163,7 +163,11 @@ class Interpreter:
                 if self.script_name == "REPL":
                     repeat_while_lines = repeat_while_lines[:-1]
                 while b.evaluate() == True:
+                    if self.script_name == "REPL":
+                        self.repl_counter -= len(repeat_while_lines) + 1
                     self.run_script(repeat_while_lines, line_number + 1)
+                    if self.script_name == "REPL":
+                        self.repl_counter += len(repeat_while_lines) + 1
                     boolean = self.resolve_function_calls(parameters[6:], line_number)
                     b = Boolean(boolean, call_stack, self.variables)
                 if self.script_name != "REPL": 
@@ -223,7 +227,11 @@ class Interpreter:
             for i in range(start, repeat_to, step):
                 if is_counter == True:
                     self.variables[counter] = i
+                if self.script_name == "REPL":
+                        self.repl_counter -= len(repeat_lines) + 1
                 self.run_script(repeat_lines, line_number + 1)
+                if self.script_name == "REPL":
+                        self.repl_counter += len(repeat_lines) + 1
             if is_counter == True:
                 self.variables.pop(counter)
             line_number += len(repeat_lines)
