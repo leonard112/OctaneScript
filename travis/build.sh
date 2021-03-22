@@ -33,9 +33,9 @@ fi
 
 # Test
 if [ "$OS" == "linux" ]; then
-    pytest --cov=src test
+    pytest --cov=$PWD test
 elif [ "$OS" == "windows" ]; then
-    py -m pytest --cov=src test
+    py -m pytest --cov=$PWD test
 fi
 
 # Build
