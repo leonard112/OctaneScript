@@ -13,7 +13,9 @@ env:
     - LICENSE="$PWD/LICENSE"
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
+    - ICON="$PWD/images/octanescript_logo.ico"
     - BUILD_SCRIPT="$PWD/travis/build.sh"
+    - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 
 jobs:
   include:
@@ -23,11 +25,9 @@ jobs:
       env:
         - OS=linux
         - DEB_PACKAGE_DIR="$PWD/package_debian"
-        - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
     - os: windows
       language: bash
       env: 
         - OS=windows
-        - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 script: 
   - cd $SRC_DIR && chmod +x $BUILD_SCRIPT && bash $BUILD_SCRIPT
