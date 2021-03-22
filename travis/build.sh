@@ -32,11 +32,7 @@ elif [ "$OS" == "windows" ]; then
 fi
 
 # Test
-if [ "$OS" == "linux" ]; then
-    pytest --cov=$PWD test
-elif [ "$OS" == "windows" ]; then
-    pytest --cov=$PWD test
-fi
+cd .. && pytest --cov=src src/test && cd src
 
 # Build
 if [ "$OS" == "linux" ]; then 
