@@ -28,8 +28,8 @@ if [ "$OS" == "linux" ]; then
     cd $SRC_DIR && pip install -r requirements.txt
 elif [ "$OS" == "windows" ]; then
     cd $SRC_DIR && py -m pip install -r requirements.txt
-    export PATH="c/Python36/Scripts:$PATH"
-    ls "c/Python36/Scripts"
+    export PATH="/c/Python36/Scripts:$PATH"
+    ls "/c/Python36/Scripts"
 fi
 
 # Test
