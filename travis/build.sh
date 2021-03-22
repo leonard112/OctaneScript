@@ -7,9 +7,9 @@ if [ "$OS" == "windows" ]; then
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
-    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$COMMIT_SHORT-$RELEASE_STATUS-linux-amd64"
+    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$COMMIT_SHORT-$RELEASE_STATUS-$OS-amd64"
 else
-    export PACKAGE_NAME="$NAME_LOWER-$VERSION"
+    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$OS-amd64"
 fi
 
 # Update metadata 
@@ -29,14 +29,13 @@ if [ "$OS" == "linux" ]; then
 elif [ "$OS" == "windows" ]; then
     cd $SRC_DIR && py -m pip install -r requirements.txt
     export PATH="/c/Python39/Scripts:$PATH"
-    ls "/c/Python39/Scripts"
 fi
 
 # Test
 if [ "$OS" == "linux" ]; then
     pytest --cov=$PWD test
 elif [ "$OS" == "windows" ]; then
-    py -m pytest --cov=$PWD test
+    pytest --cov=$PWD test
 fi
 
 # Build
