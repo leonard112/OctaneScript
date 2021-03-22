@@ -3,7 +3,7 @@
 set -e
 
 if [ "$OS" == "windows" ]; then
-    choco install python3 --version=3.6.3
+    choco install python3 --version=3.9.1
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
@@ -28,8 +28,8 @@ if [ "$OS" == "linux" ]; then
     cd $SRC_DIR && pip install -r requirements.txt
 elif [ "$OS" == "windows" ]; then
     cd $SRC_DIR && py -m pip install -r requirements.txt
-    export PATH="/c/Python36/Scripts:$PATH"
-    ls "/c/Python36/Scripts"
+    export PATH="/c/Python39/Scripts:$PATH"
+    ls "/c/Python39/Scripts"
 fi
 
 # Test
