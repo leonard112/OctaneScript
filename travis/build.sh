@@ -43,7 +43,7 @@ if [ "$OS" == "linux" ]; then
     pyinstaller --onefile  --name os  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os --version
 elif [ "$OS" == "windows" ]; then 
-    pyinstaller --onefile --name os.exe  Main.py
+    py -m pyinstaller --onefile --name os.exe  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os.exe --version
 fi
 
