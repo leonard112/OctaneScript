@@ -28,7 +28,7 @@ if [ "$OS" == "linux" ]; then
     cd $SRC_DIR && pip install -r requirements.txt
 elif [ "$OS" == "windows" ]; then
     cd $SRC_DIR && py -m pip install -r requirements.txt
-    export PATH="C:\Python310\Scripts:$PATH"
+    export PATH="C:\Python36\Scripts:$PATH"
 fi
 
 # Test
@@ -43,7 +43,7 @@ if [ "$OS" == "linux" ]; then
     pyinstaller --onefile  --name os  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os --version
 elif [ "$OS" == "windows" ]; then 
-    py -m pyinstaller --onefile --name os.exe  Main.py
+    pyinstaller --onefile --name os.exe  Main.py
     echo -e "SMOKE TEST:" && cd dist && ./os.exe --version
 fi
 
