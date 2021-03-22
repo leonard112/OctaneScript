@@ -32,7 +32,11 @@ elif [ "$OS" == "windows" ]; then
 fi
 
 # Test
-pytest --cov=src test
+if [ "$OS" == "linux" ]; then
+    pytest --cov=src test
+elif [ "$OS" == "windows" ]; then
+    py -m pytest --cov=src test
+fi
 
 # Build
 if [ "$OS" == "linux" ]; then 
