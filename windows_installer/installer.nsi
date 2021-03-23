@@ -20,8 +20,8 @@ ShowInstDetails Show
 Section
     SetOutPath $INSTDIR
 	
-	File "../src/dist/os.exe"
-	File "../src/dist/LICENSE"
+	File "os.exe"
+	File "LICENSE"
  
     WriteUninstaller "$INSTDIR\uninstall.exe"
 	
