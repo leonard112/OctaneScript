@@ -24,7 +24,6 @@ Section
 	File "LICENSE"
  
     WriteUninstaller "$INSTDIR\uninstall.exe"
-	
 SectionEnd
  
 Section "uninstall"
