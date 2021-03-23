@@ -30,8 +30,8 @@ if [ "$OS" == "linux" ]; then
 elif [ "$OS" == "windows" ]; then
     cd $WINDOWS_INSTALLER_DIR
     INSTALLER_CREATION_SCRIPT="installer.nsi"
-    sed -i "s/octanescript-installer/$PACKAGE_NAME-installer/" $INSTALLER_CREATION_SCRIPT
     sed -i "s/DEV/$WINDOWS_INSTALLER_VERSION_TAG/" $INSTALLER_CREATION_SCRIPT
+    sed -i "s/octanescript-installer/$PACKAGE_NAME-installer/" $INSTALLER_CREATION_SCRIPT
 fi
 
 # Install dependencies
