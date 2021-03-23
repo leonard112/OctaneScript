@@ -4,24 +4,34 @@ set -e
 
 if [ "$OS" == "windows" ]; then
     choco install python3 --version=3.9.1
+    choco install nsis
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
-    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$COMMIT_SHORT-$RELEASE_STATUS-$OS-amd64"
+    PACKAGE_NAME="$NAME_LOWER-$VERSION-$COMMIT_SHORT-$RELEASE_STATUS-$OS-amd64"
+    WINDOWS_INSTALLER_VERSION_TAG="$VERSION ($COMMIT_SHORT) $RELEASE_STATUS"
 else
-    export PACKAGE_NAME="$NAME_LOWER-$VERSION-$OS-amd64"
+    PACKAGE_NAME="$NAME_LOWER-$VERSION-$OS-amd64"
+    WINDOWS_INSTALLER_VERSION_TAG=$VERSION
 fi
 
 # Update metadata 
 sed -i "s/Alpha DEV/$VERSION-$COMMIT_SHORT $RELEASE $RELEASE_STATUS/" Main.py
 cat Main.py
 
-cd .. && export CONTROL_FILE="package_debian/package/DEBIAN/control"
-sed -i "s/package/$PACKAGE_NAME/" $CONTROL_FILE
-sed -i "s/arch/$ARCH/" $CONTROL_FILE
-sed -i "s/maintainer/$MAINTAINER/" $CONTROL_FILE
-sed -i "s/version/$VERSION.$COMMIT_SHORT/" $CONTROL_FILE
-cat $CONTROL_FILE
+if [ "$OS" == "linux" ]; then 
+    cd .. && CONTROL_FILE="package_debian/package/DEBIAN/control"
+    sed -i "s/package/$PACKAGE_NAME/" $CONTROL_FILE
+    sed -i "s/arch/$ARCH/" $CONTROL_FILE
+    sed -i "s/maintainer/$MAINTAINER/" $CONTROL_FILE
+    sed -i "s/version/$VERSION.$COMMIT_SHORT/" $CONTROL_FILE
+    cat $CONTROL_FILE
+elif [ "$OS" == "windows" ]; then
+    cd $WINDOWS_INSTALLER_DIR
+    INSTALLER_CREATION_SCRIPT="installer.nsi"
+    sed -i "s/octanescript-installer/$PACKAGE_NAME/" $INSTALLER_CREATION_SCRIPT
+    sed -i "s/DEV/$WINDOWS_INSTALLER_VERSION_TAG/" $INSTALLER_CREATION_SCRIPT
+fi
 
 # Install dependencies
 if [ "$OS" == "linux" ]; then
@@ -49,11 +59,11 @@ chmod 400 /tmp/sftp_rsa
 cp $LICENSE .
 if [ "$OS" == "linux" ]; then 
     tar -czvf $PACKAGE_NAME.tgz *
-    export TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
+    TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
 elif [ "$OS" == "windows" ]; then
     tar.exe -a -c -f $PACKAGE_NAME.zip *
-    export ZIP_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/zip"
+    ZIP_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/zip"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $ZIP_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.zip"
 fi
 
@@ -63,8 +73,16 @@ if [ "$OS" == "linux" ]; then
     mkdir -p $DEB_PACKAGE_DIR/package/usr/share/doc && cp LICENSE $DEB_PACKAGE_DIR/package/usr/share/doc/copyright
     cd $DEB_PACKAGE_DIR && mv package $PACKAGE_NAME
     dpkg --build $PACKAGE_NAME
-    export DEB_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian"
+    DEB_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/debian"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $DEB_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.deb"
+fi
+
+# Create Windows Installer
+if [ "$OS" == "windows" ]; then
+    cd $WINDOWS_INSTALLER_DIR
+    nsis $INSTALLER_CREATION_SCRIPT
+    INSTALLER_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/installer"
+    sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $INSTALLER_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.exe"
 fi
 
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $PUBLISH_REPO <<< $"put ${README}"

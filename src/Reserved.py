@@ -27,6 +27,9 @@ reserved = [
     # SET
     "set", "input", "randomDecimal", "randomInteger",
 
+    # SLEEP
+    "sleep",
+
     # EXIT
     "exit",
 

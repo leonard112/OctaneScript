@@ -29,5 +29,6 @@ jobs:
       language: bash
       env: 
         - OS=windows
+        - WINDOWS_INSTALLER_DIR="$PWD/windows_installer"
 script: 
   - cd $SRC_DIR && chmod +x $BUILD_SCRIPT && bash $BUILD_SCRIPT
