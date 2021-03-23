@@ -30,7 +30,7 @@ if [ "$OS" == "linux" ]; then
 elif [ "$OS" == "windows" ]; then
     cd $WINDOWS_INSTALLER_DIR
     INSTALLER_CREATION_SCRIPT="installer.nsi"
-    sed -i "s/octanescript-installer/$PACKAGE_NAME/" $INSTALLER_CREATION_SCRIPT
+    sed -i "s/octanescript-installer/$PACKAGE_NAME-installer/" $INSTALLER_CREATION_SCRIPT
     sed -i "s/DEV/$WINDOWS_INSTALLER_VERSION_TAG/" $INSTALLER_CREATION_SCRIPT
 fi
 
@@ -83,8 +83,9 @@ if [ "$OS" == "windows" ]; then
     cd $WINDOWS_INSTALLER_DIR
     cp ../src/dist/* $WINDOWS_INSTALLER_DIR
     makensis $INSTALLER_CREATION_SCRIPT
+    ls
     INSTALLER_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/installer"
-    sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $INSTALLER_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.exe"
+    sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $INSTALLER_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}-installer.exe"
 fi
 
 sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $PUBLISH_REPO <<< $"put ${README}"
