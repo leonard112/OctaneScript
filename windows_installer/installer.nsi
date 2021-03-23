@@ -13,7 +13,7 @@ ShowInstDetails Show
 !define MUI_LICENSEPAGE_TEXT_TOP "LICENSE INFORMATION"
 !define MUI_LICENSEPAGE_TEXT_BOTTOM "Please review the license if you are considering using this software for anything more than exploration and learning."
 !define MUI_LICENSEPAGE_BUTTON "Next"
-!insertmacro MUI_PAGE_LICENSE "LICENSE"
+!insertmacro MUI_PAGE_LICENSE "../src/dist/LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
  
