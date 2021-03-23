@@ -80,7 +80,7 @@ fi
 # Create Windows Installer
 if [ "$OS" == "windows" ]; then
     cd $WINDOWS_INSTALLER_DIR
-    nsis $INSTALLER_CREATION_SCRIPT
+    makensis $INSTALLER_CREATION_SCRIPT
     INSTALLER_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/installer"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $INSTALLER_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.exe"
 fi
