@@ -5,6 +5,7 @@ set -e
 if [ "$OS" == "windows" ]; then
     choco install python3 --version=3.9.1
     choco install nsis
+    export PATH="/c/Program Files (x86)/NSIS:$PATH"
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
