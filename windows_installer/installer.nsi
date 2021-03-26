@@ -7,9 +7,9 @@ InstallDir "C:\Program Files\OctaneScript"
 ShowInstDetails Show
 
 !include "MUI2.nsh"
-!define MUI_ICON "../images/octanescript_logo.ico"
-!define MUI_UNICON "../images/octanescript_logo.ico"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "../images/octanescript-logo.bmp"
+!define MUI_ICON "octanescript_logo.ico"
+!define MUI_UNICON "octanescript_logo.ico"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "octanescript_logo.bmp"
 !define MUI_WELCOMEPAGE_TEXT "OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages. Feel free to use this software for whatever you wish, but ensure that you review this software's license (MIT) if you consider using this software for anything more than exploration and learning."
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "OctaneScript"
 !define MUI_LICENSEPAGE_TEXT_TOP "LICENSE INFORMATION"
