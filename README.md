@@ -16,13 +16,13 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 
 ### Debian
 > _This package can be installed on any [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
-* Download [Debian package](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/debian/) from SourceForge.
+* Download [Debian package](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
-$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/debian/octanescript-<version>-linux-amd64.deb
+$ wget <OctaneScript Debian dowload URL>
 ```
 * Install package.
 ```console
-$ sudo dpkg -i octanescript-<version>-linux-amd64.deb
+$ sudo dpkg -i octanescript-linux-amd64-<version>.deb
 ```
 * Smoke test.
 ```console
@@ -30,9 +30,9 @@ $ os --version
 ```
 ### Tar
 _These binaries should work for most Linux distributions._
-* Download [tar file](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev/tar/) from sourceforge.net.
+* Download [tar file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
-$ wget https://pilotfiber.dl.sourceforge.net/project/octanescript/alpha/linux/amd64/dev/tar/octanescript-<version>-linux-amd64.tgz
+$ wget <OctaneScript Tar dowload URL>
 ```
 * Create a dedicated folder for the binaries to live.
 ```console
@@ -40,7 +40,7 @@ $ sudo mkdir /opt/octanescript
 ```
 * Extract the contents ot the tar file to the folder where you want the binaries to live.
 ```console
-$ sudo tar -xzvf octanescript-<version>-linux-amd64.tgz --directory /opt/octanescript/
+$ sudo tar -xzvf octanescript-linux-amd64-<version>.tgz --directory /opt/octanescript/
 ```
 * Append the following line to `.bashrc`.
 ```shell
@@ -56,28 +56,31 @@ $ os --version
 > _Note that currently, Octane has to be built on Windows from __source__._
 
 ## Windows Installation
-* Clone this repository.
+
+### Installer
+_These binaries should work on any 64 bit Windows machine._
+* Download [Windows Installer](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page, and Run it.
+* Smoke test.
 ```powershell
-> git clone https://github.com/leonard112/OctaneScript.git
+> os --version
 ```
-* Navigate to the source code.
+
+### Zip
+_These binaries should work on any 64 bit Windows machine._
+> :warning: _Ensure that you run __Windows PowerShell__ as __Administrator__._
+* Download [zip file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```powershell
-> cd OctaneScript/src
+> curl -O <OctaneScript Zip dowload URL>
 ```
-* Install dependencies.
+* Create a dedicated folder for the binaries to live.
 ```powershell
-> pip install -r requirements.txt
+> mkdir "C:\Program Files\OctaneScript" 
 ```
-* Build os.exe
+* Extract the contents ot the tar file to the folder where you want the binaries to live.
 ```powershell
-> pyinstaller --onefile  --name os  main.py
+> Expand-Archive -Path octanescript-windows-amd64-<version>.zip -DestinationPath "C:\Program Files\OctaneScript"
 ```
-* Copy everything in the `octane.exe` to your `Program Files (x86)` folder.
-```powershell
-> mkdir "C:\Program Files (x86)\OctaneScript"`
-> cp -r dist/os.exe "C:\Program Files (x86)\OctaneScript\"
-```
-* Append OctaneScript to `PATH`.
+* Add `C:\Program Files\OctaneScript\os.exe` to the `PATH` environment variable.
   * https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
 * Smoke test.
 ```powershell
