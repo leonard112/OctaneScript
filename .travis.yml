@@ -13,7 +13,7 @@ env:
     - LICENSE="$PWD/LICENSE"
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
-    - ICON="$PWD/images/octanescript_logo.ico"
+    - ICON="$PWD/images/octanescript-logo.ico"
     - BUILD_SCRIPT="$PWD/travis/build.sh"
     - PUBLISH_REPO="lcarcaramo@frs.sourceforge.net:/home/frs/project/octanescript"
 
