@@ -2,7 +2,7 @@
 
   <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.png" alt="OctaneScript Logo" width=25%></img>
 
-OctaneScript is a scripting language built from Python. OctaneScript is currenly in it's early alpha stages.
+OctaneScript is a scripting language built using Python. OctaneScript is currenly in it's early alpha stages.
 
 :warning: Note that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to use this software for whatever you wish, but ensure that you review this software's [license](https://github.com/leonard112/OctaneScript/blob/main/LICENSE) _(MIT)_ if you consider using this software for anything more than exploration and learning. 
 
@@ -13,11 +13,15 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 * __[Release Binaries](https://github.com/leonard112/OctaneScript/releases)__
 
 * __[Development Binaries](https://sourceforge.net/projects/octanescript/files/)__
-  
-## Linux Installation (amd64 only)
 
-### Debian
-> _This package can be installed on any [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
+&nbsp;
+
+&nbsp;
+  
+# Linux Installation (amd64 only)
+
+## Debian
+> _This package can be installed on any 64 bit [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
 * Download [Debian package](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
 $ wget <OctaneScript Debian dowload URL>
@@ -30,9 +34,9 @@ $ sudo dpkg -i octanescript-linux-amd64-<version>.deb
 ```console
 $ os --version
 ```
-### Tar
-> _These binaries should work for most Linux distributions._
-* Download [tar file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
+## Tar
+> _These binaries should work for most 64 bit Linux distributions._
+* Download [Tar file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
 $ wget <OctaneScript Tar dowload URL>
 ```
@@ -57,21 +61,21 @@ $ os --version
 
 > _Note that currently, Octane has to be built on Windows from __source__._
 
-## Windows Installation
+# Windows Installation (amd64 only)
 
-### Installer
-> _These binaries should work on any 64 bit Windows machine._
+## Installer
+> _The binaries in this Windows Installer should work on any 64 bit Windows machine._
 * Download [Windows Installer](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page and Run it.
 * Smoke test.
 ```powershell
 > os --version
 ```
 
-### Zip
+## Zip
 > _These binaries should work on any 64 bit Windows machine._
 
 > :warning: _Ensure that you run __Windows PowerShell__ as __Administrator__._
-* Download [zip file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
+* Download [Zip file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```powershell
 > curl -O <OctaneScript Zip dowload URL>
 ```
