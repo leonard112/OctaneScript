@@ -10,7 +10,9 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 
 * __[Source Code](https://github.com/leonard112/OctaneScript)__
 
-* __[Binaries](https://sourceforge.net/projects/octanescript/files/alpha/linux/amd64/dev)__
+* __[Release Binaries](https://github.com/leonard112/OctaneScript/releases)__
+
+* __[Development Binaries](https://sourceforge.net/projects/octanescript/files/)__
   
 ## Linux Installation (amd64 only)
 
@@ -29,7 +31,7 @@ $ sudo dpkg -i octanescript-linux-amd64-<version>.deb
 $ os --version
 ```
 ### Tar
-_These binaries should work for most Linux distributions._
+> _These binaries should work for most Linux distributions._
 * Download [tar file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
 $ wget <OctaneScript Tar dowload URL>
@@ -42,7 +44,7 @@ $ sudo mkdir /opt/octanescript
 ```console
 $ sudo tar -xzvf octanescript-linux-amd64-<version>.tgz --directory /opt/octanescript/
 ```
-* Append the following line to `.bashrc`.
+* Append the following line to `.bashrc` to add `/opt/octanescript` to the `PATH` environment variable.
 ```shell
 PATH=/opt/octanescript:$PATH
 ```
@@ -58,7 +60,7 @@ $ os --version
 ## Windows Installation
 
 ### Installer
-_These binaries should work on any 64 bit Windows machine._
+> _These binaries should work on any 64 bit Windows machine._
 * Download [Windows Installer](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page, and Run it.
 * Smoke test.
 ```powershell
@@ -66,7 +68,8 @@ _These binaries should work on any 64 bit Windows machine._
 ```
 
 ### Zip
-_These binaries should work on any 64 bit Windows machine._
+> _These binaries should work on any 64 bit Windows machine._
+
 > :warning: _Ensure that you run __Windows PowerShell__ as __Administrator__._
 * Download [zip file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```powershell
@@ -76,11 +79,11 @@ _These binaries should work on any 64 bit Windows machine._
 ```powershell
 > mkdir "C:\Program Files\OctaneScript" 
 ```
-* Extract the contents ot the tar file to the folder where you want the binaries to live.
+* Extract the contents ot the zip file to the folder where you want the binaries to live.
 ```powershell
 > Expand-Archive -Path octanescript-windows-amd64-<version>.zip -DestinationPath "C:\Program Files\OctaneScript"
 ```
-* Add `C:\Program Files\OctaneScript\os.exe` to the `PATH` environment variable.
+* Add `C:\Program Files\OctaneScript\` to the `PATH` environment variable.
   * https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
 * Smoke test.
 ```powershell
