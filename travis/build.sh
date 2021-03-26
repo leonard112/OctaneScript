@@ -65,7 +65,6 @@ if [ "$OS" == "linux" ]; then
     TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
 elif [ "$OS" == "windows" ]; then
-    cp 
     powershell Compress-Archive -Path "../dist/*" -DestinationPath $PACKAGE_NAME.zip
     ZIP_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/zip"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $ZIP_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.zip"
