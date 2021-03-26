@@ -6,6 +6,9 @@ if [ "$OS" == "windows" ]; then
     choco install python3 --version=3.9.1
     choco install nsis
     export PATH="/c/Program Files (x86)/NSIS:$PATH"
+    curl -O https://nsis.sourceforge.io/mediawiki/images/7/7f/EnVar_plugin.zip
+    powershell Expand-Archive -Path EnVar_plugin.zip -DestinationPath EnVar_plugin
+    cp -r EnVar_plugin/* "/c/Program Files (x86)/NSIS/"
 fi
 
 if [ "$RELEASE_STATUS" == "DEV" ]; then
@@ -62,7 +65,7 @@ if [ "$OS" == "linux" ]; then
     TAR_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/tar"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $TAR_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.tgz"
 elif [ "$OS" == "windows" ]; then
-    tar.exe -a -c -f $PACKAGE_NAME.zip *
+    powershell Compress-Archive -Path ../dist -DestinationPath $PACKAGE_NAME.zip
     ZIP_UPLOAD_LOCATION="$PUBLISH_REPO/$RELEASE_LOWER/$OS/$ARCH/$RELEASE_STATUS_LOWER/zip"
     sftp -o "StrictHostKeyChecking=no" -i /tmp/sftp_rsa $ZIP_UPLOAD_LOCATION <<< $"put ${PACKAGE_NAME}.zip"
 fi
