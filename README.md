@@ -2,7 +2,7 @@
 
   <img src="https://github.com/leonard112/octane/blob/main/images/octanescript-logo.png" alt="OctaneScript Logo" width=25%></img>
 
-OctaneScript is a scripting language built using Python. OctaneScript is currenly in it's early alpha stages.
+OctaneScript is a scripting language built using Python. :warning: _(Currently in Alpha)_
 
 :warning: Note that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to use this software for whatever you wish, but ensure that you review this software's [license](https://github.com/leonard112/OctaneScript/blob/main/LICENSE) _(MIT)_ if you consider using this software for anything more than exploration and learning. 
 
