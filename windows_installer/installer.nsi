@@ -11,7 +11,7 @@ ManifestDPIAware true
 !define MUI_ICON "octanescript-logo.ico"
 !define MUI_UNICON "octanescript-logo.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "octanescript-logo.bmp"
-!define MUI_WELCOMEPAGE_TEXT "OctaneScript is a scripting language built using Python. OctaneScript is currenly in it's early alpha stages. Feel free to use this software for whatever you wish, but ensure that you review this software's license (MIT) if you consider using this software for anything more than exploration and learning.$\n$\nOctaneScript is maintained at: https://github.com/leonard112/OctaneScript"
+!define MUI_WELCOMEPAGE_TEXT "OctaneScript is a scripting language built using Python.$\n$\nOctaneScript is currenly in it's early alpha stages. Feel free to use this software for whatever you wish, but ensure that you review this software's license (MIT) if you consider using this software for anything more than exploration and learning.$\n$\nOctaneScript is maintained at: https://github.com/leonard112/OctaneScript"
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "OctaneScript"
 !define MUI_LICENSEPAGE_TEXT_TOP "LICENSE INFORMATION"
 !define MUI_LICENSEPAGE_TEXT_BOTTOM "By clicking $\"I Agree$\", you accept the terms of the license."
