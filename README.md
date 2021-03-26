@@ -61,7 +61,7 @@ $ os --version
 
 ### Installer
 > _These binaries should work on any 64 bit Windows machine._
-* Download [Windows Installer](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page, and Run it.
+* Download [Windows Installer](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page and Run it.
 * Smoke test.
 ```powershell
 > os --version
