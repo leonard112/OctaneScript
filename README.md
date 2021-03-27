@@ -24,7 +24,7 @@ Feel free to open an [issue](https://github.com/leonard112/OctaneScript/issues) 
 > _This package can be installed on any 64 bit [Debian based Linux distriubtion](https://www.debian.org/derivatives/) including but not limited to __Ubuntu__ and __Kali Linux__._
 * Download [Debian package](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
-$ curl -O <OctaneScript Debian dowload URL>
+$ curl -O <OctaneScript Debian download URL>
 ```
 * Install package.
 ```console
@@ -38,7 +38,7 @@ $ os --version
 > _These binaries should work for most 64 bit Linux distributions._
 * Download [Tar file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```console
-$ curl -O <OctaneScript Tar dowload URL>
+$ curl -O <OctaneScript Tar download URL>
 ```
 * Create a dedicated folder for the binaries to live.
 ```console
@@ -79,7 +79,7 @@ $ os --version
 > :warning: _Ensure that you run __Windows PowerShell__ as __Administrator__._
 * Download [Zip file](https://github.com/leonard112/OctaneScript/releases) from the __OctaneScript GitHub Release__ page.
 ```powershell
-> curl -O <OctaneScript Zip dowload URL>
+> curl -O <OctaneScript Zip download URL>
 ```
 * Create a dedicated folder for the binaries to live.
 ```powershell

@@ -8,17 +8,28 @@ ShowInstDetails Show
 ManifestDPIAware true
 
 !include "MUI2.nsh"
+
 !define MUI_ICON "octanescript-logo.ico"
 !define MUI_UNICON "octanescript-logo.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "octanescript-logo.bmp"
-!define MUI_WELCOMEPAGE_TEXT "OctaneScript is a scripting language built using Python. (Currently in Alpha)$\n$\nNote that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to use this software for whatever you wish, but ensure that you review this software's license (MIT) if you consider using this software for anything more than exploration and learning.$\n$\nOctaneScript is maintained at: https://github.com/leonard112/OctaneScript"
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "OctaneScript"
-!define MUI_LICENSEPAGE_TEXT_TOP "LICENSE INFORMATION"
-!define MUI_LICENSEPAGE_TEXT_BOTTOM "By clicking $\"I Agree$\", you accept the terms of the license."
+!define MUI_WELCOMEPAGE_TITLE_3LINES
+!define MUI_WELCOMEPAGE_TEXT "$\nOctaneScript is a scripting language built using Python.$\n$\nNote that this language is not being developed for any customer or particular use. This lanauge is being developed for fun. Feel free to use this software for whatever you wish, but ensure that you review this software's license (MIT) if you consider using this software for anything more than exploration and learning."
+!define MUI_FINISHPAGE_TITLE_3LINES
+!define MUI_FINISHPAGE_TEXT "$\n$\n$\nOctaneScript has been installed on your computer.$\n$\nClick Finish to close Setup.$\n$\n$\n$\n$\n$\n$\n$\n$\nOctaneScript is maintained at:"
+!define MUI_FINISHPAGE_LINK "https://github.com/leonard112/OctaneScript"
+!define MUI_FINISHPAGE_LINK_LOCATION "https://github.com/leonard112/OctaneScript"
+!define MUI_LICENSEPAGE_TEXT_TOP ""
+!define MUI_LICENSEPAGE_TEXT_BOTTOM "$\nBy clicking $\"I Agree$\", you accept the terms of the license."
+!define MUI_ABORTWARNING
+!define MUI_UNABORTWARNING
+!define MUI_FINISHPAGE_NOAUTOCLOSE
+!define MUI_UNFINISHPAGE_NOAUTOCLOSE
+
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
  
 Section
@@ -35,9 +46,9 @@ Section
 SectionEnd
  
 Section "uninstall"
-    Delete "$INSTDIR\uninstall.exe"
 	Delete "$INSTDIR\os.exe"
 	Delete "$INSTDIR\LICENSE"
+	Delete "$INSTDIR\uninstall.exe"
     RMDir $INSTDIR
 	EnVar::DeleteValue "PATH" "$INSTDIR\"
 	Pop $0
