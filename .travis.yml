@@ -3,7 +3,7 @@ env:
     - NAME=OctaneScript
     - NAME_LOWER=octanescript
     - MAINTAINER=lcarcaramo@gmail.com
-    - VERSION=0.0.5
+    - VERSION=0.0.6
     - RELEASE="Alpha"
     - RELEASE_LOWER="alpha"
     - RELEASE_STATUS="DEV"
@@ -21,6 +21,7 @@ jobs:
   include:
     - os: linux
       language: python
+      python: 3.9.1
       dist: trusty
       env:
         - OS=linux
