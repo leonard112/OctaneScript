@@ -28,7 +28,7 @@ $ curl -O <OctaneScript Debian download URL>
 ```
 * Install package.
 ```console
-$ sudo dpkg -i octanescript-linux-amd64-<version>.deb
+$ sudo dpkg -i octanescript-<version>-linux-amd64.deb
 ```
 * Smoke test.
 ```console
@@ -46,7 +46,7 @@ $ sudo mkdir /opt/octanescript
 ```
 * Extract the contents ot the tar file to the folder where you want the binaries to live.
 ```console
-$ sudo tar -xzvf octanescript-linux-amd64-<version>.tgz --directory /opt/octanescript/
+$ sudo tar -xzvf octanescript-<version>-linux-amd64.tgz --directory /opt/octanescript/
 ```
 * Append the following line to `.bashrc` to add `/opt/octanescript` to the `PATH` environment variable.
 ```shell
@@ -87,7 +87,7 @@ $ os --version
 ```
 * Extract the contents ot the zip file to the folder where you want the binaries to live.
 ```powershell
-> Expand-Archive -Path octanescript-windows-amd64-<version>.zip -DestinationPath "C:\Program Files\OctaneScript"
+> Expand-Archive -Path octanescript-<version>-windows-amd64.zip -DestinationPath "C:\Program Files\OctaneScript"
 ```
 * Add `C:\Program Files\OctaneScript\` to the `PATH` environment variable.
   * https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/
