@@ -51,9 +51,9 @@ def validate_checksums_for_release(github_release_tag, sourceforge_release_folde
             color = GREEN
 
         print(f"""{color}{file_name}:
-    Expected Sha256: {expected_sha256}
-    Actual GitHub Sha256: {actual_github_release_sha256}
-    Actual SourceForge Sha256: {actual_sourceforge_release_sha256}
+    Expected Sha256:            {expected_sha256}
+    Actual GitHub Sha256:       {actual_github_release_sha256}
+    Actual SourceForge Sha256:  {actual_sourceforge_release_sha256}
     {message}""")
         subprocess.run(f"rm {file_name}", stdout=None, stderr=None, shell=True)
     subprocess.run("rm SHASUMS256.txt.asc", stdout=None, stderr=None, shell=True)
