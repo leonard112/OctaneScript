@@ -21,7 +21,8 @@ jobs:
   include:
     - os: linux
       language: python
-      python: 3.9
+      python: 
+        - "3.9"
       dist: trusty
       env:
         - OS=linux
