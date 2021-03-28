@@ -13,14 +13,14 @@ project_home = "https://github.com/leonard112/OctaneScript"
 
 def print_info():
     print(
-"""========================================================================================
+"""===============================================================================
     %s Version: %s
     Arch: %s
     OS: %s %s
     License: MIT
     Maintainer: %s
     Maintained at: %s
-========================================================================================"""
+==============================================================================="""
 % (name, version, platform.machine(), platform.system(), platform.version(), maintainer, project_home))
 
 def print_version():
