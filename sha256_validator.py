@@ -11,7 +11,7 @@ RED = "\033[91m"
 
 
 def validate_checksums_for_release(github_release_tag, sourceforge_release_folder):
-    subprocess.run(f"curl -L -O https://github.com/leonard112/OctaneScript/releases/download/{github_release_tag}/SHASUMS256.txt.asc", capture_output=True, shell=True)
+    subprocess.run(f"curl -L -O https://github.com/leonard112/OctaneScript/releases/download/{github_release_tag}/SHASUMS256.txt.asc", stdout=None, stderr=None, shell=True)
     sha256_checksums = open("SHASUMS256.txt.asc").readlines()
 
     print(f"\n{YELLOW}Validating sha256 checksums for OctaneScript release '{github_release_tag}'...")
@@ -35,10 +35,10 @@ def validate_checksums_for_release(github_release_tag, sourceforge_release_folde
         else:
             os = "linux"
 
-        subprocess.run(f"curl -L -O https://github.com/leonard112/OctaneScript/releases/download/{github_release_tag}/{file_name}", capture_output=True, shell=True)
+        subprocess.run(f"curl -L -O https://github.com/leonard112/OctaneScript/releases/download/{github_release_tag}/{file_name}", stdout=None, stderr=None, shell=True)
         actual_github_release_sha256 = hashlib.sha256(open(file_name, 'rb').read()).hexdigest()
-        subprocess.run(f"rm {file_name}", capture_output=True, shell=True)
-        subprocess.run(f"curl -L -O https://downloads.sourceforge.net/project/octanescript/{sourceforge_release_folder}/{os}/amd64/stable/{package_type}/{file_name}", capture_output=True, shell=True)
+        subprocess.run(f"rm {file_name}", stdout=None, stderr=None, shell=True)
+        subprocess.run(f"curl -L -O https://downloads.sourceforge.net/project/octanescript/{sourceforge_release_folder}/{os}/amd64/stable/{package_type}/{file_name}", stdout=None, stderr=None, shell=True)
         actual_sourceforge_release_sha256 = hashlib.sha256(open(file_name, 'rb').read()).hexdigest()
         
         if expected_sha256 != actual_github_release_sha256 or expected_sha256 != actual_sourceforge_release_sha256:
@@ -55,8 +55,8 @@ def validate_checksums_for_release(github_release_tag, sourceforge_release_folde
     Actual GitHub Sha256: {actual_github_release_sha256}
     Actual SourceForge Sha256: {actual_sourceforge_release_sha256}
     {message}""")
-        subprocess.run(f"rm {file_name}", capture_output=True, shell=True)
-    subprocess.run("rm SHASUMS256.txt.asc", capture_output=True, shell=True)
+        subprocess.run(f"rm {file_name}", stdout=None, stderr=None, shell=True)
+    subprocess.run("rm SHASUMS256.txt.asc", stdout=None, stderr=None, shell=True)
 
 
 validate_checksums_for_release("0.0.4-alpha", "alpha")
