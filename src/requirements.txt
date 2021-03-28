@@ -1,6 +1,0 @@
-ansicolors
-pyinstaller
-pytest>=5.0
-pytest-cov
-pytest-mock
-mock
