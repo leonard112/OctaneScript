@@ -9,12 +9,22 @@ name = "OctaneScript"
 version = "Alpha DEV"
 file_extension = ".os"
 maintainer = "lcarcaramo@gmail.com"
+project_home = "https://github.com/leonard112/OctaneScript"
+
+def print_info():
+    print(
+"""========================================================================================
+    %s Version: %s
+    Arch: %s
+    OS: %s %s
+    License: MIT
+    Maintainer: %s
+    Maintained at: %s
+========================================================================================"""
+% (name, version, platform.machine(), platform.system(), platform.version(), maintainer, project_home))
 
 def print_version():
-    print(
-"%s Version: %s | Arch: %s | OS: %s %s | License: MIT | Maintainer: %s" 
-% (name, version, platform.machine(), platform.system(), platform.version(), maintainer))
-
+    print("\n%s Version: %s\n" % (name, version))
 
 def print_license():
     print(
@@ -48,22 +58,26 @@ def print_help():
     print(
 """
 usage:
-    script_name%s   Run an %s script.
+    <no arguments>       Open REPL
+    script_name%s       Run an %s program.
     --version -v         Print %s version information.
+    --info -i            Print information about your %s installation.
     --license -l         Show license information.
     --help -h            Get usage information.
-""" % (file_extension, name, name)
+""" % (file_extension, name, name, name)
 )
 
 
 def perform_operation_based_on_arguments(arguments):
     if len(arguments) == 1:
-        print_version()
+        print_info()
         enter_interpreter_as("REPL")
     elif arguments[1][-3:] == file_extension :
         enter_interpreter_as(arguments[1])
     elif arguments[1] == "--version" or arguments[1] == "-v":
         print_version()
+    elif arguments[1] == "--info" or arguments[1] == "-i":
+        print_info()
     elif arguments[1] == "--license" or arguments[1] == "-l":
         print_license()
     elif arguments[1] == "--help" or arguments[1] == "-h":
