@@ -35,11 +35,17 @@ def test_print_math_decimal_works():
     assert_success(Printer("print", "(3 / 2)", test_stack, {}))
 
 
+# ARRAY
+def test_print_array_works():
+    assert_success(Printer("print", "<1, 2, 3>", test_stack, {}))
+
+
 def assert_error(printer):
     with pytest.raises(SystemExit) as error:
             printer.print()
     assert error.type == SystemExit
     assert error.value.code == 1
+
 
 def assert_success(printer):
     try:

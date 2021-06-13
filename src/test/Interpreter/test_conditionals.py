@@ -16,7 +16,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed'
-def test_if_true_functional_REPL(interpreter, capfd):
+def test_if_true_functional_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [true]
@@ -36,7 +36,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Unchanged'
-def test_if_false_functional_REPL(interpreter, capfd):
+def test_if_false_functional_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -60,7 +60,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by else'
-def test_runs_else_when_if_false_REPL(interpreter, capfd):
+def test_runs_else_when_if_false_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -84,7 +84,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by if'
-def test_does_not_runs_else_when_if_true_REPL(interpreter, capfd):
+def test_does_not_runs_else_when_if_true_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [true]
@@ -110,7 +110,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by elseIf'
-def test_runs_true_elseif_when_if_false_REPL(interpreter, capfd):
+def test_runs_true_elseif_when_if_false_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -134,7 +134,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by if'
-def test_skips_elseif__when_if_true_REPL(interpreter, capfd):
+def test_skips_elseif__when_if_true_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [true]
@@ -162,7 +162,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by elseIf'
-def test_runs_true_elseif_when_if_false_and_not_else_REPL(interpreter, capfd):
+def test_runs_true_elseif_when_if_false_and_not_else_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -190,7 +190,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by else'
-def test_runs_else_when_if_and_elseif_false_REPL(interpreter, capfd):
+def test_runs_else_when_if_and_elseif_false_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -218,7 +218,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by if'
-def test_skips_elseif_and_else_when_if_true_REPL(interpreter, capfd):
+def test_skips_elseif_and_else_when_if_true_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [true]
@@ -254,7 +254,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by fourth elseIf'
-def test_long_if_chain_works_properly_REPL(interpreter, capfd):
+def test_long_if_chain_works_properly_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -294,7 +294,7 @@ end
     assert interpreter.variables["x"] == 'x'
     assert interpreter.variables["y"] == 'y'
     assert interpreter.variables["z"] == 'z'
-def test_conditional_can_handle_multiple_lines_of_code_REPL(interpreter, capfd):
+def test_conditional_can_handle_multiple_lines_of_code_REPL(capfd):
     script = """
 set x to "Unchanged"
 set y to "Unchanged"
@@ -336,7 +336,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed by if in else on second if chain'
-def test_nested_conditionals_work_properly_REPL(interpreter, capfd):
+def test_nested_conditionals_work_properly_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [true]
@@ -373,7 +373,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Unchanged'
-def test_when_all_ifs_are_false_no_else_or_elseif_will_execute_REPL(interpreter, capfd):
+def test_when_all_ifs_are_false_no_else_or_elseif_will_execute_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -423,7 +423,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed'
-def test_valid_code_works_regardless_of_extra_lines_REPL(interpreter, capfd):
+def test_valid_code_works_regardless_of_extra_lines_REPL(capfd):
     script = """
 
 
@@ -473,7 +473,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'Changed'
-def test_valid_code_works_regardless_of_spacing_REPL(interpreter, capfd):
+def test_valid_code_works_regardless_of_spacing_REPL(capfd):
     script = """
 set x to "Unchanged"
 
@@ -506,7 +506,7 @@ end
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables["x"] == 'All bad code has been skiped due to if being false'
-def test_bad_code_that_does_not_execute_will_not_fail_REPL(interpreter, capfd):
+def test_bad_code_that_does_not_execute_will_not_fail_REPL(capfd):
     script = """
 set x to "Unchanged"
 if [false]
@@ -523,7 +523,7 @@ print x
 
 # EXTRA OR MISSING END
 
-def test_missing_end_fails(interpreter):
+def test_missing_end_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 if [true]
     print "This will cause error"
@@ -532,18 +532,10 @@ if [true]
 end
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_missing_end_fails_REPL(interpreter, capfd):
-    script = """
-if [true]
-    print "This will cause error"
-if [true]
-    print "This code should not be reached"
-end
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
-def test_extra_end_fails(interpreter):
+def test_extra_end_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 if [true]
     print "first if will execute"
@@ -555,23 +547,12 @@ end
 print "Error will occur before this is reached."
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_extra_end_fails_REPL(interpreter, capfd):
-    script = """
-if [true]
-    print "first if will execute"
-end
-if [true]
-    print "second if will execute"
-end
-end
-print "Error will occur before this is reached."
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
 # DANGLING ELSE AND ELSEIF
 
-def test_dangling_else_fails(interpreter):
+def test_dangling_else_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 else
     print "This should fail"
@@ -579,17 +560,10 @@ end
 print "Error will occur before this is reached."
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_dangling_else_fails_REPL(interpreter, capfd):
-    script = """
-else
-    print "This should fail"
-end
-print "Error will occur before this is reached."
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
-def test_dangling_elseif_fails(interpreter):
+def test_dangling_elseif_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 elseIf [true]
     print "This should fail"
@@ -599,19 +573,10 @@ end
 print "Error will occur before this is reached."
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_dangling_elseif_fails_REPL(interpreter, capfd):
-    script = """
-elseIf [true]
-    print "This should fail"
-else
-    print "This should fail"
-end
-print "Error will occur before this is reached."
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
-def test_nested_dangling_else_fails(interpreter):
+def test_nested_dangling_else_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 if [true]
     else
@@ -621,19 +586,10 @@ end
 print "Error will occur before this is reached."
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_nested_dangling_else_fails_REPL(interpreter, capfd):
-    script = """
-if [true]
-    else
-        print "This should fail"
-    end
-end
-print "Error will occur before this is reached."
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
-def test_nested_dangling_elseif_fails(interpreter):
+def test_nested_dangling_elseif_fails_for_script_and_REPL(capfd, interpreter):
     script = """
 if [true]
     elseIf [true]
@@ -645,31 +601,18 @@ end
     print "Error will occur before this is reached."
 """.splitlines(True)
     assert_error(interpreter, script)
-def test_nested_dangling_elseif_fails_REPL(interpreter, capfd):
-    script = """
-if [true]
-    elseIf [true]
-        print "This should fail"
-    else
-        print "This should fail"
-    end
-end
-print "Error will occur before this is reached."
-""".splitlines(True)
     assert_code_fails_in_REPL(capfd, script)
 
 
 # CALL STACK
 
-def test_stack_trace_valid_for_single_line(interpreter):
+def test_stack_trace_valid_for_single_line_for_script_and_REPL(capfd, interpreter):
     script = """print "err""".splitlines(True)
     assert_stack_trace(interpreter, script, [1])
-def test_stack_trace_valid_for_single_line_REPL(interpreter, capfd):
-    script = """print "err""".splitlines(True)
     assert_stack_trace_REPL(capfd, script, [1])
 
 
-def test_stack_trace_valid_for_multi_line(interpreter):
+def test_stack_trace_valid_for_multi_line_for_script_and_REPL(capfd, interpreter):
     script = """
 # This is a comment
 print "test"
@@ -677,17 +620,10 @@ print "err
 print "This will not be executed"
 """.splitlines(True)
     assert_stack_trace(interpreter, script, [4])
-def test_stack_trace_valid_for_multi_line_REPL(interpreter, capfd):
-    script = """
-# This is a comment
-print "test"
-print "err
-print "This will not be executed"
-""".splitlines(True)
     assert_stack_trace_REPL(capfd, script, [4])
 
 
-def test_stack_trace_valid_for_nesting(interpreter):
+def test_stack_trace_valid_for_nesting_for_script_and_REPL(capfd, interpreter):
     script = """
 print "Outside of if"
 if [true]
@@ -707,29 +643,10 @@ end
 print "This won't print"
 """.splitlines(True)
     assert_stack_trace(interpreter, script, [11, 10, 7, 3])
-def test_stack_trace_valid_for_nesting_REPL(interpreter, capfd):
-    script = """
-print "Outside of if"
-if [true]
-    print "In first if"
-    if [false]
-        print "This wont print"
-    else
-        if [false]
-            print "This won't print"
-        elseIf [true]
-            print "err
-        else
-            print "This wont print"
-        end
-    end
-end
-print "This won't print"
-""".splitlines(True)
     assert_stack_trace_REPL(capfd, script, [11, 10, 7, 3])
 
 
-def test_stack_trace_after_completion_of_if(interpreter):
+def test_stack_trace_after_completion_of_if_for_script_and_REPL(capfd, interpreter):
     script = """
 print "Outside of if"
 if [true]
@@ -740,14 +657,43 @@ if [true]
 end
 """.splitlines(True)
     assert_stack_trace(interpreter, script, [7, 6])
-def test_stack_trace_after_completion_of_if_REPL(interpreter, capfd):
+    assert_stack_trace_REPL(capfd, script, [7, 6])
+
+def test_stack_trace_when_function_inside_if_fails_for_script_and_REPL(capfd, interpreter):
     script = """
-print "Outside of if"
-if [true]
-    print "Inside if"
+function fails()
+    invalid
 end
 if [true]
-    print "err
+    set x to fails()
 end
 """.splitlines(True)
-    assert_stack_trace_REPL(capfd, script, [7, 6])
+    assert_stack_trace(interpreter, script, [3, 6, 5])
+    assert_stack_trace_REPL(capfd, script, [3, 6, 5])
+
+
+# FUNCTIONS
+
+def test_functions_can_be_called_inside_if(interpreter):
+    script = """
+function returnOne()
+    return 1
+end
+if [true]
+    set x to returnOne()
+end
+""".splitlines(True)
+    interpreter.run_script(script, None)
+    assert interpreter.variables["x"] == 1
+def test_functions_can_be_called_inside_if_REPL(capfd):
+    script = """
+function returnOne()
+    return 1
+end
+if [true]
+    set x to returnOne()
+end
+print x
+""".splitlines(True)
+    assert_code_works_in_REPL(capfd, script, '1\n')
+

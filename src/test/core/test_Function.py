@@ -85,7 +85,10 @@ def test_single_quote_strings_can_be_passed_in_when_calling_function():
 def test_boolean_values_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
     b.populate_variables('(true, false, true)')
-    assert b.function_variables == {'x' : True, 'y' : False, 'z' : True}
+def test_array_values_can_be_passed_in_when_calling_function():
+    b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
+    b.populate_variables('(<1, 2>, <3, 4>, <5, 6>)')
+    assert b.function_variables == {'x' : [1, 2], 'y' : [3, 4], 'z' : [5, 6]}
 def test_variables_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {'a' : 1, 'b' : 2, 'c' : 3}, 0)
     b.populate_variables('(a, b, c)')

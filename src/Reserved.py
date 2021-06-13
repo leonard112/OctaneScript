@@ -25,7 +25,7 @@ reserved = [
     "log", "logWarn", "logSuccess", "logError",
     
     # SET
-    "set", "input", "randomDecimal", "randomInteger",
+    "set", "input", "randomDecimal", "randomInteger", "to",
 
     # SLEEP
     "sleep",
@@ -43,6 +43,10 @@ reserved = [
     # FUNCTION
     "function", "return",
 
-    # REPEAT
-    "repeat", "while", "counter", "step", "start"
+    # LOOPS
+    "repeat", "while", "counter", "step", "start", "for"
+
+    # ARRAYS
+    "append", "push", "prepend", "removeFirst", "removeLast", "remove"
+    "peek", "start", "end", "first", "last"
 ]

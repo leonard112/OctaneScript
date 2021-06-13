@@ -8,6 +8,12 @@ end
 
 set x to 0
 
-repeat while [true]
-    invalid
+
+
+
+
+repeat 10
+    print "hello"
 end
+set x to 3
+print x

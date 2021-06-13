@@ -92,12 +92,14 @@ class NestableExpression:
     def parse_string_expression(self, expression):
         expression_no_white_space = expression.replace(" ", "")
         start_symbol = expression_no_white_space[0]
-        if start_symbol == '"' or start_symbol == "'" or start_symbol == "(" or start_symbol == "[":
+        if start_symbol == '"' or start_symbol == "'" or start_symbol == "(" or start_symbol == "[" or start_symbol == "<":
             token = ""
             if start_symbol == "(":
                 token = expression[:expression.index(")")+1]
             elif start_symbol == "[":
                 token = expression[:expression.index("]")+1]
+            elif start_symbol == "<":
+                token = expression[:expression.index(">")+1]
             else:
                 try:
                     token = expression[:expression[1:].index(start_symbol)+2]

@@ -158,23 +158,6 @@ class Interpreter:
 
         elif function == "repeat":
             parameters = ' '.join(parameters.split())
-            if parameters[:6] == "while ":
-                boolean = self.resolve_function_calls(parameters[6:], line_number)
-                b = Boolean(boolean, call_stack, self.variables)
-                repeat_while_lines = self.get_nested_code(line_number + 1)
-                if self.script_name == "REPL":
-                    repeat_while_lines = repeat_while_lines[:-1]
-                while b.evaluate() == True:
-                    if self.script_name == "REPL":
-                        self.repl_counter -= len(repeat_while_lines) + 1
-                    self.run_script(repeat_while_lines, line_number + 1)
-                    if self.script_name == "REPL":
-                        self.repl_counter += len(repeat_while_lines) + 1
-                    boolean = self.resolve_function_calls(parameters[6:], line_number)
-                    b = Boolean(boolean, call_stack, self.variables)
-                if self.script_name != "REPL": 
-                    line_number += 1
-                return line_number + len(repeat_while_lines)
             is_counter = False
             counter = None
             counter_overrides_an_existing_variable = False
@@ -232,24 +215,78 @@ class Interpreter:
             if repeat_to - start < 0 and step > 0:
                 fail("\"step\" cannot be greater than '0' if the difference between the amount of times to repeat the code block and \"start\" is less than '0'." , self.error_type, self.call_stack)
             repeat_lines = self.get_nested_code(line_number + 1)
-            if self.script_name == "REPL":
-                repeat_lines = repeat_lines[:-1]
             for i in range(start, repeat_to, step):
                 if is_counter == True:
                     self.variables[counter] = i
-                if self.script_name == "REPL":
-                        self.repl_counter -= len(repeat_lines) + 1
-                self.run_script(repeat_lines, line_number + 1)
-                if self.script_name == "REPL":
-                        self.repl_counter += len(repeat_lines) + 1
+                if self.script_name == "REPL" and self.in_nested_repl == False:
+                    self.in_nested_repl = True
+                    repl_repeat_lines = repeat_lines[:-1]
+                    self.repl_counter -= len(repl_repeat_lines)
+                    self.run_script(repl_repeat_lines, None)
+                    self.repl_counter += len(repl_repeat_lines)
+                    self.in_nested_repl = False
+                else:
+                    self.run_script(repeat_lines, line_number + 1)
             if is_counter == True:
                 self.variables.pop(counter)
-            line_number += len(repeat_lines)
-            if self.script_name != "REPL": 
-                line_number += 1
             if counter_overrides_an_existing_variable == True:
                 self.variables[counter] = counter_original_value
-            return line_number
+            return line_number + len(repeat_lines) + 1
+
+        elif function == "while":
+            parameters = ' '.join(parameters.split())
+            if parameters == '':
+                fail("'while' must take a boolean argument." , self.error_type, self.call_stack)
+            boolean = self.resolve_function_calls(parameters, line_number)
+            b = Boolean(boolean, call_stack, self.variables)
+            while_lines = self.get_nested_code(line_number + 1)
+            while b.evaluate() == True:
+                if self.script_name == "REPL" and self.in_nested_repl == False:
+                    self.in_nested_repl = True
+                    repl_while_lines = while_lines[:-1]
+                    self.repl_counter -= len(repl_while_lines)
+                    self.run_script(repl_while_lines, None)
+                    self.repl_counter += len(repl_while_lines)
+                    self.in_nested_repl = False
+                else:
+                    self.run_script(while_lines, line_number + 1)
+                boolean = self.resolve_function_calls(parameters, line_number)
+                b = Boolean(boolean, call_stack, self.variables)
+            return line_number + len(while_lines) + 1
+
+        if function == "for":
+            parameters = ' '.join(parameters.split())
+            parameter_tokens = parameters.split()
+            if len(parameter_tokens) < 3:
+                fail("'for' requires at least 3 arguments. Correct syntax for 'repeat for': 'repeat for element in array'" , self.error_type, self.call_stack)
+            if parameter_tokens[1] != "in":
+                fail("'for' requires the 'in' keyword. Correct syntax for 'repeat for': 'repeat for element in array'" , self.error_type, self.call_stack)
+            element_variable = parameter_tokens[0]
+            element_variable_overrides_existing_variable = False
+            element_variable_original_value = None
+            if element_variable in self.variables:
+                element_variable_overrides_existing_variable = True
+                element_variable_original_value = self.variables[element_variable]
+            array_expression = self.resolve_function_calls(' '.join(parameter_tokens[2:]), line_number)
+            e = Expression(array_expression, self.call_stack, self.variables)
+            array = e.evaluate()
+            if type(array) != list:
+                fail(f"'for' can only iterate over an array. '{parameter_tokens[2:]}' is not an array." , self.error_type, self.call_stack)
+            for_lines = self.get_nested_code(line_number + 1)
+            for element in array:
+                self.variables[element_variable] = element
+                if self.script_name == "REPL" and self.in_nested_repl == False:
+                    self.in_nested_repl = True
+                    repl_for_line = for_lines[:-1]
+                    self.repl_counter -= len(repl_for_line)
+                    self.run_script(repl_for_line, None)
+                    self.repl_counter += len(repl_for_line)
+                    self.in_nested_repl = False
+                else: 
+                    self.run_script(for_lines, line_number + 1)
+            if element_variable_overrides_existing_variable == True:
+                self.variables[element_variable] = element_variable_original_value
+            return line_number + len(for_lines) + 1
 
         elif function == "function":
             function_name = parameters.split("(")[0].strip()
@@ -312,20 +349,20 @@ class Interpreter:
                 prompt = expression.evaluate()
                 user_input = input(prompt)
                 parameters = ' '.join(parameter_tokens[:2]) + ' "' + user_input + '"'
-            elif parameter_tokens[2][:13] == "randomInteger":
-                random_integer_parameters = ' '.join(parameter_tokens[2:])
+            elif parameter_tokens[2] == "randomInteger":
+                random_integer_parameters = ' '.join(parameter_tokens[3:])
                 random_integer_parameter_tokens = random_integer_parameters.split(",")
                 random_integer_parameter_tokens_length = len(random_integer_parameter_tokens)
-                if random_integer_parameter_tokens_length > 3 or random_integer_parameter_tokens_length < 2:
+                if random_integer_parameter_tokens_length > 2 or random_integer_parameter_tokens_length < 1:
                     fail("'randomInteger' can only take 2 parameters, and must take at least 1.", self.error_type, call_stack)
-                if random_integer_parameter_tokens_length == 3:
-                    expression = Expression(random_integer_parameter_tokens[1], self.call_stack, self.variables)
-                    lower_limit = expression.evaluate()
-                    expression = Expression(random_integer_parameter_tokens[2], self.call_stack, self.variables)
-                    upper_limit = expression.evaluate()
                 if random_integer_parameter_tokens_length == 2:
-                    lower_limit = 0
+                    expression = Expression(random_integer_parameter_tokens[0], self.call_stack, self.variables)
+                    lower_limit = expression.evaluate()
                     expression = Expression(random_integer_parameter_tokens[1], self.call_stack, self.variables)
+                    upper_limit = expression.evaluate()
+                if random_integer_parameter_tokens_length == 1:
+                    lower_limit = 0
+                    expression = Expression(random_integer_parameter_tokens[0], self.call_stack, self.variables)
                     upper_limit = expression.evaluate()
                 if type(lower_limit) != int or type(upper_limit) != int:
                     fail("'randomInteger' can only take integer parameters.", self.error_type, call_stack)
@@ -340,10 +377,58 @@ class Interpreter:
             self.variables.update(setter.set())
             return line_number
 
+        elif function == "append" or function == "prepend" or function == "push":
+            parameters = self.resolve_function_calls(parameters, line_number)
+            parameter_tokens = parameters.split()
+            if parameter_tokens[-2] != "to":
+                fail(f"'{function}' operation missing 'to' keyword." , self.error_type, call_stack)
+            expression = Expression(''.join(parameter_tokens[:-2]), self.call_stack, self.variables)
+            value = expression.evaluate()
+            array = parameter_tokens[-1]
+            if array not in self.variables:
+                fail(f"The array '{array}' does not exist in the current scope.", self.error_type, call_stack)
+            if type(self.variables[array]) != list:
+                fail("Values can only be appended to arrays.", self.error_type, call_stack)
+            if function == "append":
+                self.variables[array].append(value)
+            elif function == "prepend" or function == "push" :
+                self.variables[array].insert(0, value)
+            return line_number
+
+        elif function == "pop" or function == "removeFirst" or function == "removeLast" or function == "remove":
+            parameters = self.resolve_function_calls(parameters, line_number)
+            if "from" not in parameters:
+                fail(f"'{function}' operation missing 'from' keyword.", self.error_type, call_stack)
+            parameter_tokens = parameters.split("from")
+            if len(parameter_tokens) != 2:
+                fail(f"The '{function}' function may only contain one instance of the 'from' keyword.", self.error_type, call_stack)
+            array = parameter_tokens[-1].strip()
+            if array not in self.variables:
+                fail(f"The array '{array}' does not exist in the current scope.", self.error_type, call_stack)
+            if type(self.variables[array]) != list:
+                fail(f"Elements may only be removed from arrays.", self.error_type, call_stack)
+            if len(self.variables[array]) == 0:
+                fail(f"Elements cannot be removed from array '{array}' because it is empty.", self.error_type, call_stack)
+            if function != "remove" and parameter_tokens[0].strip() != '':
+                fail(f"The '{function}' function was given too many arguments.", self.error_type, call_stack)
+            if function == "pop" or function == "removeFirst":
+                self.variables[array] = self.variables[array][1:]
+            elif function == "removeLast":
+                self.variables[array] = self.variables[array][:-1]
+            elif function == "remove":
+                index_expression = parameter_tokens[0]
+                index = Expression(index_expression, self.call_stack, self.variables).evaluate()
+                if type(index) != int:
+                    fail(f"Array index '{index_expression}' is not an integer. Array index must be an integer.", self.error_type, call_stack)
+                try:
+                    self.variables[array].pop(index)
+                except:
+                    fail(f"Array index '{index_expression}' is out of range for array '{array}'.", self.error_type, call_stack)
+            return line_number
+
         elif function == "sleep":
             parameters = self.resolve_function_calls(parameters, line_number)
-            expression = Expression(parameters, self.call_stack, self.variables)
-            seconds = expression.evaluate()
+            seconds = Expression(parameters, self.call_stack, self.variables).evaluate()
             if type(seconds) == int or type(seconds) == float:
                 time.sleep(seconds)
             else:
@@ -383,14 +468,14 @@ class Interpreter:
         for token in parameter_tokens:
             for function in self.functions:
                 if function in token:
-                    if token.count('"') == 0 and token.count("'") == 0:
-                        if token[0] == "(" or token[0] == "[":
-                            specialized_expression_functions = self.get_functions_from_specialized_expression(token, function)
-                            for specialized_token in specialized_expression_functions:
-                                function_calls += [specialized_token]
-                        else:
-                            token = token.strip(",")
-                            function_calls += [token]
+                    token = token.strip("<").strip(">")
+                    if token[0] == "(" or token[0] == "[":
+                        specialized_expression_functions = self.get_functions_from_specialized_expression(token, function)
+                        for specialized_token in specialized_expression_functions:
+                            function_calls += [specialized_token]
+                    else:
+                        token = token.strip(",")
+                        function_calls += [token]
         return function_calls
 
     def get_functions_from_specialized_expression(self, math_expression, function):
@@ -419,14 +504,16 @@ class Interpreter:
         for i in range(0, parameter_tokens_length, 1):
             for function_call in function_calls:
                 if function_call in parameter_tokens[i]:
-                    if parameter_tokens[i].count('"') == 0 and parameter_tokens[i].count("'") == 0:
-                        function_name = function_call.split("(")[0]
-                        self.execute_function(function_call, "", function_name, line_number)
-                        return_value = self.functions[function_name].return_value
-                        return_value = str(return_value)
-                        if return_value == "True" or return_value == "False":
-                            return_value =return_value.lower()
-                        parameter_tokens[i] = parameter_tokens[i].replace(function_call, return_value)
+                    function_name = function_call.split("(")[0]
+                    self.execute_function(function_call, "", function_name, line_number)
+                    return_value = self.functions[function_name].return_value
+                    if type(return_value) == list:
+                        p = Printer("print", "", self.call_stack, self.variables)
+                        return_value = p.stringify_array(return_value)
+                    return_value = str(return_value)
+                    if return_value == "True" or return_value == "False":
+                        return_value = return_value.lower()
+                    parameter_tokens[i] = parameter_tokens[i].replace(function_call, return_value)
         return parameter_tokens
 
 
@@ -475,6 +562,12 @@ class Interpreter:
                 line_raw = input("| " + str(self.repl_counter+1) + "\t\b\b~ ") + "\n"
                 if line_raw.strip()[:2] == "if":
                     required_end_count += 1
+                elif line_raw.strip()[:3] == "for":
+                    required_end_count += 1
+                elif line_raw.strip()[:5] == "while":
+                    required_end_count += 1
+                elif line_raw.strip()[:6] == "repeat":
+                    required_end_count += 1
                 elif line_raw.strip() == "end":
                     end_count += 1
                 elif line_raw.strip()[:8] == "function":
@@ -488,6 +581,12 @@ class Interpreter:
         for i in range(start_line,line_count,1):
             line_raw = self.lines[i]
             if line_raw.strip()[:2] == "if":
+                required_end_count += 1
+            elif line_raw.strip()[:3] == "for":
+                required_end_count += 1
+            elif line_raw.strip()[:5] == "while":
+                required_end_count += 1
+            elif line_raw.strip()[:6] == "repeat":
                 required_end_count += 1
             elif line_raw.strip() == "end":
                 end_count += 1

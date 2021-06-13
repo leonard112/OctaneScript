@@ -45,6 +45,10 @@ def test_math_is_true():
     assert Boolean('[(1+1)]', test_stack, {}).evaluate() == True
 def test_string_is_true():
     assert Boolean('["hello"]', test_stack, {}).evaluate() == True
+def test_string_is_true():
+    assert Boolean('["hello"]', test_stack, {}).evaluate() == True
+def test_array_is_true():
+    assert Boolean('[<1,2,3>]', test_stack, {}).evaluate() == True
 
 
 # OPERATIONS
@@ -57,6 +61,10 @@ def test_equals_for_equal_integers_true():
     assert Boolean('[1 equals 1]', test_stack, {}).evaluate() == True
 def test_equals_for_equal_decimals_true():
     assert Boolean('[1.1 equals 1.1]', test_stack, {}).evaluate() == True
+def test_equals_for_equal_math_true():
+    assert Boolean('[(1 + 1) equals (1 + 1)]', test_stack, {}).evaluate() == True
+def test_equals_for_equal_arrays_true():
+    assert Boolean('[<1, 2, 3> equals <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_equals_for_equal_booleans_true():
     assert Boolean('[true equals true]', test_stack, {}).evaluate() == True
 def test_equals_for_equal_strings_true():
@@ -68,6 +76,10 @@ def test_equals_for_unequal_integers_false():
     assert Boolean('[1 equals 2]', test_stack, {}).evaluate() == False
 def test_equals_for_unequal_decimals_false():
     assert Boolean('[1.1 equals 2.4]', test_stack, {}).evaluate() == False
+def test_equals_for_unequal_math_false():
+    assert Boolean('[(1 + 1) equals (1 + 2)]', test_stack, {}).evaluate() == False
+def test_equals_for_unequal_arrays_false():
+    assert Boolean('[<1, 2, 3> equals <1, 2, 4>]', test_stack, {}).evaluate() == False
 def test_equals_for_unequal_booleans_false():
     assert Boolean('[true equals false]', test_stack, {}).evaluate() == False
 def test_equals_for_unequal_strings_false():
@@ -82,6 +94,10 @@ def test_not_equals_for_unequal_integers_lower_first_true():
     assert Boolean('[1 notEquals 2]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_decimals_lower_first_true():
     assert Boolean('[1.1 notEquals 2.4]', test_stack, {}).evaluate() == True
+def test_not_equals_for_unequal_math_lower_first_true():
+    assert Boolean('[(1 + 1) notEquals (1 + 2)]', test_stack, {}).evaluate() == True
+def test_not_equals_for_unequal_arrays_lower_first_true():
+    assert Boolean('[<1, 2 ,3> notEquals <1, 2, 4>]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_booleans_lower_first_true():
     assert Boolean('[true notEquals false]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_strings_lower_first_true():
@@ -93,6 +109,10 @@ def test_not_equals_for_unequal_integers_greater_first_true():
     assert Boolean('[2 notEquals 1]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_decimals_greater_first_true():
     assert Boolean('[2.4 notEquals 1.1]', test_stack, {}).evaluate() == True
+def test_not_equals_for_unequal_math_greater_first_true():
+    assert Boolean('[(1 + 2) notEquals (1 + 1)]', test_stack, {}).evaluate() == True
+def test_not_equals_for_unequal_arrays_greater_first_true():
+    assert Boolean('[<1, 2, 4> notEquals <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_booleans_greater_first_true():
     assert Boolean('[false notEquals true]', test_stack, {}).evaluate() == True
 def test_not_equals_for_unequal_strings_greater_first_true():
@@ -104,6 +124,10 @@ def test_not_equals_for_equal_integers_false():
     assert Boolean('[1 notEquals 1]', test_stack, {}).evaluate() == False
 def test_not_equals_for_equal_decimals_false():
     assert Boolean('[1.1 notEquals 1.1]', test_stack, {}).evaluate() == False
+def test_not_equals_for_equal_math_false():
+    assert Boolean('[(1 + 1) notEquals (1 + 1)]', test_stack, {}).evaluate() == False
+def test_not_equals_for_equal_arrays_false():
+    assert Boolean('[<1, 2, 3> notEquals <1, 2, 3>]', test_stack, {}).evaluate() == False
 def test_not_equals_for_equal_booleans_false():
     assert Boolean('[true notEquals true]', test_stack, {}).evaluate() == False
 def test_not_equals_for_equal_strings_false():
@@ -118,6 +142,10 @@ def test_less_than_for_first_integer_less_than_following_true():
     assert Boolean('[1 lessThan 2]', test_stack, {}).evaluate() == True
 def test_less_than_for_first_decimal_less_than_following_true():
     assert Boolean('[1.1 lessThan 2.4]', test_stack, {}).evaluate() == True
+def test_less_than_for_first_math_expression_less_than_following_true():
+    assert Boolean('[(1 + 1) lessThan (1 + 2)]', test_stack, {}).evaluate() == True
+def test_less_than_for_first_array_less_than_following_true():
+    assert Boolean('[<1, 2, 3> lessThan <1, 2, 4>]', test_stack, {}).evaluate() == True
 def test_less_than_for_first_boolean_less_than_following_true():
     assert Boolean('[false lessThan true]', test_stack, {}).evaluate() == True
 def test_less_than_for_first_string_less_than_following_true():
@@ -129,6 +157,10 @@ def test_less_than_for_first_integer_greater_than_following_false():
     assert Boolean('[2 lessThan 1]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_decimal_greater_than_following_false():
     assert Boolean('[2.4 lessThan 1.1]', test_stack, {}).evaluate() == False
+def test_less_than_for_first_math_expression_greater_than_following_false():
+    assert Boolean('[(1 + 2) lessThan (1 + 1)]', test_stack, {}).evaluate() == False
+def test_less_than_for_first_array_greater_than_following_false():
+    assert Boolean('[<1, 2, 4> lessThan <1, 2, 3>]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_boolean_greater_than_following_false():
     assert Boolean('[true lessThan false]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_string_greater_than_following_false():
@@ -140,6 +172,10 @@ def test_less_than_for_first_integer_equal_to_following_false():
     assert Boolean('[1 lessThan 1]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_decimal_equal_to_following_false():
     assert Boolean('[1.1 lessThan 1.1]', test_stack, {}).evaluate() == False
+def test_less_than_for_first_math_expression_equal_to_following_false():
+    assert Boolean('[(1 + 1) lessThan (1 + 1)]', test_stack, {}).evaluate() == False
+def test_less_than_for_first_array_equal_to_following_false():
+    assert Boolean('[<1, 2, 3> lessThan <1, 2, 3>]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_boolean_equal_to_following_false():
     assert Boolean('[true lessThan true]', test_stack, {}).evaluate() == False
 def test_less_than_for_first_string_equal_to_following_false():
@@ -154,6 +190,10 @@ def test_less_than_equals_for_first_integer_less_than_following_true():
     assert Boolean('[1 lessThanEquals 2]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_decimal_less_than_following_true():
     assert Boolean('[1.1 lessThanEquals 2.4]', test_stack, {}).evaluate() == True
+def test_less_than_equals_for_first_math_expression_less_than_following_true():
+    assert Boolean('[(1 + 1) lessThanEquals (1 + 2)]', test_stack, {}).evaluate() == True
+def test_less_than_equals_for_first_array_less_than_following_true():
+    assert Boolean('[<1, 2, 3> lessThanEquals <1, 2, 4>]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_boolean_less_than_following_true():
     assert Boolean('[false lessThanEquals true]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_string_less_than_following_true():
@@ -165,6 +205,10 @@ def test_less_than_equals_for_first_integer_greater_than_following_false():
     assert Boolean('[2 lessThanEquals 1]', test_stack, {}).evaluate() == False
 def test_less_than_equals_for_first_decimal_greater_than_following_false():
     assert Boolean('[2.4 lessThanEquals 1.1]', test_stack, {}).evaluate() == False
+def test_less_than_equals_for_first_math_expression_greater_than_following_false():
+    assert Boolean('[(1 + 2) lessThanEquals (1 + 1)]', test_stack, {}).evaluate() == False
+def test_less_than_equals_for_first_array_greater_than_following_false():
+    assert Boolean('[<1, 2, 4> lessThanEquals <1, 2, 3>]', test_stack, {}).evaluate() == False
 def test_less_than_equals_for_first_boolean_greater_than_following_false():
     assert Boolean('[true lessThanEquals false]', test_stack, {}).evaluate() == False
 def test_less_than_equals_for_first_string_greater_than_following_false():
@@ -176,6 +220,10 @@ def test_less_than_equals_for_first_integer_equal_to_following_false():
     assert Boolean('[1 lessThanEquals 1]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_decimal_equal_to_following_false():
     assert Boolean('[1.1 lessThanEquals 1.1]', test_stack, {}).evaluate() == True
+def test_less_than_equals_for_first_math_expression_equal_to_following_false():
+    assert Boolean('[(1 + 1) lessThanEquals (1 + 1)]', test_stack, {}).evaluate() == True
+def test_less_than_equals_for_first_array_equal_to_following_false():
+    assert Boolean('[<1, 2, 3> lessThanEquals <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_boolean_equal_to_following_false():
     assert Boolean('[true lessThanEquals true]', test_stack, {}).evaluate() == True
 def test_less_than_equals_for_first_string_equal_to_following_false():
@@ -190,6 +238,10 @@ def test_greater_than_for_first_integer_less_than_following_false():
     assert Boolean('[1 greaterThan 2]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_decimal_less_than_following_false():
     assert Boolean('[1.1 greaterThan 2.4]', test_stack, {}).evaluate() == False
+def test_greater_than_for_first_math_expression_less_than_following_false():
+    assert Boolean('[(1 + 1) greaterThan (1 + 2)]', test_stack, {}).evaluate() == False
+def test_greater_than_for_first_array_less_than_following_false():
+    assert Boolean('[<1, 2, 3> greaterThan <1, 2, 4>]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_boolean_less_than_following_false():
     assert Boolean('[false greaterThan true]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_string_less_than_following_false():
@@ -201,6 +253,10 @@ def test_greater_than_for_first_integer_greater_than_following_true():
     assert Boolean('[2 greaterThan 1]', test_stack, {}).evaluate() == True
 def test_greater_than_for_first_decimal_greater_than_following_true():
     assert Boolean('[2.4 greaterThan 1.1]', test_stack, {}).evaluate() == True
+def test_greater_than_for_first_math_expression_greater_than_following_true():
+    assert Boolean('[(1 + 2) greaterThan (1 + 1)]', test_stack, {}).evaluate() == True
+def test_greater_than_for_first_array_greater_than_following_true():
+    assert Boolean('[<1, 2, 4> greaterThan <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_greater_than_for_first_boolean_greater_than_following_true():
     assert Boolean('[true greaterThan false]', test_stack, {}).evaluate() == True
 def test_greater_than_for_first_string_greater_than_following_true():
@@ -212,6 +268,10 @@ def test_greater_than_for_first_integer_equal_to_following_false():
     assert Boolean('[1 greaterThan 1]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_decimal_equal_to_following_false():
     assert Boolean('[1.1 greaterThan 1.1]', test_stack, {}).evaluate() == False
+def test_greater_than_for_first_math_expression_equal_to_following_false():
+    assert Boolean('[(1 + 1) greaterThan (1 + 1)]', test_stack, {}).evaluate() == False
+def test_greater_than_for_first_array_equal_to_following_false():
+    assert Boolean('[<1, 2, 3> greaterThan <1, 2, 3>]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_boolean_equal_to_following_false():
     assert Boolean('[true greaterThan true]', test_stack, {}).evaluate() == False
 def test_greater_than_for_first_string_equal_to_following_false():
@@ -226,6 +286,10 @@ def test_greater_than_equals_for_first_integer_less_than_following_false():
     assert Boolean('[1 greaterThanEquals 2]', test_stack, {}).evaluate() == False
 def test_greater_than_equals_for_first_decimal_less_than_following_false():
     assert Boolean('[1.1 greaterThanEquals 2.4]', test_stack, {}).evaluate() == False
+def test_greater_than_equals_for_first_math_less_than_following_false():
+    assert Boolean('[(1 + 1) greaterThanEquals (1 + 2)]', test_stack, {}).evaluate() == False
+def test_greater_than_equals_for_first_array_less_than_following_false():
+    assert Boolean('[<1, 2, 3> greaterThanEquals <1, 2, 4>]', test_stack, {}).evaluate() == False
 def test_greater_than_equals_for_first_boolean_less_than_following_false():
     assert Boolean('[false greaterThanEquals true]', test_stack, {}).evaluate() == False
 def test_greater_than_equals_for_first_string_less_than_following_false():
@@ -237,6 +301,10 @@ def test_greater_than_equals_for_first_integer_greater_than_following_true():
     assert Boolean('[2 greaterThanEquals 1]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_decimal_greater_than_following_true():
     assert Boolean('[2.4 greaterThanEquals 1.1]', test_stack, {}).evaluate() == True
+def test_greater_than_equals_for_first_math_expression_greater_than_following_true():
+    assert Boolean('[(1 + 2) greaterThanEquals (1 + 1)]', test_stack, {}).evaluate() == True
+def test_greater_than_equals_for_first_array_greater_than_following_true():
+    assert Boolean('[<1, 2, 4> greaterThanEquals <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_boolean_greater_than_following_true():
     assert Boolean('[true greaterThanEquals false]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_string_greater_than_following_true():
@@ -248,6 +316,10 @@ def test_greater_than_equals_for_first_integer_equal_to_following_true():
     assert Boolean('[1 greaterThanEquals 1]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_decimal_equal_to_following_true():
     assert Boolean('[1.1 greaterThanEquals 1.1]', test_stack, {}).evaluate() == True
+def test_greater_than_equals_for_first_math_expression_equal_to_following_true():
+    assert Boolean('[(1 + 1) greaterThanEquals (1 + 1)]', test_stack, {}).evaluate() == True
+def test_greater_than_equals_for_first_array_equal_to_following_true():
+    assert Boolean('[<1, 2, 3> greaterThanEquals <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_boolean_equal_to_following_true():
     assert Boolean('[true greaterThanEquals true]', test_stack, {}).evaluate() == True
 def test_greater_than_equals_for_first_string_equal_to_following_true():
@@ -264,6 +336,10 @@ def test_and_for_equal_integer_values_is_true():
     assert Boolean('[1 and 1]', test_stack, {}).evaluate() == True  
 def test_and_for_equal_decimal_values_is_true():
     assert Boolean('[1.1 and 1.1]', test_stack, {}).evaluate() == True  
+def test_and_for_equal_math_values_is_true():
+    assert Boolean('[(1 + 1) and (1 + 1)]', test_stack, {}).evaluate() == True
+def test_and_for_equal_arrays_values_is_true():
+    assert Boolean('[<1, 2, 3> and <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_and_for_equal_string_values_is_true():
     assert Boolean('["hello" and "hello"]', test_stack, {}).evaluate() == True 
 def test_and_for_equal_variable_values_is_true():
@@ -275,6 +351,10 @@ def test_and_for_unequal_integers_with_greater_first_is_true_unless_booleans():
     assert Boolean('[2 and 1]', test_stack, {}).evaluate() == True  
 def test_and_for_unequal_decimals_with_greater_first_is_true_unless_booleans():
     assert Boolean('[2.4 and 1.1]', test_stack, {}).evaluate() == True
+def test_and_for_unequal_math_with_greater_first_is_true_unless_booleans():
+    assert Boolean('[(1 + 2) and (1 + 1)]', test_stack, {}).evaluate() == True
+def test_and_for_unequal_arrays_with_greater_first_is_true_unless_booleans():
+    assert Boolean('[<1, 2, 4> and <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_and_for_unequal_strings_with_greater_first_is_true_unless_booleans():
     assert Boolean('["world" and "hello"]', test_stack, {}).evaluate() == True 
 def test_and_for_unequal_variables_with_greater_first_is_true_unless_booleans():
@@ -286,6 +366,10 @@ def test_and_for_unequal_integers_with_lower_first_is_true_unless_booleans():
     assert Boolean('[1 and 2]', test_stack, {}).evaluate() == True    
 def test_and_for_unequal_decimals_with_lower_first_is_true_unless_booleans():
     assert Boolean('[1.1 and 2.4]', test_stack, {}).evaluate() == True
+def test_and_for_unequal_math_with_lower_first_is_true_unless_booleans():
+    assert Boolean('[(1 + 1) and (1 + 2)]', test_stack, {}).evaluate() == True
+def test_and_for_unequal_decimals_with_lower_first_is_true_unless_booleans():
+    assert Boolean('[<1, 2, 3> and <1, 2, 4>]', test_stack, {}).evaluate() == True
 def test_and_for_unequal_strings_with_lower_first_is_true_unless_booleans():
     assert Boolean('["hello" and "world"]', test_stack, {}).evaluate() == True 
 def test_and_for_unequal_variables_with_lower_first_is_true_unless_booleans():
@@ -303,6 +387,10 @@ def test_or_for_equal_integer_values_is_true():
     assert Boolean('[1 or 1]', test_stack, {}).evaluate() == True
 def test_or_for_equal_decimal_values_is_true():
     assert Boolean('[1.1 or 1.1]', test_stack, {}).evaluate() == True
+def test_or_for_equal_math_values_is_true():
+    assert Boolean('[(1 + 1) or (1 + 1)]', test_stack, {}).evaluate() == True
+def test_or_for_equal_array_values_is_true():
+    assert Boolean('[<1, 2, 3> or <1, 2 ,3>]', test_stack, {}).evaluate() == True
 def test_or_for_equal_string_values_is_true():
     assert Boolean('["hello" or "hello"]', test_stack, {}).evaluate() == True 
 def test_or_for_equal_variable_values_is_true():
@@ -314,6 +402,10 @@ def test_or_for_unequal_integers_with_greater_first_is_true():
     assert Boolean('[2 or 1]', test_stack, {}).evaluate() == True   
 def test_or_for_unequal_decimals_with_greater_first_is_true():
     assert Boolean('[2.4 or 1.1]', test_stack, {}).evaluate() == True
+def test_or_for_unequal_math_with_greater_first_is_true():
+    assert Boolean('[(1 + 2) or (1 + 1)]', test_stack, {}).evaluate() == True
+def test_or_for_unequal_arrays_with_greater_first_is_true():
+    assert Boolean('[<1, 2, 4> or <1, 2, 3>]', test_stack, {}).evaluate() == True
 def test_or_for_unequal_strings_with_greater_first_is_true():
     assert Boolean('["world" or "hello"]', test_stack, {}).evaluate() == True 
 def test_or_for_unequal_variables_with_greater_first_is_true():
@@ -325,6 +417,10 @@ def test_or_for_unequal_integers_with_lower_first_is_true():
     assert Boolean('[1 or 2]', test_stack, {}).evaluate() == True 
 def test_or_for_unequal_decimals_with_lower_first_is_true():
     assert Boolean('[1.1 or 2.4]', test_stack, {}).evaluate() == True
+def test_or_for_unequal_math_with_lower_first_is_true():
+    assert Boolean('[(1 + 1) or (1 + 2)]', test_stack, {}).evaluate() == True
+def test_or_for_unequal_arrays_with_lower_first_is_true():
+    assert Boolean('[<1, 2, 3> or <1, 2, 4>]', test_stack, {}).evaluate() == True
 def test_or_for_unequal_strings_with_lower_first_is_true():
     assert Boolean('["hello" or "world"]', test_stack, {}).evaluate() == True 
 def test_or_for_unequal_variables_with_lower_first_is_true():
@@ -376,6 +472,8 @@ def test_no_spaces_between_complex_single_quote_string_expression_operators_and_
     assert Boolean("[x.'hello'equals'world'.y]", test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_no_spaces_between_complex_string_expression_operators_and_operands_with_math_touching_operator_works():
     assert Boolean('[x.(1+1)equals(2*2).y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_between_complex_string_expression_operators_and_operands_with_arrays_touching_operator_works():
+    assert Boolean('[x.<1,2,3>equals<1,2,4>.y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_no_spaces_between_complex_string_expression_operators_and_operands_with_boolean_expression_touching_operator_works():
     assert Boolean('[x.[true]equals[false].y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_no_spaces_when_comparing_single_enclosed_true_false_booleans_works():
@@ -405,6 +503,8 @@ def test_extra_spaces_in_boolean_operation_on_single_quote_strings_expressions_c
     assert Boolean("[   x   .   'hello'   equals   'world'   .   y   ]", test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_extra_spaces_in_boolean_operation_on_string_expressions_with_variables_concatenated_with_math_operation_facing_operator_works():
     assert Boolean('[   x   .   (   1   +   1   )   equals   (   2   *   2   )   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_extra_spaces_in_boolean_operation_on_string_expressions_with_variables_concatenated_with_arrays_facing_operator_works():
+    assert Boolean('[   x   .   <   1   ,   2   ,   3   >   equals   <   1   ,   2   ,   4   >   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_extra_spaces_in_boolean_operation_on_string_expressions_with_variables_concatenated_with_boolean_operation_facing_operator_works():
     assert Boolean('[   x   .   [   true   ]   equals   [   false   ]   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_extra_spaces_when_comparing_single_enclosed_true_false_booleans_works():
@@ -457,6 +557,80 @@ def test_missing_closing_parenthesis_when_comparing_math_raises_error():
     assert_error(Boolean('[(1 + 1 equals (2 * 2)]', test_stack, {}))
 def test_missing_leading_parenthesis_when_comparing_math_raises_error():
     assert_error(Boolean('[(1 + 1) equals 2 * 2)]', test_stack, {}))
+# ARRAY
+def test_extra_closing_symbol_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3>> equals <1, 2, 4>]', test_stack, {}))
+def test_extra_leading_symbol_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3> equals <<1, 2, 4>]', test_stack, {}))
+def test_missing_closing_symbol_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3 equals <1, 2, 4>]', test_stack, {}))
+def test_missing_leading_symbol_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3> equals 1, 2, 4>]', test_stack, {}))
+def test_extra_comma_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3,> equals <1, 2, 4>]', test_stack, {}))
+def test_missing_comma_when_comparing_arrays_raises_error():
+    assert_error(Boolean('[<1, 2, 3> equals <1 2, 4>]', test_stack, {}))
+
+
+# COMPARING TO DIFFERENT VALUE TYPES
+# STRING
+def test_string_cannot_be_compared_to_an_integer():
+    assert_error(Boolean('["hello" or 1]', test_stack, {}))
+def test_string_cannot_be_compared_to_a_decimal():
+    assert_error(Boolean('["hello" or 1.1]', test_stack, {}))
+def test_string_cannot_be_compared_to_math():
+    assert_error(Boolean('["hello" or (1 + 1)]', test_stack, {}))
+def test_string_cannot_be_compared_to_an_array():
+    assert_error(Boolean('["hello" or <1, 2, 3>]', test_stack, {}))
+def test_string_cannot_be_compared_to_a_boolean():
+    assert_error(Boolean('["hello" or true]', test_stack, {}))
+# NUMBERS AND MATH
+def test_integers_cannot_be_compared_to_strings():
+    assert_error(Boolean('[1 or "hello"]', test_stack, {}))
+def test_decimals_cannot_be_compared_to_strings():
+    assert_error(Boolean('[1.0 or "hello"]', test_stack, {}))
+def test_math_cannot_be_compared_to_strings():
+    assert_error(Boolean('[(2 - 1) or "hello"]', test_stack, {}))
+def test_integers_can_be_compared_to_decimals():
+    assert Boolean("[1 or 1.1]", test_stack, {}).evaluate() == True
+def test_integers_can_be_compared_to_math():
+    assert Boolean("[1 or (2 - 1)]", test_stack, {}).evaluate() == True
+def test_decimals_can_be_compared_to_math():
+    assert Boolean("[1.1 or (2 - 1)]", test_stack, {}).evaluate() == True
+def test_integers_cannot_be_compared_to_arrays():
+    assert_error(Boolean('[1 or <1, 2, 3>]', test_stack, {}))
+def test_decimals_cannot_be_compared_to_arrays():
+    assert_error(Boolean('[1.0 or <1, 2, 3>]', test_stack, {}))
+def test_math_cannot_be_compared_to_arrays():
+    assert_error(Boolean('[(2 - 1) or <1, 2, 3>]', test_stack, {}))
+def test_integers_can_be_compared_to_booleans():
+    assert Boolean("[1 or true]", test_stack, {}).evaluate() == True
+def test_decimals_can_be_compared_to_booleans():
+    assert Boolean("[1.0 or true]", test_stack, {}).evaluate() == True
+def test_math_can_be_compared_to_booleans():
+    assert Boolean("[(2 - 1) or true]", test_stack, {}).evaluate() == True
+# ARRAYS
+def test_arrays_cannot_be_compared_to_strings():
+    assert_error(Boolean('[<1, 2, 3> or "hello"]', test_stack, {}))
+def test_arrays_cannot_be_compared_to_integers():
+    assert_error(Boolean('[<1, 2, 3> or 1]', test_stack, {}))
+def test_arrays_cannot_be_compared_to_decimals():
+    assert_error(Boolean('[<1, 2, 3> or 1.1]', test_stack, {}))
+def test_arrays_cannot_be_compared_to_math():
+    assert_error(Boolean('[<1, 2, 3> or (1 + 1)]', test_stack, {}))
+def test_arrays_cannot_be_compared_to_booleans():
+    assert_error(Boolean('[<1, 2, 3> or true]', test_stack, {}))
+# BOOLEANS
+def test_booleans_cannot_be_compared_to_strings():
+    assert_error(Boolean('[true or "hello"]', test_stack, {}))
+def test_booleans_can_be_compared_to_integers():
+    assert Boolean("[true or 1]", test_stack, {}).evaluate() == True
+def test_booleans_can_be_compared_to_decimals():
+    assert Boolean("[true or 1.1]", test_stack, {}).evaluate() == True
+def test_booleans_cann_be_compared_to_math():
+    assert Boolean("[true or (1 + 1)]", test_stack, {}).evaluate() == True
+def test_booleans_cannot_be_compared_to_arrays():
+    assert_error(Boolean('[true or <1, 2, 3>]', test_stack, {}))
 
 
 # INLINE OPERATIONS

@@ -94,6 +94,15 @@ def test_math_zero_root_raises_error():
     assert_error(Math('(0 rootOf 4)', test_stack, {}))
 
 
+# INVALID VALUE TYPES
+def test_math_operations_cannot_be_performed_on_strings():
+    assert_error(Math('(1 / "hello")', test_stack, {}))
+def test_math_operations_cannot_be_performed_on_booleans():
+    assert_error(Math('(1 / [true])', test_stack, {}))
+def test_math_operations_cannot_be_performed_on_arrays():
+    assert_error(Math('(1 / <1, 2, 3>)', test_stack, {}))
+
+
 def assert_error(expression):
     with pytest.raises(SystemExit) as error:
             expression.calculate()

@@ -5,6 +5,7 @@ from colors import color
 from core.Fail import fail
 from core.Expression import Expression
 
+
 class Printer:
     def __init__ (self, function, expression, call_stack, variables):
         self.function = function
@@ -16,7 +17,12 @@ class Printer:
 
     def print(self):
         expression = Expression(self.expression, self.call_stack, self.variables)
-        self.expression = str(expression.evaluate())
+        self.expression = expression.evaluate()
+
+        if type(self.expression) == list:
+            self.expression = self.stringify_array(self.expression)
+        else:
+            self.expression = str(self.expression)
         
         if self.expression == "True" or self.expression == "False":
             self.expression = self.expression.lower()
@@ -26,6 +32,26 @@ class Printer:
             print(self.expression)
         else:
             fail("Bad print function.", self.error_type, self.call_stack)
+
+
+    def stringify_array(self, array):
+        array_string = "<"
+        for element in array:
+            if type(element) != list:
+                if type(element) == str:
+                    element = "'" + element + "'"
+                else:
+                    element = str(element)
+                if element == "True" or element == "False":
+                    element = element.lower()
+                array_string += element + ", "
+            else:
+                array_string += self.stringify_array(element) + ", "
+        if len(array_string) >= 2:
+            if array_string[-2] == ",":
+                array_string = array_string[:-2]
+        array_string += ">"
+        return array_string
             
 
     def print_switch(self):

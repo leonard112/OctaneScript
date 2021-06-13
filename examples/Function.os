@@ -1,29 +1,21 @@
-function countDown(x)
-    if [x greaterThan 0]
-        return countDown((x-1))
-    else
-        return x
-    end
+function returnString()
+    return "string"
+end
+function addOne(x)
+    return (x + 1)
+end
+function addPointFive(x)
+    return (x + .5)
+end
+function returnBool()
+    return true
+end
+function testArray(x)
+    return x
 end
 
-function shortCircuit()
-    return "hello"
-    print err
-end
-
-function factorial(n)
-    if [n equals 0]
-        return 1
-    else
-        return (n * factorial(n - 1))
-    end
-end
-
-# set val to countDown(498)
-
-set val to factorial(10)
-print val
-
-#print shortCircuit()
-
-print "done"
+set stringValue to "hello" . returnString() . "world"
+set integerValue to "hello" . addOne(1) . "world"
+set decimalValue to "hello" . addPointFive(1) . "world"
+set booleanValue to "hello" . returnBool() . "world"
+set arrayValue to testArray(<1, 2, 3>)

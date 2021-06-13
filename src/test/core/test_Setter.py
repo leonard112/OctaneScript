@@ -40,17 +40,56 @@ def test_stores_decimal_result_of_math_operation():
 
 # BOOLEANS
 def test_stores_true_boolean():
-    set_number = Setter("x to true", test_stack, {}, {})
-    assert set_number.set()['x'] == True
+    set_boolean = Setter("x to true", test_stack, {}, {})
+    assert set_boolean.set()['x'] == True
 def test_stores_false_boolean():
-    set_number = Setter("x to false", test_stack, {}, {})
-    assert set_number.set()['x'] == False
+    set_boolean = Setter("x to false", test_stack, {}, {})
+    assert set_boolean.set()['x'] == False
 def test_stores_complex_true_result_of_boolean():
-    set_number = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
-    assert set_number.set()['x'] == True
+    set_boolean = Setter("x to [[15 equals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
+    assert set_boolean.set()['x'] == True
 def test_stores_complex_false_result_of_boolean():
-    set_number = Setter("x to [[15 notEquals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
-    assert set_number.set()['x'] == False
+    set_boolean = Setter("x to [[15 notEquals (5 * 3)] and [\"hello\" notEquals \"world\"]]", test_stack, {}, {})
+    assert set_boolean.set()['x'] == False
+
+
+# ARRAYS
+def test_stores_empty_array_when_using_the_array_keyword():
+    set_array = Setter("x to array", test_stack, {}, {})
+    assert set_array.set()['x'] == []
+def test_stores_empty_array():
+    set_array = Setter("x to <>", test_stack, {}, {})
+    assert set_array.set()['x'] == []
+def test_stores_array_with_only_one_non_boolean_element():
+    set_array = Setter("x to <1>", test_stack, {}, {})
+    assert set_array.set()['x'] == [1]
+def test_stores_array_with_only_one_boolean_element():
+    set_array = Setter("x to <true>", test_stack, {}, {})
+    assert set_array.set()['x'] == [True]
+def test_stores_an_array_of_numbers():
+    set_array = Setter("x to <1, 2, 3>", test_stack, {}, {})
+    assert set_array.set()['x'] == [1, 2, 3]
+def test_stores_an_array_of_multiple_value_types():
+    set_array = Setter("x to <1, 'hello world', true, <6,7>>", test_stack, {}, {})
+    assert set_array.set()['x'] == [1, 'hello world', True, [6, 7]]
+
+
+#ARRAY INDICIES AND SUBARRAYS
+def test_stores_an_array_index():
+    set_array_index = Setter("x to y<0>", test_stack, {'y': [1,2,3]}, {})
+    assert set_array_index.set()['x'] == 1
+def test_stores_a_subarray():
+    set_array_index = Setter("x to y<0:2>", test_stack, {'y': [1,2,3]}, {})
+    assert set_array_index.set()['x'] == [1,2]
+
+
+#STRING INDICIES AND SUBSTRINGS
+def test_stores_a_string_index():
+    set_array_index = Setter("x to y<0>", test_stack, {'y': 'hello'}, {})
+    assert set_array_index.set()['x'] == 'h'
+def test_stores_a_substring():
+    set_array_index = Setter("x to y<0:3>", test_stack, {'y': 'hello'}, {})
+    assert set_array_index.set()['x'] == 'hel'
 
 
 def assert_error(setter):

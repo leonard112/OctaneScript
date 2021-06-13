@@ -188,7 +188,7 @@ test(1, 2, 3)
     assert_stack_trace(interpreter, script, [2])
     assert_stack_trace_REPL(capfd, script, [2])
 
-def test_function_can_return_all_primitive_value_types(interpreter):
+def test_function_can_return_all_value_types(interpreter):
     script = """
 function returnString()
     return "string"
@@ -202,17 +202,22 @@ end
 function returnBool()
     return true
 end
+function returnArray()
+    return <1,2,3>
+end
 
 set stringValue to returnString()
 set integerValue to addOne(1)
 set decimalValue to addPointFive(1)
 set booleanValue to returnBool()
+set arrayValue to returnArray()
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables['stringValue'] == "string"
     assert interpreter.variables['integerValue'] == 2
     assert interpreter.variables['decimalValue'] == 1.5
     assert interpreter.variables['booleanValue'] == True
+    assert interpreter.variables['arrayValue'] == [1, 2, 3]
 
 def test_any_return_value_of_function_can_be_concatenated_with_string(interpreter):
     script = """
@@ -228,17 +233,22 @@ end
 function returnBool()
     return true
 end
+function returnArray()
+    return <1,2,3>
+end
 
 set stringValue to "hello" . returnString() . "world"
 set integerValue to "hello" . addOne(1) . "world"
 set decimalValue to "hello" . addPointFive(1) . "world"
 set booleanValue to "hello" . returnBool() . "world"
+set arrayValue to "hello" . returnArray() . "world"
 """.splitlines(True)
     interpreter.run_script(script, None)
     assert interpreter.variables['stringValue'] == "hellostringworld"
     assert interpreter.variables['integerValue'] == "hello2world"
     assert interpreter.variables['decimalValue'] == "hello1.5world"
     assert interpreter.variables['booleanValue'] == "hellotrueworld"
+    assert interpreter.variables['arrayValue'] == "hello<1, 2, 3>world"
 
 def test_number_return_value_of_function_can_be_evaluated_in_math_expression(interpreter):
     script = """

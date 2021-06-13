@@ -3,6 +3,7 @@
 
 import core.Expression
 from core.NestableExpression import NestableExpression
+import core.Printer
 from core.Fail import fail
 
 class Boolean(NestableExpression):
@@ -30,8 +31,8 @@ class Boolean(NestableExpression):
     
     def perform_operation(self, tokens):
         try:
-            token_1 = self.resolve(tokens[0])
-            token_2 = self.resolve(tokens[2])
+            token_1 = self.resolve(tokens[0].strip())
+            token_2 = self.resolve(tokens[2].strip())
             return {
                 'equals' : token_1 == token_2,
                 'lessThan' : token_1 < token_2,
@@ -44,8 +45,15 @@ class Boolean(NestableExpression):
             }.get(tokens[1], None)
         except Exception:
             fail("Differing value types cannot be compared.\n\t\t" +
-                 "Operand 1: " + str(self.resolve(tokens[0])) + "\n\t\t" +
-                 "Operand 2: " + str(self.resolve(tokens[2])), self.error_type, self.call_stack)
+                 "Operand 1: " + self.stringify_token(token_1) + "\n\t\t" +
+                 "Operand 2: " + self.stringify_token(token_2), self.error_type, self.call_stack)
+
+
+    def stringify_token(self, token):
+        if type(token) == list:
+            p = core.Printer.Printer("print", "", self.call_stack, self.variables)
+            return p.stringify_array(token)
+        return str(token)
 
 
     def perform_and_or(self, operand_1, operand_2, operator):
@@ -72,6 +80,8 @@ class Boolean(NestableExpression):
             except:
                 e = core.Expression.Expression(value, self.call_stack, self.variables)
                 value = e.evaluate()
+                if type(value) == list:
+                    return value
                 try:
                     return float(value)
                 except:
@@ -81,7 +91,7 @@ class Boolean(NestableExpression):
     def is_valid_answer(self, tokens):
             if len(tokens) > 1:
                 return False
-            elif (tokens[0][0] == '"' and tokens[0][-1] == '"') or (tokens[0][0] == "'" and tokens[0][-1] == "'") or (tokens[0][0] == "(" and tokens[0][-1] == ")"):
+            elif self.starts_and_ends_with_valid_symbols(tokens) == True:
                 e = core.Expression.Expression(tokens[0], self.call_stack, self.variables)
                 e.evaluate()
                 return True
@@ -97,3 +107,17 @@ class Boolean(NestableExpression):
                         return True
                     except:
                         return False
+
+
+    def starts_and_ends_with_valid_symbols(self, tokens):
+        start_symbol = tokens[0][0]
+        end_symbol = tokens[0][-1]
+        if start_symbol == '"' and end_symbol == '"':
+            return True
+        elif start_symbol == "'" and end_symbol == "'":
+            return True
+        elif start_symbol == "(" and end_symbol == ")":
+            return True
+        elif start_symbol == "<" and end_symbol == ">":
+            return True
+        return False
