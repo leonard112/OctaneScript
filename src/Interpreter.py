@@ -33,6 +33,7 @@ class Interpreter:
         self.in_if_chain = False
         self.looking_for_else = False
         self.in_nested_repl = False
+        self.exit_repl_on_error = False
         self.error_type = "Interpreter Error"
         
 
@@ -87,7 +88,12 @@ class Interpreter:
             self.lines.append(line_raw)
             line = Line(line_raw, self.repl_counter, "REPL")
             self.call_stack.push(line)
-            self.execute(self.call_stack)
+            try:
+                self.execute(self.call_stack)
+            except SystemExit as e:
+                rc = int(str(e))
+                if rc == 0 or self.exit_repl_on_error == True:
+                    raise sys.exit(rc)
             if self.call_stack.peek() != None:
                 self.call_stack.pop()
             self.repl_counter += 1
@@ -397,12 +403,18 @@ class Interpreter:
 
         elif function == "pop" or function == "removeFirst" or function == "removeLast" or function == "remove":
             parameters = self.resolve_function_calls(parameters, line_number)
-            if "from" not in parameters:
+            parameters = " " + parameters
+            if " from " not in parameters:
                 fail(f"'{function}' operation missing 'from' keyword.", self.error_type, call_stack)
-            parameter_tokens = parameters.split("from")
-            if len(parameter_tokens) != 2:
-                fail(f"The '{function}' function may only contain one instance of the 'from' keyword.", self.error_type, call_stack)
-            array = parameter_tokens[-1].strip()
+            required_tokens = 2
+            parameter_tokens = parameters.split(" from ")
+            if " into " in parameters:
+                required_tokens = 3
+                parameter_tokens = parameter_tokens[:-1] + parameter_tokens[-1].split(" into ")
+                variable = parameter_tokens[-1]
+            if len(parameter_tokens) != required_tokens:
+                fail(f"The '{function}' function must contain one instance of the 'from' keyword and may contain one instance of the 'into' keyword.", self.error_type, call_stack)
+            array = parameter_tokens[1].strip()
             if array not in self.variables:
                 fail(f"The array '{array}' does not exist in the current scope.", self.error_type, call_stack)
             if type(self.variables[array]) != list:
@@ -412,8 +424,10 @@ class Interpreter:
             if function != "remove" and parameter_tokens[0].strip() != '':
                 fail(f"The '{function}' function was given too many arguments.", self.error_type, call_stack)
             if function == "pop" or function == "removeFirst":
+                removed_value = self.variables[array][0]
                 self.variables[array] = self.variables[array][1:]
             elif function == "removeLast":
+                removed_value = self.variables[array][-1]
                 self.variables[array] = self.variables[array][:-1]
             elif function == "remove":
                 index_expression = parameter_tokens[0]
@@ -421,9 +435,32 @@ class Interpreter:
                 if type(index) != int:
                     fail(f"Array index '{index_expression}' is not an integer. Array index must be an integer.", self.error_type, call_stack)
                 try:
+                    removed_value = self.variables[array][index]
                     self.variables[array].pop(index)
                 except:
                     fail(f"Array index '{index_expression}' is out of range for array '{array}'.", self.error_type, call_stack)
+            if required_tokens == 3:
+                setter = Setter(parameters, call_stack, self.variables, self.functions)
+                if setter.is_variable_name_valid(variable) == True:
+                    self.variables[variable] = removed_value
+            return line_number
+
+        elif function == "merge":
+            parameters = self.resolve_function_calls(parameters, line_number)
+            if " into " not in parameters:
+                fail(f"'{function}' operation missing 'into' keyword.", self.error_type, call_stack)
+            parameter_tokens = parameters.split(" into ")
+            if len(parameter_tokens) != 2:
+                fail(f"The '{function}' function may only contain one instance of the 'into' keyword.", self.error_type, call_stack)
+            from_array = Expression(parameter_tokens[0].strip(), self.call_stack, self.variables).evaluate()
+            into_array = parameter_tokens[-1].strip()
+            if into_array not in self.variables:
+                fail(f"The array '{into_array}' does not exist in the current scope.", self.error_type, call_stack)
+            if type(from_array) != list:
+                fail(f"Only arrays can be merged. {from_array} is not an array", self.error_type, call_stack)
+            if type(self.variables[into_array]) != list:
+                fail(f"Only arrays can be merged. {into_array} is not an array", self.error_type, call_stack)
+            self.variables[into_array] = self.variables[into_array] + from_array
             return line_number
 
         elif function == "sleep":
@@ -452,6 +489,7 @@ class Interpreter:
 
     def function_cleanup(self):
         self.recursion_depth -= 1
+        self.call_stack.pop()
         if self.recursion_depth == 0:
             self.variables = self.variables_out_of_scope
 
@@ -519,6 +557,8 @@ class Interpreter:
 
     def execute_function(self, function, parameters, function_name, line_number):
         function_name_length = len(function_name)
+        if function_name_length == len(function):
+            fail(f"'{function}' is an incomplete function call. Function call systax: 'myFunction(param1, param2)'" , self.error_type, self.call_stack)
         if function[function_name_length] == "(":
             function_parameters = function[function_name_length:] + parameters
             self.functions[function_name].populate_variables(function_parameters)
@@ -571,7 +611,9 @@ class Interpreter:
                 elif line_raw.strip() == "end":
                     end_count += 1
                 elif line_raw.strip()[:8] == "function":
-                    fail("A function cannot be defined inside a function or a conditional." , self.error_type, self.call_stack)
+                    line = Line(line_raw, self.repl_counter, "REPL")
+                    self.call_stack.push(line)
+                    fail("A function cannot be defined inside a nestable." , self.error_type, self.call_stack)
                 if required_end_count == end_count:
                     nestable_lines.append(line_raw)
                     return nestable_lines
@@ -591,7 +633,9 @@ class Interpreter:
             elif line_raw.strip() == "end":
                 end_count += 1
             elif line_raw.strip()[:8] == "function":
-                fail("A function cannot be defined inside a function or a conditional." , self.error_type, self.call_stack)
+                line = Line(line_raw, i + self.repl_counter, self.script_name)
+                self.call_stack.push(line)
+                fail("A function cannot be defined inside a nestable." , self.error_type, self.call_stack)
             if required_end_count == end_count:
                 return nestable_lines
             nestable_lines.append(line_raw)

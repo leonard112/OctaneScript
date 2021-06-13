@@ -166,8 +166,8 @@ end
 print "Entering function"
 test(1, 2, 3)
 """.splitlines(True)
-    assert_stack_trace(interpreter, script, [2])
-    assert_stack_trace_REPL(capfd, script, [2])
+    assert_stack_trace(interpreter, script, [3, 2])
+    assert_stack_trace_REPL(capfd, script, [3, 2])
 
 def test_function_cannot_be_defined_inside_conditional_inside_function(capfd, interpreter):
     script = """
@@ -185,8 +185,23 @@ end
 print "Entering function"
 test(1, 2, 3)
 """.splitlines(True)
-    assert_stack_trace(interpreter, script, [2])
-    assert_stack_trace_REPL(capfd, script, [2])
+    assert_stack_trace(interpreter, script, [7, 2])
+    assert_stack_trace_REPL(capfd, script, [7, 2])
+
+def test_function_calls_get_popped_of_stack(capfd, interpreter):
+    script = """
+function returnHello()
+    return "hello"
+end
+function returnWorld()
+    return "world"
+end
+returnHello()
+returnWorld()
+invalid
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [10])
+    assert_stack_trace_REPL(capfd, script, [10])
 
 def test_function_can_return_all_value_types(interpreter):
     script = """

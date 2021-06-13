@@ -89,6 +89,10 @@ def test_array_values_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
     b.populate_variables('(<1, 2>, <3, 4>, <5, 6>)')
     assert b.function_variables == {'x' : [1, 2], 'y' : [3, 4], 'z' : [5, 6]}
+def test_complex_array_values_can_be_passed_in_when_calling_function():
+    b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
+    b.populate_variables('(<1, <"hello", "world">>, <<true, false>, 4>, <<(1 + 1), 5.1>, 6>)')
+    assert b.function_variables == {'x' : [1, ['hello', 'world']], 'y' : [[True, False], 4], 'z' : [[2, 5.1], 6]}
 def test_variables_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {'a' : 1, 'b' : 2, 'c' : 3}, 0)
     b.populate_variables('(a, b, c)')

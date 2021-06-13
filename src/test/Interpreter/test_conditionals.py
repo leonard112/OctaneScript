@@ -697,3 +697,13 @@ print x
 """.splitlines(True)
     assert_code_works_in_REPL(capfd, script, '1\n')
 
+def test_function_cannot_be_defined_inside_conditional_for_script_and_REPL(capfd, interpreter):
+    script = """
+if [true]
+    function returnOne()
+        return 1
+    end
+end
+""".splitlines(True)
+    assert_stack_trace(interpreter, script, [3, 2])
+    assert_stack_trace_REPL(capfd, script, [3, 2])

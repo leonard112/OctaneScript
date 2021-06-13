@@ -15,6 +15,14 @@ append "test" to x
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == [1, 2, 3, "test"]
 
+def test_value_can_be_appended_to_array_with_to(interpreter):
+    script = """
+set xto to <1, 2, 3>
+append "test" to xto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xto'] == [1, 2, 3, "test"]
+
 def test_value_can_be_appended_to_empty_array(interpreter):
     script = """
 set x to <>
@@ -59,6 +67,14 @@ prepend "test" to x
 """.splitlines(True)
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == ["test", 1, 2, 3]
+
+def test_value_can_be_prepended_to_array_with_to(interpreter):
+    script = """
+set xto to <1, 2, 3>
+prepend "test" to xto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xto'] == ["test", 1, 2, 3]
 
 def test_value_can_be_prepended_to_empty_array(interpreter):
     script = """
@@ -105,6 +121,14 @@ push "test" to x
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == ["test" ,1, 2, 3]
 
+def test_value_can_be_pushed_to_array_with_to(interpreter):
+    script = """
+set xto to <1, 2, 3>
+push "test" to xto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xto'] == ["test" ,1, 2, 3]
+
 def test_value_can_be_pushed_to_empty_array(interpreter):
     script = """
 set x to <>
@@ -136,7 +160,7 @@ push "test" x
 def test_prepend_will_fail_if_given_too_many_arguments(interpreter):
     script = """
 set x to <1, 2, 3>
-prepend "test" to extra x
+push "test" to extra x
 """.splitlines(True)
     assert_error(interpreter, script)
 
@@ -149,6 +173,14 @@ removeLast from x
 """.splitlines(True)
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == [1, 2]
+
+def test_last_element_can_be_removed_from_array_with_from(interpreter):
+    script = """
+set xfrom to <1, 2, 3>
+removeLast from xfrom
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xfrom'] == [1, 2]
 
 def test_last_element_can_not_be_removed_from_array_that_is_not_stored_in_a_variable(interpreter):
     script = """
@@ -228,6 +260,14 @@ removeFirst from x
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == [2, 3]
 
+def test_first_element_can_be_removed_from_array_with_from(interpreter):
+    script = """
+set xfrom to <1, 2, 3>
+removeFirst from xfrom
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xfrom'] == [2, 3]
+
 def test_first_element_can_not_be_removed_from_array_that_is_not_stored_in_a_variable(interpreter):
     script = """
 removeFirst from <1, 2, 3>
@@ -305,6 +345,14 @@ pop from x
 """.splitlines(True)
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == [2, 3]
+
+def test_element_can_be_popped_from_array_with_from(interpreter):
+    script = """
+set xfrom to <1, 2, 3>
+pop from xfrom
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xfrom'] == [2, 3]
 
 def test_element_can_not_be_popped_from_array_that_is_not_stored_in_a_variable(interpreter):
     script = """
@@ -409,6 +457,26 @@ remove index from x
     assert_success(interpreter, script)
     assert interpreter.variables['x'] == [1, 2]
 
+def test_element_being_removed_can_be_a_variable_that_contains_from(interpreter):
+    script = """
+set x to <1, 2, 3>
+set indexfrom to 2
+remove indexfrom from x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2]
+
+def test_element_being_removed_can_be_the_result_of_a_function(interpreter):
+    script = """
+function returnIndex()
+    return 2
+end
+set x to <1, 2, 3>
+remove returnIndex() from x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2]
+
 def test_element_being_removed_can_be_an_array_index(interpreter):
     script = """
 set y to <1, 2, 3>
@@ -430,6 +498,13 @@ remove (1 + 1) from x
 def test_element_can_not_be_removed_from_array_that_is_not_stored_in_a_variable(interpreter):
     script = """
 remove 1 from <1, 2, 3>
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_being_removed_can_not_be_out_of_range(interpreter):
+    script = """
+set x to <1, 2, 3>
+remove 10 from x
 """.splitlines(True)
     assert_error(interpreter, script)
 
@@ -534,5 +609,338 @@ def test_remove_will_fail_if_given_extra_from_keyword_after_array(interpreter):
     script = """
 set x to <1, 2, 3>
 remove 1 from x from
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+
+# INSERTING REMOVED VALUES INTO VARIABLES
+def test_last_element_can_be_removed_from_array_and_stored_to_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeLast from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 3
+
+def test_last_element_can_be_removed_from_array_and_stored_to_a_variable_that_contains_into(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeLast from x into yinto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['yinto'] == 3
+
+def test_last_element_can_be_removed_from_array_and_stored_to_a_variable_that_already_exists(interpreter):
+    script = """
+set x to <1, 2, 3>
+set y to "hello"
+removeLast from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 3
+
+def test_last_element_cannot_be_removed_from_array_and_stored_to_a_variable_is_already_defined_as_function(interpreter):
+    script = """
+function y()
+    return true
+end
+set x to <1, 2, 3>
+removeLast from x into y
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_last_element_cannot_be_removed_from_array_and_stored_to_something_that_is_not_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeLast from x into "hello"
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_last_element_cannot_be_removed_from_array_and_stored_to_a_variable_with_extra_into_keyword(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeLast from x into y into
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_first_element_can_be_removed_from_array_and_stored_to_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeFirst from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 1
+
+def test_first_element_can_be_removed_from_array_and_stored_to_a_variable_that_contain_into(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeFirst from x into yinto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['yinto'] == 1
+
+def test_first_element_can_be_removed_from_array_and_stored_to_a_variable_that_already_exists(interpreter):
+    script = """
+set x to <1, 2, 3>
+set y to "hello"
+removeFirst from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 1
+
+def test_first_element_cannot_be_removed_from_array_and_stored_to_a_variable_that_is_already_defined_as_a_function(interpreter):
+    script = """
+function y()
+    return true
+end
+set x to <1, 2, 3>
+removeFirst from x into y
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_first_element_cannot_be_removed_from_array_and_stored_to_something_that_is_not_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeFirst from x into "hello"
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_first_element_cannot_be_removed_from_array_and_stored_to_a_variable_with_extra_into_keyword(interpreter):
+    script = """
+set x to <1, 2, 3>
+removeFirst from x into y into
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_can_be_popped_from_array_and_stored_to_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+pop from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 1
+
+def test_element_can_be_popped_from_array_and_stored_to_a_variable_that_contains_into(interpreter):
+    script = """
+set x to <1, 2, 3>
+pop from x into yinto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['yinto'] == 1
+
+def test_element_can_be_popped_from_array_and_stored_to_a_variable_that_already_exists(interpreter):
+    script = """
+set x to <1, 2, 3>
+set y to "hello"
+pop from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 1
+
+def test_element_cannot_be_popped_from_array_and_stored_to_a_variable_that_is_already_defined_as_function(interpreter):
+    script = """
+function y()
+    return true
+end
+set x to <1, 2, 3>
+pop from x into y
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_cannot_be_popped_from_array_and_stored_to_something_that_is_not_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+pop from x into "hello"
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_cannot_be_popped_from_array_and_stored_to_a_variable_with_extra_into_keyword(interpreter):
+    script = """
+set x to <1, 2, 3>
+pop from x into y into
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_at_index_can_be_removed_from_array_and_stored_to_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+remove 1 from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 2
+
+def test_element_at_index_can_be_removed_from_array_and_stored_to_a_variable_that_contains_into(interpreter):
+    script = """
+set x to <1, 2, 3>
+remove 1 from x into yinto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['yinto'] == 2
+
+def test_element_at_index_can_be_removed_from_array_and_stored_to_a_variable_that_already_exists(interpreter):
+    script = """
+set x to <1, 2, 3>
+set y to "hello"
+remove 1 from x into y
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['y'] == 2
+
+def test_element_at_index_cannot_be_removed_from_array_and_stored_to_a_variable_that_is_already_defined_as_function(interpreter):
+    script = """
+function y()
+    return true
+end
+set x to <1, 2, 3>
+remove 1 from x into y
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_at_index_cannot_be_removed_from_array_and_stored_to_something_that_is_not_a_variable(interpreter):
+    script = """
+set x to <1, 2, 3>
+remove 1 from x into "hello"
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_element_at_index_cannot_be_removed_from_array_and_stored_to_variable_with_extra_into_keyword(interpreter):
+    script = """
+set x to <1, 2, 3>
+remove 1 from x into y into
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+
+# MERGE
+def test_two_arrays_can_be_merged(interpreter):
+    script = """
+set x to <1, 2, 3>
+set y to <4, 5>
+merge y into x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2, 3, 4, 5]
+
+def test_anonymous_array_can_be_merged_into_another_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge <4, 5> into x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2, 3, 4, 5]
+
+def test_array_returned_by_function_can_be_merged_into_another_array(interpreter):
+    script = """
+function returnArray()
+    return <4, 5>
+end
+set x to <1, 2, 3>
+merge returnArray() into x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2, 3, 4, 5]
+
+def test_into_array_can_contain_into(interpreter):
+    script = """
+set xinto to <1, 2, 3>
+merge <4, 5> into xinto
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['xinto'] == [1, 2, 3, 4, 5]
+
+def test_string_cannot_be_merged_into_an_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge "hello" into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_integer_cannot_be_merged_into_an_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge 1 into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_decimal_cannot_be_merged_into_an_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge 1.1 into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_math_cannot_be_merged_into_an_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge (1 + 1) into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_boolean_cannot_be_merged_into_an_array(interpreter):
+    script = """
+set x to <1, 2, 3>
+merge true into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_anonymous(interpreter):
+    script = """
+merge <4, 5> into <1, 2, 3>
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_a_string(interpreter):
+    script = """
+set x to "hello"
+merge <4, 5> into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_an_integer(interpreter):
+    script = """
+set x to 1
+merge <4, 5> into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_a_decimal(interpreter):
+    script = """
+set x to 1.1
+merge <4, 5> into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_a_boolean(interpreter):
+    script = """
+set x to true
+merge <4, 5> into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_contain_extra_into_keyword(interpreter):
+    script = """
+set x to true
+merge <4, 5> into into x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_be_missing_into_keyword(interpreter):
+    script = """
+set x to true
+merge <4, 5> x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_have_extra_arguments_at_end(interpreter):
+    script = """
+set x to true
+merge <4, 5> into x extra
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_into_array_cannot_have_extra_arguments_before_into(interpreter):
+    script = """
+set x to true
+merge <4, 5> extra into x
 """.splitlines(True)
     assert_error(interpreter, script)

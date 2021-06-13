@@ -51,6 +51,8 @@ class Function:
     def populate_variables(self, parameters):
         try:
             parameters = self.tokenize_parameters(parameters)
+            expression = Expression("", self.call_stack, self.function_variables)
+            parameters = expression.reconcatenate_nested_object(parameters, '<', '>')
             if self.function_variable_count != len(parameters):
                 fail("Too many or two few parameters.", self.error_type, self.call_stack)
             for variable in self.function_variables:

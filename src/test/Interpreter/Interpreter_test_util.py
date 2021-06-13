@@ -62,6 +62,7 @@ def assert_code_fails_in_REPL(capfd, script):
 
 def mock_REPL(capfd, script):
     interpreter = Interpreter("REPL")
+    interpreter.exit_repl_on_error = True
     def input_side_effect():
         nonlocal script
         if (len(script) == 0):
