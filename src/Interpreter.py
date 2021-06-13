@@ -12,6 +12,8 @@ from core.Boolean import Boolean
 from core.Function import Function
 from colors import color
 import os
+import io
+from contextlib import redirect_stdout
 import sys
 import random
 import time
@@ -334,13 +336,27 @@ class Interpreter:
         elif function[:5] == "print":
             parameters = self.resolve_function_calls(parameters, line_number)
             p = Printer(function, parameters, call_stack, self.variables)
-            p.print()
+            if self.script_name == "REPL" and self.exit_repl_on_error == False:
+                output = io.StringIO()
+                with redirect_stdout(output):
+                    p.print()
+                output = output.getvalue()
+                print("\t " + output[:-1].replace("\n", "\n\t "))
+            else:
+                p.print()
             return line_number
 
         elif function[:3] == "log":
             parameters = self.resolve_function_calls(parameters, line_number)
             l = Logger(function, parameters, call_stack, self.variables)
-            l.log()
+            if self.script_name == "REPL":
+                output = io.StringIO()
+                with redirect_stdout(output):
+                    l.log()
+                output = output.getvalue()
+                print("\t " + output[:-1].replace("\n", "\n\t "))
+            else:
+                l.log()
             return line_number
 
         elif function == "set":
@@ -463,6 +479,17 @@ class Interpreter:
             self.variables[into_array] = self.variables[into_array] + from_array
             return line_number
 
+        elif function == "sort" or function == "sortReverse":
+            if parameters not in self.variables:
+                fail(f"Array to sort must be stored in a variable. '{parameters}' is not a variable", self.error_type, call_stack)
+            if type(self.variables[parameters]) != list:
+                fail(f"Only arrays can be sorted. '{parameters}'' is not an array", self.error_type, call_stack)
+            if function == "sort":
+                self.variables[parameters].sort()
+            else:
+                self.variables[parameters].sort(reverse=True)
+            return line_number
+
         elif function == "sleep":
             parameters = self.resolve_function_calls(parameters, line_number)
             seconds = Expression(parameters, self.call_stack, self.variables).evaluate()
@@ -495,6 +522,8 @@ class Interpreter:
 
 
     def resolve_function_calls(self, parameters, line_number):
+        if len(parameters) == 0:
+            return parameters
         expression = Expression(parameters, self.call_stack, self.variables)
         parameter_tokens = expression.parse_expression(parameters, [])
         function_calls = self.get_functions(parameter_tokens)
@@ -640,8 +669,3 @@ class Interpreter:
                 return nestable_lines
             nestable_lines.append(line_raw)
         fail("Missing end to nestable.", self.error_type, self.call_stack)
-
-
-
-
-        

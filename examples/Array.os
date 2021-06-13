@@ -18,7 +18,7 @@ set y to <1, 2, 3>
 print y
 append y to x
 print x
-append "string, with, commas" to x
+#append "string, with, commas" to x
 print x
 print x<0>
 pop from x
@@ -29,9 +29,13 @@ print index<last>
 
 print "hello" . index<first>
 
-repeat for index in x
+for index in x
     print index
 end
 
 print
 print index
+
+
+set x to <2, 3, 1>
+sort x

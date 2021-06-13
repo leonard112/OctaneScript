@@ -944,3 +944,65 @@ set x to true
 merge <4, 5> extra into x
 """.splitlines(True)
     assert_error(interpreter, script)
+
+
+# SORT
+def test_array_can_be_sorted(interpreter):
+    script = """
+set x to <2, 3, 1>
+sort x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [1, 2, 3]
+
+def test_anonymous_array_cannot_be_sorted(interpreter):
+    script = """
+sort <2, 3, 1>
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_anything_that_is_not_an_array_cannot_be_sorted(interpreter):
+    script = """
+set x to "hello"
+sort x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_result_array_of_function__cannot_be_sorted(interpreter):
+    script = """
+function returnArray()
+    return <2, 3, 1>
+sort returnArray()
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+
+# SORT REVERSE
+def test_array_can_be_sorted_in_reverse_order(interpreter):
+    script = """
+set x to <2, 3, 1>
+sortReverse x
+""".splitlines(True)
+    assert_success(interpreter, script)
+    assert interpreter.variables['x'] == [3, 2, 1]
+
+def test_anonymous_array_cannot_be_sorted_in_reverse_order(interpreter):
+    script = """
+sortReverse <2, 3, 1>
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_anything_that_is_not_an_array_cannot_be_sorted_in_reverse_order(interpreter):
+    script = """
+set x to "hello"
+sortReverse x
+""".splitlines(True)
+    assert_error(interpreter, script)
+
+def test_result_array_of_function__cannot_be_sorted_in_reverse_order(interpreter):
+    script = """
+function returnArray()
+    return <2, 3, 1>
+sortReverse returnArray()
+""".splitlines(True)
+    assert_error(interpreter, script)
