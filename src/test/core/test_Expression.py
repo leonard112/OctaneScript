@@ -88,7 +88,7 @@ def test_not_found_fails():
     assert_error(Expression('x', test_stack, {}))
 def test_reserved_fails():
     for word in reserved:
-        if word != "true" and word != "false":
+        if word != "true" and word != "false" and word != "type":
             assert_error(Expression(word, test_stack, {}))
 def test_string_value_can_be_resolved_from_variable():
     assert Expression('x', test_stack, {'x' : 'value'}).evaluate() == "value"

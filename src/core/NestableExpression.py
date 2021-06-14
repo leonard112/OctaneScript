@@ -17,7 +17,7 @@ class NestableExpression:
 
 
     def parse_expression(self, expression, tokens):
-        expression = expression.lstrip()
+        expression = expression.strip()
 
         if len(expression) == 0:
             return tokens
@@ -28,8 +28,13 @@ class NestableExpression:
                 first_word_length = len(first_word)
                 rest_of_expression = expression[first_word_length:]
                 # if word is following by . operator tokenize string expression
-                if rest_of_expression.lstrip()[0] == ".":
+                if rest_of_expression.strip()[0] == ".":
                     token = self.parse_string_expression(expression)
+                    token_length = len(token)
+                    tokens += [token]
+                    return self.parse_expression(expression[token_length:], tokens)
+                elif first_word == "type":
+                    token = first_word + " " + self.parse_string_expression(expression[first_word_length+1:])
                     token_length = len(token)
                     tokens += [token]
                     return self.parse_expression(expression[token_length:], tokens)

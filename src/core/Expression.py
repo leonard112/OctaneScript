@@ -6,6 +6,7 @@ from core.Boolean import Boolean
 from core.Math import Math
 from core.Fail import fail
 from Reserved import reserved
+import types
 
 
 class Expression:
@@ -23,6 +24,8 @@ class Expression:
             return []
         elif self.expression[0] == "<" and self.expression[-1] == ">":
             return self.build_array(self.expression)
+        elif self.expression.split()[0] == "type":
+            return type(Expression(' '.join(self.expression.split()[1:]), self.call_stack, self.variables).evaluate())
 
         tokens = self.parse_expression(self.expression, [])
         self.is_valid_expression(tokens)
@@ -52,8 +55,13 @@ class Expression:
             elif token == ".":
                 None
             else:
+                initial_token = token
                 token = self.resolve(token)
-                if type(token) == list:
+                if len(initial_token) == len(self.expression):
+                    return token
+                if self.is_value_type(token) == True:
+                    result += self.create_string_representation_of_type(token)
+                elif type(token) == list:
                     result += "<" + str(token)[1:-1] + ">"
                 elif type(token) == bool:
                     result += str(token).lower()
@@ -65,6 +73,8 @@ class Expression:
     def resolve(self, token):
         token = self.perform_type_conversion(token)
         if type(token) == str:
+            if token[0] == "@":
+                return self.get_type(token)
             if "<" in token and ">" in token:
                 start_delimiter_index = token.find("<")
                 array_name = token[:start_delimiter_index].strip()
@@ -152,6 +162,8 @@ class Expression:
             return True
         elif token == "false" or token == "False":
             return False
+        elif token[:4] == "type":
+            return self.get_type(token)
         elif len(token) >= 2:
             if token[0] == "<" and token[-1] == ">":
                 return self.build_array(token)
@@ -325,3 +337,49 @@ class Expression:
         array = array.replace(' ','')
         if "<," in array or ",>" in array or ",," in array:
             fail("Extra comma in array definition.", self.error_type, self.call_stack)
+
+
+    def is_value_type(self, value_type):
+        if value_type == str:
+            return True
+        elif value_type == int:
+            return True
+        elif value_type == float:
+            return True
+        elif value_type == bool:
+            return True
+        elif value_type == list:
+            return True
+        elif value_type == types.FunctionType:
+            return True
+        return False
+
+
+    def create_string_representation_of_type(self, value_type):
+        if value_type == str:
+            return "@Type:String"
+        elif value_type == int:
+            return "@Type:Number"
+        elif value_type == float:
+            return "@Type:Number"
+        elif value_type == bool:
+            return "@Type:Boolean"
+        elif value_type == list:
+            return "@Type:Array"
+        elif value_type == types.FunctionType:
+            return "@Type:Function"
+        fail(f"'{token}' is not a valid type.", self.error_type, self.call_stack)
+
+
+    def get_type(self, value_type):
+        if value_type == "@Type:String":
+            return str
+        elif value_type == "@Type:Number":
+            return float
+        elif value_type == "@Type:Boolean:":
+            return bool
+        elif value_type == "@Type:Array":
+            return list
+        elif value_type == "@Type:Function":
+            return types.FunctionType
+        return value_type

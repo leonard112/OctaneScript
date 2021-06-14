@@ -48,5 +48,8 @@ reserved = [
 
     # ARRAYS
     "append", "push", "prepend", "removeFirst", "removeLast", "remove"
-    "peek", "start", "end", "first", "last", "merge", "into", "sort", "sortReverse"
+    "peek", "start", "end", "first", "last", "merge", "into", "sort", "sortReverse",
+
+    # GENERAL
+    "type"
 ]

@@ -2,6 +2,7 @@
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
 from colors import color
+import types
 from core.Fail import fail
 from core.Expression import Expression
 
@@ -21,6 +22,16 @@ class Printer:
 
         if type(self.expression) == list:
             self.expression = self.stringify_array(self.expression)
+        elif self.expression == str:
+            self.expression = "@Type:String"
+        elif self.expression == int or self.expression == float:
+            self.expression = "@Type:Number"
+        elif self.expression == bool:
+            self.expression = "@Type:Boolean"
+        elif self.expression == list:
+            self.expression = "@Type:Array"
+        elif self.expression == types.FunctionType:
+            self.expression = "@Type:Function"
         else:
             self.expression = str(self.expression)
         
@@ -40,6 +51,8 @@ class Printer:
             if type(element) != list:
                 if type(element) == str:
                     element = "'" + element + "'"
+                elif element == str:
+                    element = "@Type:String"
                 else:
                     element = str(element)
                 if element == "True" or element == "False":

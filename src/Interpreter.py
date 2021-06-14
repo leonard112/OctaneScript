@@ -86,7 +86,7 @@ class Interpreter:
         line = ""
 
         while True:
-            line_raw = input("| " + str(self.repl_counter+1) + "\t\b\b>> ") + "\n"
+            line_raw = input("| " + str(self.repl_counter+1) + "   >> ") + "\n"
             self.lines.append(line_raw)
             line = Line(line_raw, self.repl_counter, "REPL")
             self.call_stack.push(line)
@@ -341,7 +341,7 @@ class Interpreter:
                 with redirect_stdout(output):
                     p.print()
                 output = output.getvalue()
-                print("\t " + output[:-1].replace("\n", "\n\t "))
+                print("\t " + output[:-1].replace("\n", "\n         "))
             else:
                 p.print()
             return line_number
@@ -354,7 +354,7 @@ class Interpreter:
                 with redirect_stdout(output):
                     l.log()
                 output = output.getvalue()
-                print("\t " + output[:-1].replace("\n", "\n\t "))
+                print("\t " + output[:-1].replace("\n", "\n         "))
             else:
                 l.log()
             return line_number
@@ -404,7 +404,7 @@ class Interpreter:
             parameter_tokens = parameters.split()
             if parameter_tokens[-2] != "to":
                 fail(f"'{function}' operation missing 'to' keyword." , self.error_type, call_stack)
-            expression = Expression(''.join(parameter_tokens[:-2]), self.call_stack, self.variables)
+            expression = Expression(' '.join(parameter_tokens[:-2]), self.call_stack, self.variables)
             value = expression.evaluate()
             array = parameter_tokens[-1]
             if array not in self.variables:
@@ -545,8 +545,8 @@ class Interpreter:
                         function_calls += [token]
         return function_calls
 
-    def get_functions_from_specialized_expression(self, math_expression, function):
-        parameter_tokens = math_expression.split(function)
+    def get_functions_from_specialized_expression(self, expression, function):
+        parameter_tokens = expression.split(function)
         functions = []
         for token in parameter_tokens:
             if token.count("(") <= token.count(")") and token.count("(") >= 1:
@@ -563,6 +563,11 @@ class Interpreter:
                         break 
                 if function_parameter[0] == "(":
                     functions += [function + function_parameter]
+        parameter_tokens = expression.split(f" {function}")
+        for token in parameter_tokens:
+            token = token.strip().strip("(").strip("[")
+            if token[-4:] == "type":
+                functions += function
         return functions
 
     
@@ -570,7 +575,12 @@ class Interpreter:
         parameter_tokens_length = len(parameter_tokens)
         for i in range(0, parameter_tokens_length, 1):
             for function_call in function_calls:
-                if function_call in parameter_tokens[i]:
+                if parameter_tokens[i][0] == '"' and parameter_tokens[i][-1] == '"':
+                    pass
+                elif function_call in parameter_tokens[i] and "(" not in function_call and "type" in parameter_tokens[i]:
+                    parameter_tokens[i] = ' '.join(parameter_tokens[i].split())
+                    parameter_tokens[i] = parameter_tokens[i].replace(f"type {function_call}", "@Type:Function")
+                elif function_call in parameter_tokens[i] and parameter_tokens[i-1] != "type":
                     function_name = function_call.split("(")[0]
                     self.execute_function(function_call, "", function_name, line_number)
                     return_value = self.functions[function_name].return_value
@@ -581,6 +591,11 @@ class Interpreter:
                     if return_value == "True" or return_value == "False":
                         return_value = return_value.lower()
                     parameter_tokens[i] = parameter_tokens[i].replace(function_call, return_value)
+                elif function_call in parameter_tokens[i] and parameter_tokens[i-1] == "type":
+                    i -= 1
+                    parameter_tokens.pop(i)
+                    parameter_tokens[i] = "@Type:Function"
+
         return parameter_tokens
 
 
@@ -628,7 +643,7 @@ class Interpreter:
         if self.script_name == "REPL" and self.in_nested_repl == False:
             while(True):
                 self.repl_counter += 1
-                line_raw = input("| " + str(self.repl_counter+1) + "\t\b\b~ ") + "\n"
+                line_raw = input("| " + str(self.repl_counter+1) + "    ~ ") + "\n"
                 if line_raw.strip()[:2] == "if":
                     required_end_count += 1
                 elif line_raw.strip()[:3] == "for":
