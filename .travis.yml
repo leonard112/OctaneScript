@@ -9,7 +9,6 @@ env:
     - RELEASE_STATUS="DEV"
     - RELEASE_STATUS_LOWER="dev"
     - COMMIT_SHORT="${TRAVIS_COMMIT:0:7}"
-    - ARCH=amd64
     - LICENSE="$PWD/LICENSE"
     - README="$PWD/README.md"
     - SRC_DIR="$PWD/src"
@@ -20,15 +19,27 @@ env:
 jobs:
   include:
     - os: linux
+      arch: amd64
       language: python
       dist: trusty
       env:
         - OS=linux
+        - ARCH=amd64
+        - DEB_PACKAGE_DIR="$PWD/package_debian"
+    - os: linux
+      arch: arm64
+      language: python
+      dist: trusty
+      env:
+        - OS=linux
+        - ARCH=arm64
         - DEB_PACKAGE_DIR="$PWD/package_debian"
     - os: windows
+      arch: amd64
       language: bash
       env: 
         - OS=windows
+        - ARCH=amd64
         - WINDOWS_INSTALLER_DIR="$PWD/windows_installer"
 script: 
   - cd $SRC_DIR && chmod +x $BUILD_SCRIPT && bash $BUILD_SCRIPT
