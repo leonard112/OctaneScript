@@ -42,7 +42,6 @@ Section
 	EnVar::AddValue "PATH" "$INSTDIR\"
 	Pop $0
 	DetailPrint "EnVar::AddValue returned=|$0|"
-	
 SectionEnd
  
 Section "uninstall"

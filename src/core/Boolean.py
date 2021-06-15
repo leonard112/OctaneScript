@@ -33,6 +33,14 @@ class Boolean(NestableExpression):
         try:
             token_1 = self.resolve(tokens[0].strip())
             token_2 = self.resolve(tokens[2].strip())
+            e = core.Expression.Expression("", self.call_stack, self.variables)
+            if e.is_value_type(token_1) or e.is_value_type(token_2):
+                operator = tokens[1]
+                if operator == "equals":
+                    return token_1 == token_2
+                elif operator == "notEquals":
+                    return token_1 != token_2
+                raise Exception
             return {
                 'equals' : token_1 == token_2,
                 'lessThan' : token_1 < token_2,
@@ -53,6 +61,9 @@ class Boolean(NestableExpression):
         if type(token) == list:
             p = core.Printer.Printer("print", "", self.call_stack, self.variables)
             return p.stringify_array(token)
+        e = core.Expression.Expression("", self.call_stack, self.variables)
+        if e.is_value_type(token):
+            return e.create_string_representation_of_type(token)
         return str(token)
 
 
@@ -69,10 +80,10 @@ class Boolean(NestableExpression):
 
 
     def resolve(self, value):
-        value = value.lower()
-        if value == "true":
+        value_lower = value.lower()
+        if value_lower == "true":
             return True
-        elif value == "false":
+        elif value_lower == "false":
             return False
         else:
             try:
@@ -80,6 +91,8 @@ class Boolean(NestableExpression):
             except:
                 e = core.Expression.Expression(value, self.call_stack, self.variables)
                 value = e.evaluate()
+                if e.is_value_type(value):
+                    return value
                 if type(value) == list:
                     return value
                 try:
@@ -89,24 +102,24 @@ class Boolean(NestableExpression):
 
 
     def is_valid_answer(self, tokens):
-            if len(tokens) > 1:
-                return False
-            elif self.starts_and_ends_with_valid_symbols(tokens) == True:
-                e = core.Expression.Expression(tokens[0], self.call_stack, self.variables)
-                e.evaluate()
+        if len(tokens) > 1:
+            return False
+        elif self.starts_and_ends_with_valid_symbols(tokens) == True or (len(tokens) == 1 and tokens[0][0] == "@"):
+            e = core.Expression.Expression(tokens[0], self.call_stack, self.variables)
+            e.evaluate()
+            return True
+        elif tokens[0].lower() == "true" or tokens[0].lower() == "false":
+            return True
+        else:
+            try:
+                float(tokens[0])
                 return True
-            elif tokens[0].lower() == "true" or tokens[0].lower() == "false":
-                return True
-            else:
+            except:
                 try:
-                    float(tokens[0])
+                    self.variables[tokens[0]]
                     return True
                 except:
-                    try:
-                        self.variables[tokens[0]]
-                        return True
-                    except:
-                        return False
+                    return False
 
 
     def starts_and_ends_with_valid_symbols(self, tokens):
@@ -121,3 +134,4 @@ class Boolean(NestableExpression):
         elif start_symbol == "<" and end_symbol == ">":
             return True
         return False
+        

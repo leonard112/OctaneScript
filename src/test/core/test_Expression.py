@@ -2,6 +2,7 @@
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
 import pytest
+import types
 from core.Line import Line
 from core.Stack import Stack
 from core.Expression import Expression
@@ -108,6 +109,8 @@ def test_string_can_be_concatenated_to_boolean_variable():
     assert Expression('"test" . x', test_stack, {'x' : True}).evaluate() == "testtrue"
 def test_string_can_be_concatenated_to_array_variable():
     assert Expression('"test" . x', test_stack, {'x' : [1, 2, 3]}).evaluate() == "test<1, 2, 3>"
+def test_string_can_be_concatenated_to_type_variable():
+    assert Expression('"test" . x', test_stack, {'x' : str}).evaluate() == "test@Type:String"
 def test_valid_complex_expression_successful():
     assert Expression(
         '"hello " . x . \' this expression is valid. Here is y \' . y', test_stack,
@@ -378,6 +381,60 @@ def test_get_substring_of_string_array_element_fails_when_start_angle_bracket_is
     assert_error(Expression('x<0>1:end>', test_stack, {'x': ['hello',2,3]}))
 def test_get_substring_of_nested_string_array_element_fails_when_end_angle_bracket_is_missing():
     assert_error(Expression('x<0><1:end', test_stack, {'x': ['hello',2,3]}))
+
+
+# TYPES
+def test_get_string_type():
+    assert Expression('@Type:String', test_stack, {}).evaluate() == str
+def test_get_number_type():
+    assert Expression('@Type:Number', test_stack, {}).evaluate() == float
+def test_get_boolean_type():
+    assert Expression('@Type:Boolean', test_stack, {}).evaluate() == bool
+def test_get_array_type():
+    assert Expression('@Type:Array', test_stack, {}).evaluate() == list
+def test_get_array_function():
+    assert Expression('@Type:Function', test_stack, {}).evaluate() == types.FunctionType
+
+
+# TYPES OF VALUES
+def test_get_type_of_string_value():
+    assert Expression('type "hello"', test_stack, {}).evaluate() == str
+def test_get_type_of_integer_value():
+    assert Expression('type 1', test_stack, {}).evaluate() == int
+def test_get_type_of_decimal_value():
+    assert Expression('type 1.1', test_stack, {}).evaluate() == float
+def test_get_type_of_boolean_value():
+    assert Expression('type true', test_stack, {}).evaluate() == bool
+def test_get_type_of_array_value():
+    assert Expression('type <>', test_stack, {}).evaluate() == list
+
+
+# TYPES OF EXPRESSIONS
+def test_get_type_of_string_expression():
+    assert Expression('type "hello" . 1 . "world"', test_stack, {}).evaluate() == str
+def test_get_type_of_math_expression():
+    assert Expression('type (1 + 2)', test_stack, {}).evaluate() == int
+def test_get_type_of_boolean_expression():
+    assert Expression('type [1 equals 1]', test_stack, {}).evaluate() == bool
+
+
+# TYPES CONCATENATED WITH STRINGS
+def test_get_string_type_can_be_concatenated_to_string():
+    assert Expression('"hello" . @Type:String', test_stack, {}).evaluate() == "hello@Type:String"
+def test_get_number_type_can_be_concatenated_to_string():
+    assert Expression('"hello" . @Type:Number', test_stack, {}).evaluate() == "hello@Type:Number"
+def test_get_boolean_type_can_be_concatenated_to_string():
+    assert Expression('"hello" . @Type:Boolean', test_stack, {}).evaluate() == "hello@Type:Boolean"
+def test_get_array_type_can_be_concatenated_to_string():
+    assert Expression('"hello" . @Type:Array', test_stack, {}).evaluate() == "hello@Type:Array"
+def test_get_function_type_can_be_concatenated_to_string():
+    assert Expression('"hello" . @Type:Function', test_stack, {}).evaluate() == "hello@Type:Function"
+
+
+# STRINGS CAN CONTAIN TYPES AND TYPES OF VALUES
+def test_string_can_contain_type():
+    assert Expression('"hello @Type:String"', test_stack, {}).evaluate() == "hello @Type:String"
+    assert Expression('"hello type 1"', test_stack, {}).evaluate() == "hello type 1"
 
 
 def assert_error(expression):

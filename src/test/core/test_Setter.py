@@ -2,6 +2,7 @@
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
 import pytest
+import types
 from core.Line import Line
 from core.Stack import Stack
 from core.Setter import Setter
@@ -74,7 +75,7 @@ def test_stores_an_array_of_multiple_value_types():
     assert set_array.set()['x'] == [1, 'hello world', True, [6, 7]]
 
 
-#ARRAY INDICIES AND SUBARRAYS
+# ARRAY INDICIES AND SUBARRAYS
 def test_stores_an_array_index():
     set_array_index = Setter("x to y<0>", test_stack, {'y': [1,2,3]}, {})
     assert set_array_index.set()['x'] == 1
@@ -83,13 +84,52 @@ def test_stores_a_subarray():
     assert set_array_index.set()['x'] == [1,2]
 
 
-#STRING INDICIES AND SUBSTRINGS
+# STRING INDICIES AND SUBSTRINGS
 def test_stores_a_string_index():
     set_array_index = Setter("x to y<0>", test_stack, {'y': 'hello'}, {})
     assert set_array_index.set()['x'] == 'h'
 def test_stores_a_substring():
     set_array_index = Setter("x to y<0:3>", test_stack, {'y': 'hello'}, {})
     assert set_array_index.set()['x'] == 'hel'
+
+
+# TYPE
+def test_stores_string_type():
+    set_array_index = Setter("x to @Type:String", test_stack, {}, {})
+    assert set_array_index.set()['x'] == str
+def test_stores_string_type():
+    set_array_index = Setter("x to @Type:Number", test_stack, {}, {})
+    assert set_array_index.set()['x'] == float
+def test_stores_string_type():
+    set_array_index = Setter("x to @Type:Boolean", test_stack, {}, {})
+    assert set_array_index.set()['x'] == bool
+def test_stores_string_type():
+    set_array_index = Setter("x to @Type:Array", test_stack, {}, {})
+    assert set_array_index.set()['x'] == bool
+def test_stores_string_type():
+    set_array_index = Setter("x to @Type:Function", test_stack, {}, {})
+    assert set_array_index.set()['x'] == types.FunctionType
+
+
+# TYPE OF EXPRESSION
+def test_stores_type_of_double_quote_string():
+    set_array_index = Setter('x to type "hello"', test_stack, {}, {})
+    assert set_array_index.set()['x'] == str
+def test_stores_type_of_single_quote_string():
+    set_array_index = Setter("x to type 'hello'", test_stack, {}, {})
+    assert set_array_index.set()['x'] == str
+def test_stores_type_of_integer():
+    set_array_index = Setter("x to type 1", test_stack, {}, {})
+    assert set_array_index.set()['x'] == int
+def test_stores_type_of_decimal():
+    set_array_index = Setter("x to type 1.1", test_stack, {}, {})
+    assert set_array_index.set()['x'] == float
+def test_stores_type_of_math():
+    set_array_index = Setter("x to type (1 + 1)", test_stack, {}, {})
+    assert set_array_index.set()['x'] == int
+def test_stores_type_of_array():
+    set_array_index = Setter("x to type <1, 2, 3>", test_stack, {}, {})
+    assert set_array_index.set()['x'] == list
 
 
 def assert_error(setter):

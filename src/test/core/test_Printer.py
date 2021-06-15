@@ -40,6 +40,13 @@ def test_print_array_works():
     assert_success(Printer("print", "<1, 2, 3>", test_stack, {}))
 
 
+# TYPE
+def test_print_type_works():
+    assert_success(Printer("print", "@Type:String", test_stack, {}))
+def test_print_type_of_value_works():
+    assert_success(Printer("print", "type 'hello'", test_stack, {}))
+
+
 def assert_error(printer):
     with pytest.raises(SystemExit) as error:
             printer.print()

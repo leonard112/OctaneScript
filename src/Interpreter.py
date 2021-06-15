@@ -307,7 +307,7 @@ class Interpreter:
                 function_start = self.repl_counter
             function_body = self.get_nested_code(line_number + 1)
             function_end = len(function_body)
-            f = Function(parameters, function_body, call_stack, self.functions, self.variables, function_start)
+            f = Function(parameters, function_body, self.call_stack, self.functions, self.variables, function_start)
             self.functions[f.function_name] = f
             return line_number + function_end + 1
 
@@ -577,6 +577,8 @@ class Interpreter:
             for function_call in function_calls:
                 if parameter_tokens[i][0] == '"' and parameter_tokens[i][-1] == '"':
                     pass
+                elif function_call.split("(")[0] not in self.functions:
+                    pass
                 elif function_call in parameter_tokens[i] and "(" not in function_call and "type" in parameter_tokens[i]:
                     parameter_tokens[i] = ' '.join(parameter_tokens[i].split())
                     parameter_tokens[i] = parameter_tokens[i].replace(f"type {function_call}", "@Type:Function")
@@ -587,6 +589,9 @@ class Interpreter:
                     if type(return_value) == list:
                         p = Printer("print", "", self.call_stack, self.variables)
                         return_value = p.stringify_array(return_value)
+                    e = Expression("", self.call_stack, self.variables)
+                    if e.is_value_type(return_value):
+                        return_value = e.create_string_representation_of_type(return_value)
                     return_value = str(return_value)
                     if return_value == "True" or return_value == "False":
                         return_value = return_value.lower()

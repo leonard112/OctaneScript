@@ -17,23 +17,22 @@ class Function:
         self.function_variable_count = 0
         self.return_value = None
         self.error_type = "Function Error"
-        try:
-            if function_start < 0:
-                raise Exception
-            else:
-                self.function_start = function_start
+        if function_start < 0:
+            fail("Function start line cannot be '0'.", self.error_type, self.call_stack)
+        else:
+            self.function_start = function_start
 
-            self.function_name = function_definition.split("(")[0].rstrip()
-            function_name_length = len(self.function_name)
-            if function_definition[function_name_length] == "(":
-                parameters = function_definition[function_name_length:]
-                if len(parameters) > 2:
-                    self.function_variables = self.get_function_variables(parameters)
-                    self.function_variable_count = len(self.function_variables)
-            else:
-                fail("There cannot be spaces between the function name and \"(\" that begins the definition of the function parameters).", self.error_type, self.call_stack)
-        except Exception:
-            fail("Bad function definition.", self.error_type, self.call_stack)
+        self.function_name = function_definition.split("(")[0].rstrip()
+        function_name_length = len(self.function_name)
+        if len(function_definition) == function_name_length:
+            fail("Incomplete function definition. Functions must contain a parameter section with 0 or more parameters. (i.e. myFunction(x, y))", self.error_type, self.call_stack)
+        if function_definition[function_name_length] == "(":
+            parameters = function_definition[function_name_length:]
+            if len(parameters) > 2:
+                self.function_variables = self.get_function_variables(parameters)
+                self.function_variable_count = len(self.function_variables)
+        else:
+            fail("There cannot be spaces between the function name and \"(\" that begins the definition of the function parameters).", self.error_type, self.call_stack)
 
     
     def get_function_variables(self, parameters):
@@ -41,9 +40,8 @@ class Function:
         function_variables = {}
         for parameter in parameters:
             parameter = parameter.strip()
-            setter = Setter("", "", "", self.functions)
-            if setter.is_variable_name_valid(parameter) == False:
-                raise Exception
+            setter = Setter("", self.call_stack, {}, self.functions)
+            setter.is_variable_name_valid(parameter)
             function_variables[parameter] = None
         return function_variables
 

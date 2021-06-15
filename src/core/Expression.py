@@ -18,12 +18,16 @@ class Expression:
 
 
     def evaluate (self):
-        if self.expression == "":
+        if self.expression in self.variables:
+            return self.variables[self.expression]
+        elif self.expression == "":
             return ""
         elif self.expression == "array":
             return []
         elif self.expression[0] == "<" and self.expression[-1] == ">":
             return self.build_array(self.expression)
+        elif self.expression[0] == "@" and " " not in self.expression:
+            return self.get_type(self.expression)
         elif self.expression.split()[0] == "type":
             return type(Expression(' '.join(self.expression.split()[1:]), self.call_stack, self.variables).evaluate())
 
@@ -51,7 +55,6 @@ class Expression:
             elif token[0] == "[" and token[-1] == "]":
                 boolean = Boolean(token, self.call_stack, self.variables)
                 result += str(boolean.evaluate()).lower()
-
             elif token == ".":
                 None
             else:
@@ -282,7 +285,8 @@ class Expression:
 
     def is_valid_expression(self, expression):
         dot_count = expression.count(".")
-        if dot_count * 2 != len(expression)-1:
+        type_count = expression.count("type")
+        if dot_count * 2 != len(expression)-1-type_count:
             fail("Extra or missing '.', '\"', or \"'\".", self.error_type, self.call_stack)
 
 
@@ -340,7 +344,9 @@ class Expression:
 
 
     def is_value_type(self, value_type):
-        if value_type == str:
+        if type(value_type) != type:
+            return False
+        elif value_type == str:
             return True
         elif value_type == int:
             return True
@@ -368,7 +374,7 @@ class Expression:
             return "@Type:Array"
         elif value_type == types.FunctionType:
             return "@Type:Function"
-        fail(f"'{token}' is not a valid type.", self.error_type, self.call_stack)
+        fail(f"'{value_type}' is not a valid type.", self.error_type, self.call_stack)
 
 
     def get_type(self, value_type):
@@ -376,7 +382,7 @@ class Expression:
             return str
         elif value_type == "@Type:Number":
             return float
-        elif value_type == "@Type:Boolean:":
+        elif value_type == "@Type:Boolean":
             return bool
         elif value_type == "@Type:Array":
             return list

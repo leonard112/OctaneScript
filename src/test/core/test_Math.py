@@ -101,6 +101,10 @@ def test_math_operations_cannot_be_performed_on_booleans():
     assert_error(Math('(1 / [true])', test_stack, {}))
 def test_math_operations_cannot_be_performed_on_arrays():
     assert_error(Math('(1 / <1, 2, 3>)', test_stack, {}))
+def test_math_operations_cannot_be_performed_on_type():
+    assert_error(Math('(1 / @Type:Integer)', test_stack, {}))
+def test_math_operations_cannot_be_type_of_value():
+    assert_error(Math('(1 / type 1)', test_stack, {}))
 
 
 def assert_error(expression):

@@ -59,7 +59,7 @@ class Math(NestableExpression):
             try:
                 return float(self.get_variable(value))
             except Exception:
-                fail("Math operations can only be performed with numbers.", self.error_type, self.call_stack)
+                fail(f"Math operations can only be performed with numbers. '{value}' is not a number.", self.error_type, self.call_stack)
 
 
     def is_valid_answer(self, tokens):

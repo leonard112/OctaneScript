@@ -49,6 +49,16 @@ def test_string_is_true():
     assert Boolean('["hello"]', test_stack, {}).evaluate() == True
 def test_array_is_true():
     assert Boolean('[<1,2,3>]', test_stack, {}).evaluate() == True
+def test_string_type_is_true():
+    assert Boolean('[@Type:String]', test_stack, {}).evaluate() == True
+def test_number_type_is_true():
+    assert Boolean('[@Type:Number]', test_stack, {}).evaluate() == True
+def test_boolean_type_is_true():
+    assert Boolean('[@Type:Boolean]', test_stack, {}).evaluate() == True
+def test_array_type_is_true():
+    assert Boolean('[@Type:Array]', test_stack, {}).evaluate() == True
+def test_function_type_is_true():
+    assert Boolean('[@Type:Array]', test_stack, {}).evaluate() == True
 
 
 # OPERATIONS
@@ -71,6 +81,8 @@ def test_equals_for_equal_strings_true():
     assert Boolean('["hello" equals "hello"]', test_stack, {}).evaluate() == True
 def test_equals_for_equal_variables_true():
     assert Boolean('[x equals y]', test_stack, {'x': 1, 'y': 1}).evaluate() == True
+def test_equals_for_equal_types_true():
+    assert Boolean('[@Type:String equals @Type:String]', test_stack, {}).evaluate() == True
 
 def test_equals_for_unequal_integers_false():
     assert Boolean('[1 equals 2]', test_stack, {}).evaluate() == False
@@ -86,6 +98,8 @@ def test_equals_for_unequal_strings_false():
     assert Boolean('["hello" equals "world"]', test_stack, {}).evaluate() == False
 def test_equals_for_unequal_variables_false():
     assert Boolean('[x equals y]', test_stack, {'x': 1, 'y': 2}).evaluate() == False
+def test_equals_for_unequal_types_false():
+    assert Boolean('[@Type:String equals @Type:Number]', test_stack, {}).evaluate() == False
 
 def test_equals_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 equals "hello"]', test_stack, {}))
@@ -134,6 +148,11 @@ def test_not_equals_for_equal_strings_false():
     assert Boolean('["hello" notEquals "hello"]', test_stack, {}).evaluate() == False
 def test_not_equals_for_equal_variables_false():
     assert Boolean('[x notEquals y]', test_stack, {'x': 1, 'y': 1}).evaluate() == False
+
+def test_not_equals_for_unequal_types_true():
+    assert Boolean('[@Type:String notEquals @Type:Integer]', test_stack, {}).evaluate() == True
+def test_not_equals_for_equal_types_false():
+    assert Boolean('[@Type:String notEquals @Type:String]', test_stack, {}).evaluate() == False
 
 def test_not_equals_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 notEquals "hello"]', test_stack, {}))
@@ -185,6 +204,8 @@ def test_less_than_for_first_variable_equal_to_following_false():
 
 def test_less_than_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 lessThan "hello"]', test_stack, {}))
+def test_less_than_for_types_raises_error():
+    assert_error(Boolean('[@Type:String lessThan @Type:String]', test_stack, {}))
 #LESS THAN EQUALS
 def test_less_than_equals_for_first_integer_less_than_following_true():
     assert Boolean('[1 lessThanEquals 2]', test_stack, {}).evaluate() == True
@@ -233,6 +254,8 @@ def test_less_than_equals_for_first_variable_equal_to_following_false():
 
 def test_less_than_equals_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 lessThanEquals "hello"]', test_stack, {}))
+def test_less_than_equals_for_types_raises_error():
+    assert_error(Boolean('[@Type:String lessThanEquals @Type:String]', test_stack, {}))
 # GREATER THAN
 def test_greater_than_for_first_integer_less_than_following_false():
     assert Boolean('[1 greaterThan 2]', test_stack, {}).evaluate() == False
@@ -281,6 +304,8 @@ def test_greater_than_for_first_variable_equal_to_following_false():
 
 def test_greater_than_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 greaterThan "hello"]', test_stack, {}))
+def test_greater_than_for_types_raises_error():
+    assert_error(Boolean('[@Type:String greaterThan @Type:String]', test_stack, {}))
 # GREATER THAN EQUALS
 def test_greater_than_equals_for_first_integer_less_than_following_false():
     assert Boolean('[1 greaterThanEquals 2]', test_stack, {}).evaluate() == False
@@ -329,6 +354,8 @@ def test_greater_than_equals_for_first_variable_equal_to_following_true():
 
 def test_greater_than_equals_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 greaterThanEquals "hello"]', test_stack, {}))
+def test_greater_than_equals_for_types_raises_error():
+    assert_error(Boolean('[@Type:String greaterThanEquals @Type:String]', test_stack, {}))
 # AND
 def test_and_for_equal_boolean_values_is_true():
     assert Boolean('[true and true]', test_stack, {}).evaluate() == True
@@ -380,6 +407,8 @@ def test_false_and_false_is_false():
 
 def test_and_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 and "hello"]', test_stack, {}))
+def test_and_for_types_raises_error():
+    assert_error(Boolean('[@Type:String and @Type:String]', test_stack, {}))
 # OR
 def test_or_for_equal_boolean_values_is_true():
     assert Boolean('[true or true]', test_stack, {}).evaluate() == True
@@ -431,6 +460,8 @@ def test_false_or_false_is_false():
 
 def test_or_for_differing_value_types_raises_error():
     assert_error(Boolean('[1 or "hello"]', test_stack, {}))
+def test_or_for_types_raises_error():
+    assert_error(Boolean('[@Type:String or @Type:String]', test_stack, {}))
 
 # STRING EXPRESSIONS
 def test_double_quote_string_expressions_can_be_compared_using_boolean():
@@ -466,6 +497,8 @@ def test_no_spaces_between_complex_string_expression_operators_and_operands_with
     assert_error(Boolean('[(1+1).xequalsy.(2*2)]', test_stack, {'x': 'hello', 'y': 'world'}))
 def test_no_spaces_between_complex_string_expression_operators_and_operands_with_boolean_expression_and_variables_touching_operator_raises_error():
     assert_error(Boolean('[[true].xequalsy.[false]]', test_stack, {'x': 'hello', 'y': 'world'}))
+def test_no_spaces_between_operator_and_types_raises_error():
+    assert_error(Boolean('[@Type:Stringequals@Type:String]', test_stack, {}))
 def test_no_spaces_between_complex_double_quote_string_expression_operators_and_operands_with_strings_touching_operator_works():
     assert Boolean('[x."hello"equals"world".y]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_no_spaces_between_complex_single_quote_string_expression_operators_and_operands_with_strings_touching_operator_works():
@@ -497,6 +530,8 @@ def test_extra_spaces_in_boolean_operation_on_string_expressions_with_math_conca
     assert Boolean('[   (   1   +   1   )   .   x   equals   y   .   (   2   *   2   )   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_extra_spaces_in_boolean_operation_on_string_expressions_with_boolean_expressions_concatenated_with_variables_facing_operator_works():
     assert Boolean('[   [   true   ]   .   x   equals   y   .   [   false   ]   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
+def test_no_spaces_between_operator_and_types_works():
+    assert Boolean('[   @Type:String   equals   @Type:String   ]', test_stack, {}).evaluate() == True
 def test_extra_spaces_in_boolean_operation_on_double_quote_strings_expressions_concatenated_with_strings_facing_operator_works():
     assert Boolean('[   x   .   "hello"   equals   "world"   .   y   ]', test_stack, {'x': 'hello', 'y': 'world'}).evaluate() == False
 def test_extra_spaces_in_boolean_operation_on_single_quote_strings_expressions_concatenated_with_strings_facing_operator_works():

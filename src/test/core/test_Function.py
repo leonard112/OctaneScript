@@ -2,6 +2,7 @@
 # See license for more details: https://github.com/leonard112/OctaneScript/blob/main/README.md
 
 import pytest
+import types
 from core.Line import Line
 from core.Stack import Stack
 from core.Function import Function
@@ -93,6 +94,14 @@ def test_complex_array_values_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {}, 0)
     b.populate_variables('(<1, <"hello", "world">>, <<true, false>, 4>, <<(1 + 1), 5.1>, 6>)')
     assert b.function_variables == {'x' : [1, ['hello', 'world']], 'y' : [[True, False], 4], 'z' : [[2, 5.1], 6]}
+def test_types_can_be_passed_in_when_calling_function():
+    b = Function('testFunc(x, y, z, a, b)', [], test_stack, {}, {}, 0)
+    b.populate_variables('(@Type:String, @Type:Number, @Type:Boolean, @Type:Array, @Type:Function)')
+    assert b.function_variables == {'x' : str, 'y' : float, 'z' : bool, 'a' : list, 'b' : types.FunctionType}
+def test_types_of_values_can_be_passed_in_when_calling_function():
+    b = Function('testFunc(x, y, z, a, b)', [], test_stack, {}, {}, 0)
+    b.populate_variables('(type "hello", type 1, type 1.1, type true, type <>)')
+    assert b.function_variables == {'x' : str, 'y' : int, 'z' : float, 'a' : bool, 'b' : list}
 def test_variables_can_be_passed_in_when_calling_function():
     b = Function('testFunc(x, y, z)', [], test_stack, {}, {'a' : 1, 'b' : 2, 'c' : 3}, 0)
     b.populate_variables('(a, b, c)')
